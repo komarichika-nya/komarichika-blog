@@ -1,0 +1,88 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true
+}
+\begin{document}
+\subsubsection{Greatest Common Divisor}
+The Greatest Common Divisor is defined ($gcd$) as if $a,b\in\mathbb{Z}-\{0\}$, satisfy :
+\[a\mid d,b\mid d\land e\mid a,e\mid b,e\mid d\]
+we say $\gcd(a,b)=d$, speaialy $\gcd(a,b)=1$ if and only if $a,b$ is prime
+\begin{theorem}
+    \[\forall d\mid a,d\mid b, \forall x,y, d\mid ax+by\]
+\end{theorem}
+\begin{proof}
+    According to the define : $\exists m,n\in\mathbb{Z}$ equal :
+    \[a=md,b=nd\]
+    \[ax+by=(mx+ny)d\]
+    \[d\mid ax+by\]
+\end{proof}
+\subsubsection{Stein's algorithm}
+if $2\mid a,2\mid b, \gcd(a,b)=2\gcd(\frac{a}{2},\frac{b}{2})$ else $\gcd(a,b)=\gcd(\frac{a}{2},b)$
+\begin{lstlisting}[language=C++]
+ll gcd_(ll a, ll b){if(!a)return b;if(!b)return a;int la=ctz(a),lb=ctz(b);int v=la>lb?lb:la;a>>=la;
+for(;;){b>>=lb;if(a>b)swap(a,b);b-=a;if(!b)break;lb=ctz(b);}return a<<v;}
+\end{lstlisting}
+time complexly $O(\log n)$
+\subsubsection{Extended Euclidean algorithm}
+The problem is to find a solution $(x,y)$ to equation $ax+by=\gcd(a,b)$.
+let $(x_1,y_1),(x_2,y_2)$ are solutions to $ax+by=\gcd(a,b)$, so we have :
+\[ax_1+by_1=\gcd(a,b)\]
+\[a_x2+by_2=\gcd(a,b)\]
+\begin{theorem}
+    if $b!=0$\[\gcd(a,b)=\gcd(a,a\mod{b})\]
+\end{theorem}
+\begin{proof}
+    let $a=bq+r$, $\gcd(a,b)=d,\gcd(a,a\mod{b})=e$, $r\in[1,|b|]$.
+    According to theorem 0.1. :\[d\mid a,d\mid b,d\mid a-bq\]
+    so : \[\gcd(a,b)\mid\gcd(a,a\mod b)\]
+    \[e\mid a,e\mid a\mod{b},e\mid bq+r\]
+    so: \[\gcd(a,b)=\gcd(a,a\mod b)\]
+\end{proof}
+the base cases are $(1,0),(0,1)$, according to the defination of modular arithmetic :
+\[bx_2+(a-\lfloor\frac{a}{b}\rfloor\cdot b)y_2=\gcd(b,(a-\lfloor\frac{a}{b}\rfloor\cdot b))\]
+so :\[x_1=y_2\]\[y_1=(x_2-\lfloor\frac{a}{b}\rfloor)y_2\]
+\begin{lstlisting}[language=C++]
+ll exgcd(ll a,ll b,ll&x,ll&y){if(!b){x=1,y=0;return a;}int v=exgcd(b,a%b,x,y);
+ll k=x;x=y;y=k-(a/b)*y;return v;}
+\end{lstlisting}
+\subsubsection{Euler's totient function}
+For $n\in\mathbb{Z^{+}}$, the Euler's totient function $\phi(n)$ is defined as a postive number
+$a\le n$ and relatively prime.
+\[\phi(n)=n\prod\limits_{i=1}^{k}(1-\frac{1}{p_i})\], $p$ is prime.
+According to theorem 0.1., an obvious conclusions is $\phi(n) is even$ when $n>2$.
+that's because the $\gcd$ is always come out by a pair. Going by a step further, 
+the sum of numbers less than or equal to $n$ and coprime to $n$ is $\frac{n}{2}\phi(n),n>1$
+\begin{theorem}
+    Given $N$, the number of n such that $\phi(n)$ is finite.
+\end{theorem}
+\begin{proof}
+    \[n=\prod\limits_{i=1}^{k}p_i^{\alpha_i}\]
+    \[\phi(n)=\prod\limits_{i=1}^{k}p_i^{\alpha_i-1}(p_i-1)=N\]
+    \[p_i-1\mid N,p_i\le N+1\]
+    Obviously,the number of $p_i$ is finite. so $\alpha_i$ is finite.
+\end{proof}
+If we perform a discrete Fourier transform on the Euler's totient function, we can calculate $\phi(n)$ online in nlogn time.
+According to DFT we have :
+\[\mathbf{F}[x][m]=\sum\limits_{k=1}^{n}x_i\exp(-2\pi\frac{mk}{n})\]where $m=1,x_i=\gcd(k,n)$
+\[\phi(n)=\sum\limits_{k=1}{n}\gcd(k,n)\exp(-2\pi\frac{mk}{n})\]
+\[\phi(n)=\sum\limits_{k=1}{n}\gcd(k,n)\exp(\frac{2\pi k}{n})\]
+
+if:$\gcd(a,n)=1,\gcd(b,n)=1$,$\gcd(ab,n)=1$
+\end{document}
+

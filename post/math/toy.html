@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>toy · KomariChika</title>
+<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
+</head>
+<body>
+<header><nav><a href="../../index.html">Home</a></nav></header>
+<main><article>
+<section id="am-gm" class="level3">
+<h3>AM-GM</h3>
+<div class="theorem theorem-box">
+<p><strong>Theorem. </strong></p>
+<p><strong>Theorem 1</strong> (AM-GM). <em>define <span
+class="math inline">x_1,x_2,\cdots,x_i\ge0, w_1,w_2,\cdots&gt;0</span>
+<span
+class="math display">\sum\limits_{i=1}^{n}w_ix_i\ge\prod\limits_{i=1}^{n}x_i^{w_i}</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span
+class="math display">\log(\sum\limits_{i=1}^{n}w_ix_i)\ge\log(\prod\limits_{i=1}^{n}x_i^{w_i})=\sum\limits_{i=1}^{n}w_i\log
+x_i</span> According Jensen’s inequality :<br />
+<span class="math display">f(\sum\limits_i w_ix_i)\ge\sum\limits_i
+w_if(x_i)</span> ◻</p>
+</div>
+</section>
+<section id="yong-inequality" class="level3">
+<h3>Yong inequality</h3>
+<div class="theorem theorem-box">
+<p><strong>Theorem. </strong></p>
+<p><strong>Theorem 2</strong> (Yong inequality). <em>define <span
+class="math inline">p,q&gt;1\land
+\frac{1}{p}+\frac{1}{q}=1,u,v\ge0</span> <span
+class="math display">\frac{u^p}{p}+\frac{v^q}{q}\ge uv</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> when <span class="math inline">u,v=0</span> obviously
+established.<br />
+when <span class="math inline">u,v&gt;0</span>. According Jensen’s
+inequality :<br />
+<span
+class="math display">\frac{1}{p}\log(u^p)+\frac{1}{q}\log(v^q)\le\log(\frac{u^p}{p}+\frac{v^q}{q})</span>
+<span
+class="math display">(u^p)^{\frac{1}{p}}(v^q)^{\frac{1}{q}}\le\frac{u^p}{p}+\frac{v^q}{q}</span> ◻</p>
+</div>
+</section>
+<section id="jacobian" class="level3">
+<h3>Jacobian</h3>
+<p>Consider <span
+class="math inline">f:\mathbf{R^n}\to\mathbf{R^m},n=m</span>, the
+Jacobian’s matrix is be defined as : <span
+class="math display">J_F(x_1,x_2,\cdots,x_n)=\frac{\partial(y_1,y_2,\cdots,y_n)}{\partial(x_1,x_2,\cdots
+x_n)}=
+\begin{pmatrix}
+\frac{\partial y_1}{\partial x_1}&amp;\frac{\partial y_2}{\partial
+x_1}&amp;\cdots&amp;\frac{\partial y_n}{\partial x_1}\\
+\frac{\partial y_1}{\partial x_2}&amp;\frac{\partial y_2}{\partial
+x_2}&amp;\cdots&amp;\frac{\partial y_n}{\partial x_2}\\
+\vdots&amp;\vdots&amp;\vdots\\
+\frac{\partial y_1}{\partial x_n}&amp;\frac{\partial y_2}{\partial
+x_n}&amp;\cdots&amp;\frac{\partial y_n}{\partial x_n}
+\end{pmatrix}</span></p>
+</section>
+</article></main>
+<footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+    </footer>
+</body>
+</html>

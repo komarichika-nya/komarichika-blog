@@ -1,0 +1,102 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true
+}
+\begin{document}
+\subsubsection{Vector space}
+Giving the field $\mathbf{F}$, the vector space $\langle V,+,\cdot,\rangle$ is an nonempty set over the $\mathbf{F}$.It satisfies two operations and axioms.
+\[V\times V\to V\]
+\[F\times V\to V\]
+if $V$ is the vector space over field $\mathbf{F}$, the $W$ is called the $subspace$ when satisfies $W\subseteq V$.
+if:
+\[\vec{0}\in W\land V\land\forall u,v\in W,u+v\in W\land\forall u\in\mathbf{F},\forall k\in W,uk\in W\]
+we say $W$ is vector space over field $\mathbf{F}$.\\
+The trival subspace $S$ is defined as:
+\[\mathrm{subspace}(S):=\mathrm{subspace}(S)\land S=\vec{0}\land S=V\]
+The nontrivial subspace $S$ is defined as:
+\[\mathrm{subspace}(S):=\mathrm(S)\land\mathbf{subspace}(S)/\{0\}\land S/V\]
+if $S$ is a subset of vector space $V$ over field $\mathbf{F}$.
+The S's linear combination $\mathrm{span}(S)$ will be given:
+\[\mathrm{span}(S)=\{a_1v_1+a_2v_2+a_3v_3+\cdots+a_kv_k:v_1,v_2,v_3\cdots\in V,a_1,a_2,a_3\in\mathbf{F},k\in 1,2,3\cdots\}\]
+The linear combination is defined as finite many elements in vector space.\\
+vectors $v_1,v_2,v_3\cdots v_n$ is in vector space $V$ over field $\mathbf{F}$, let $S\subseteq V$,
+we say $S$ is linear dependent if and only if:
+\[\forall n\in\mathbf{N^+},\forall v_1,v_2\cdots v_n\in S,a_1,a_2\cdots a_n\in\mathbf{F}\]
+\[\sum\limits_{i=1}^{n}a_iv_i=0\Rightarrow a_1=a_2=\cdots=a_n\]
+we say $S$ is linear independent if and only if:
+\[\forall n,\forall v_1,v_2\cdots v_n\in S,\exists a_1,a_2\cdots a_n\in\mathbf{F}\]
+\[(\sum\limits_{i=1}^{n}a_iv_i=0)\land\neg(a_1\land a_2\land\cdots\land a_n=0)\]
+let $V$ is the vector space over field $\mathbf{F}$, $S\subseteq V$, we say $S$ is a basis of $V$, if and only if:
+\[\forall n\in\mathbf{N^+}\forall a_1,a_2\cdots\in F,\forall v_1,v_2\cdots S\sum\limits_{i=1}^{n}a_iv_i=0\Rightarrow a_i=0\land\forall v\in V,\mathrm{span}(S)=V\]
+\begin{theorem}
+    let: $\forall V$ is the vector space over field $\mathbb{F}$, $U\subseteq V,W\subseteq V$.
+    \[\dim{U+W}=\dim{U}+\dim{W}-\dim(U\cap W)\]
+\end{theorem}
+\begin{proof}
+    let:\[\dim{U\cap W}=k\]
+    take a set of basis for $U\cap W$:
+    \[\mathcal{B}_0\{e_1,e_2,\cdots,e_k\}\]
+    expanded to bases $U$ and $W$ respectively:
+    \[\mathcal{B}_U\{u_1,u_2,\cdots,u_r\}\]
+    \[\mathcal{B}_W\{w_1,w_2,\cdots,w_m\}\]
+    so:\[\dim{U}=k+r,\dim{W}=k+m,\mathcal{B}=\{e_1,e_2,\cdots,e_n,u_1,u_2,\cdots,u_n,w_1,w_2,\cdots,w_n\}\]
+    \[\forall\mathbf{u}\in U,\mathbf{w}\in W,\mathbf{x}\in U+W,\mathbf{x}=\mathbf{u}+\mathbf{w}\]
+    \[\mathbf{u}\in\mathrm{span}(\mathcal{B}_U),\mathbf{w}\in\mathrm{span}(\mathcal{B}_W)\]
+    \[\mathbf{x}\in\mathrm{span}(\mathcal{B}_U\cup\mathcal{B}_W)\Rightarrow\mathcal{B}_U\cup\mathcal{B_W}\subseteq\mathrm{span}(\mathcal{B})\]
+    \[\mathbf{x}\in\mathrm{span}(\mathcal{B})\]
+    \[U+W\subseteq\mathrm{span}(\mathcal{B})\]
+    \[\mathrm{span}(\mathcal{B})\subseteq U+W\]
+    \[U+W=\mathrm{span}(\mathcal{B})\]
+    suppose:
+    \[\exists \{e_1,e_2,\cdots,e_k\},\{u_1,u_2,\cdots,u_r\},\{w_1,w_2,\cdots,w_m\}\]
+    \[\sum\limits_{i=1}^{k}a_ie_i+\sum\limits_{j=1}^{r}b_ju_j+\sum\limits_{l=1}^{m}c_lw_l=0\]
+    \[\sum\limits_{i=1}^{k}a_ie_i+\sum\limits_{j=1}^{r}b_ju_j=-\sum\limits_{l=1}^{m}c_lw_l\]
+    \[e_i,u_j\in U,w_l\in W\Rightarrow\sum\limits_{i=1}^{k}a_ie_i+\sum\limits_{j=1}^{r}b_ju_j\in U\cap W\]
+    because of: $U\cap W\in\mathrm{span}(\mathcal{B}_0)$, so:$\exists\{d_1,d_2,\cdots,d_k\}$ satisfies:
+    \[\sum\limits_{i=1}^{k}a_ie_i+\sum\limits_{j=1}^{r}b_ju_j=\sum\limits_{i=1}^{k}d_ie_i\]
+    \[\sum\limits_{i=1}^{k}(a_i-d_i)e_i+\sum\limits_{j=1}^{r}b_ju_j=0\]
+    because of $\{e_1,e_2,\cdots,e_k,u_1,u_2,\cdots,u_r\}$ is the base of $U$.
+    so:\[a_i-d_i=0,b_j=0\]\[\sum\limits_{i=1}^{k}a_ie_i+\sum\limits_{l=1}^{m}c_l+w_l=0\] 
+    because of $\{e_1,e_2,\cdots,e_k,w_1,w_2,\cdots,w_r\}$ is the base of $W$.
+    so:\[a_i=0,c_l=0\]
+    so:$\mathcal{B}$ is linear dependent.
+    \[\dim(U+W)=k+r+m=\dim(U)+\dim(W)-\dim(U\cap W)\]
+\end{proof}
+\begin{theorem}
+    let: $\forall V$ is the vector space over field $\mathbb{F}$, $\forall U\subseteq V$.
+    \[\dim(\sum\limits_{i=1}^{n}U_i)=\sum\limits_{k=1}^{n}\dim(U_k)-\sum\limits_{k=2}^{n}\dim(U_k\cap\sum\limits_{i=1}^{k-1}U_i)\]
+\end{theorem}
+\begin{proof}
+    when $n=1$:
+    \[\dim(U_1)=\dim(U_1)\]
+    suppose $n=k$
+    \[\dim(\sum\limits_{i=1}^{k}U_i)=\sum\limits_{i=1}^{k}\dim{U_i}-\sum\limits_{j=2}^{k}(\dim U_j\cap\sum\limits_{i=1}^{j-1}U_i)\]
+    when $n=k+1$
+    \[\dim(\sum\limits_{i=1}^{k+1}U_i)=\sum\limits_{i=1}^{k}\dim{U_i}+\dim{U_{k+1}}-\sum\limits_{j=2}^{k}(\dim{U_j}\cap\sum\limits_{i=1}{j-1}U_i)-(\dim{U_{j+1}}\cap\sum\limits_{i=1}^{j}U_j)\]
+    \[\dim(\sum\limits_{i=1}^{k+1}U_i)=\dim(\sum\limits_{i=1}^{k}U_i)+\dim{U_{k+1}}-\dim({U_{j+1}\cap\sum\limits_{i=1}^{j}}U_i)\]
+    \[\dim(\sum\limits_{i=1}^{k+1}U_i)=\dim(\sum\limits_{i=1}^{k+1}U_i)-\dim({U_{j+1}\cap\sum\limits_{i=1}^{j}}U_i)\]
+\end{proof}
+\end{document}
+
+
+
+
+
+
+

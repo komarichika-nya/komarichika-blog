@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>order · KomariChika</title>
+<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
+</head>
+<body>
+<header><nav><a href="../../index.html">Home</a></nav></header>
+<main><article>
+<div class="theorem theorem-box">
+<p><strong>Theorem. </strong></p>
+<p><strong>Theorem 1</strong> (smn). <em><span
+class="math display">\forall n,m\ge 1,\exists
+s_n^m:\mathbb{N}^{m+1}\to\mathbb{N},\forall e,x_1,\cdots
+x_m,y_1,y_2,\cdots y_n\in\mathbb{N}</span> <span
+class="math display">\Phi_{{s_n^m}(e_,x_1,x_2,\cdots,x_m)}^n(y_1,\cdots,y_n)\simeq\Phi_{e}^{m+n}(x_1,\cdots,x_m,y_1,\cdots,y_n)</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> let: <span
+class="math display">\langle\cdot,\cdot\rangle\to\mathbb{N}^2\to\mathbb{N},m\ge
+1</span> <span class="math display">\langle
+x_1,\cdots,x_m\rangle=\langle x_1,\langle x_2,\cdots,\langle
+x_{m-1},x_m\rangle\cdots\rangle\rangle</span> <span
+class="math display">\Phi_e^k(x_1,x_2,\cdots,x_m)\simeq\Phi_e(\langle
+x_1,x_2,\cdots,x_m\rangle)</span> when <span
+class="math inline">n=1,m=0</span> <span
+class="math display">s_1^0=e</span> <span
+class="math display">s_1^{k+1}(e,x_1,x_2,\cdots,x_{k+1})=s(s_1^k(e,x_1,x_2,\cdots,x_k),x_{k+1})</span>
+so:<span
+class="math display">\Phi_{s_1^m(e,\vec{x})}^1(\vec{y})\simeq\Phi_{s_1^m}^1(\langle\vec{x},y\rangle)</span>
+<span
+class="math display">\Phi_{s_n^m}^1(\langle\vec{x},y_1,\cdots,y_n\rangle):=\Phi_{s_1^m}^1(\langle\vec{x},y\rangle)</span> ◻</p>
+</div>
+</article></main>
+<footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+    </footer>
+</body>
+</html>

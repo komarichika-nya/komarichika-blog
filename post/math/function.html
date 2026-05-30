@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>function · KomariChika</title>
+<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
+</head>
+<body>
+<header><nav><a href="../../index.html">Home</a></nav></header>
+<main><article>
+<section id="function" class="level1">
+<h1>function</h1>
+<p>A function <span class="math inline">f</span> set <span
+class="math inline">X\to Y</span> is an assignment of one element <span
+class="math inline">Y</span> to each of element <span
+class="math inline">X</span>.<br />
+A function <span class="math inline">f</span> is called <span
+class="math inline">total</span> if and only if : <span
+class="math display">\forall x\in X,\exists y\in Y,(x,y)\in f</span>
+<span class="math display">\forall x\in X,\exists y_1,y_2\in
+Y,((x,y_1)\in f\land(x,y_2)\in f)\to y_1=y_2</span></p>
+<p>A function <span class="math inline">f</span> is called <span
+class="math inline">partial</span> if and only if : <span
+class="math display">\forall x\in X,\forall y_1,y_2\in Y,((x,y_1)\in
+f\land(x,y_2\in f))\to y_1=y_2</span> <span
+class="math display">dom(f)=\{x\in X|\exists y\in Y,(x,y)\in
+f\}\subseteq X</span> <span class="math display">ran(f)=\{y\in Y|\exists
+x\in X,(x,y)\in f\}\subseteq Y</span></p>
+<p>Give two functions <span class="math inline">f,g</span>, the domain
+are <span class="math inline">X_f,X_g</span>, the range are <span
+class="math inline">Y_f,Y_g</span>, the composite function will be given
+by: <span class="math display">g\circ f:\{(x,z)|(\exists y\in Y_f\cap
+X_g)[y=f(x)\land z=g(y)]\}</span></p>
+<div class="theorem theorem-box">
+<p><strong>Theorem. </strong></p>
+<p><strong>Theorem 1</strong>. <em>if <span class="math inline">f: X\to
+Y,g: Y\to Z</span>, <span class="math inline">f,g</span> are full,<span
+class="math inline">g\circ f: X\to Z</span> is full.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Because of <span class="math inline">f,g</span> are
+full, so: <span class="math display">\forall x\in X,\exists y\in
+Y,(x,y)\in f</span> <span class="math display">\forall y\in Y,\exists
+z\in Z,(y,z)\in g</span> <span class="math display">(g\circ
+f)(x)=g(f(x)),\forall x\in X</span> ◻</p>
+</div>
+<p>I have a question here: <span class="math inline">\forall g\circ
+f</span> is full, <span class="math inline">f</span> is full? <span
+class="math inline">g</span> is full?<br />
+A function is called injective if and only if: <span
+class="math display">\forall x,x&#39;,y,\{((x,y)\in f\land (x&#39;,y)\in
+f)\to x=x&#39;\}</span> A function is called surjective if and only if:
+<span class="math display">\forall y\in Y,\exists x\in X,f(x)=y</span> A
+function is called bijective if and only if: <span
+class="math display">\forall x_1,x_2\in X,f(x_1)=f(x_2)\Rightarrow
+x_1=x_2</span></p>
+</section>
+<section id="complutable-function" class="level1">
+<h1>Complutable function</h1>
+<p>Define: <span class="math display">f:X\to \Sigma^*</span> we say
+<span class="math inline">f</span> is complutable if and only if: <span
+class="math display">\exists P,\forall x\in X,f(x)\downarrow=P(x)</span>
+where <span class="math inline">P</span> is any program.</p>
+<div class="theorem theorem-box">
+<p><strong>Theorem. </strong></p>
+<p><strong>Theorem 2</strong>. <em><span class="math display">\exists
+P^*,\forall x\in X,f(x)\downarrow=P(x)=P^*(x)</span></em></p>
+</div>
+<section id="primitive-function" class="level3">
+<h3>primitive function</h3>
+<p>The primitive function class <span
+class="math inline">\mathcal{P}</span> are given: <span
+class="math display">Z:\mathbb{N}\to\mathbb{N},Z(x)=0</span> <span
+class="math display">S:\mathbb{N}\to\mathbb{N},S(x)=x+1</span> <span
+class="math display">P:\mathbb{N}^n\to\mathbb{N},P_{i}^{n}(x_1,x_2,\cdots,x_n)=x_i,i\in[1,n]</span>
+if <span
+class="math inline">g,h:\mathbb{N}^m\to\mathbb{N},f:\mathbb{N}^k\to\mathbb{N}\in\mathcal{P}</span>,
+the composition is defined as: <span
+class="math display">f(x_1,x_2,\cdot
+x_k)=g(h_1(x_1,x_2,\cdots,x_m),\cdots
+h_m(x_1,x_2,\cdots,x_m))</span></p>
+<div class="lemma theorem-box">
+<p><strong>Lemma. </strong></p>
+<p><strong>Lemma 3</strong>. <em>Define <span
+class="math inline">f:D_f\to R_f,g:D_g\to R_g</span>, if <span
+class="math inline">g</span> is not complutable directly, <span
+class="math inline">\exists f</span> which is complutable illsorm to
+<span class="math inline">g</span> if and only if <span
+class="math display">\exists\alpha:D_f\to R_f\land\forall x_1,x_2\in
+D_f,\alpha(x_1)=\alpha(x_2)\Rightarrow x_1=x_2\land\exists\beta:D_g\to
+R_g\land\forall x_1,x_2\in D_g,\beta(x_1)=\beta(x_2)\Rightarrow
+x_1=x_2</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span class="math display">\forall x\in D_g,y\in R_g
+g(y)=\beta(x)f(x)\alpha^{-1}(x)</span> ◻</p>
+</div>
+<div class="theorem theorem-box">
+<p><strong>Theorem. </strong></p>
+<p><strong>Theorem 4</strong> (smn). <em><span
+class="math display">\forall n,m\ge 1,\exists
+s_n^m:\mathbb{N}^{m+1}\to\mathbb{N},\forall e,x_1,\cdots
+x_m,y_1,y_2,\cdots y_n\in\mathbb{N}</span> <span
+class="math display">\Phi_{{s_n^m}(e_,x_1,x_2,\cdots,x_m)}^n(y_1,\cdots,y_n)\simeq\Phi_{e}^{m+n}(x_1,\cdots,x_m,y_1,\cdots,y_n)</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> let: <span
+class="math display">\langle\cdot,\cdot\rangle\to\mathbb{N}^2\to\mathbb{N},m\ge
+1</span> <span class="math display">\langle
+x_1,\cdots,x_m\rangle=\langle x_1,\langle x_2,\cdots,\langle
+x_{m-1},x_m\rangle\cdots\rangle\rangle</span> <span
+class="math display">\Phi_e^k(x_1,x_2,\cdots,x_m)\simeq\Phi_e(\langle
+x_1,x_2,\cdots,x_m\rangle)</span> when <span
+class="math inline">n=1,m=0</span> <span
+class="math display">s_1^0=e</span> <span
+class="math display">s_1^{k+1}(e,x_1,x_2,\cdots,x_{k+1})=s(s_1^k(e,x_1,x_2,\cdots,x_k),x_{k+1})</span>
+so:<span
+class="math display">\Phi_{s_1^m(e,\vec{x})}^1(\vec{y})\simeq\Phi_{s_1^m}^1(\langle\vec{x},y\rangle)</span>
+<span
+class="math display">\Phi_{s_n^m}^1(\langle\vec{x},y_1,\cdots,y_n\rangle):=\Phi_{s_1^m}^1(\langle\vec{x},y\rangle)</span> ◻</p>
+</div>
+</section>
+</section>
+</article></main>
+<footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+    </footer>
+</body>
+</html>

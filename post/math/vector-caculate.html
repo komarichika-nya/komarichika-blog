@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vector-caculate · KomariChika</title>
+<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
+</head>
+<body>
+<header><nav><a href="../../index.html">Home</a></nav></header>
+<main><article>
+<p>div <span class="math display">\vec{n}=\vec{u}\times\vec{v}</span>
+<span class="math display">\vec{u}=iu_x+k(\frac{\partial F}{\partial
+x})u_x</span> <span class="math display">\vec{v}=jv_y+k(\frac{\partial
+F}{\partial y})v_y</span> <span
+class="math display">\vec{u}\times\vec{v}=(-i\frac{\partial F}{\partial
+x}-j\frac{\partial F}{\partial y}+k)u_xu_y</span> <span
+class="math display">normalize(n)=\frac{-i\frac{\partial F}{\partial
+x}-j\frac{\partial F}{\partial y}+k}{\sqrt{1+(\frac{\partial F}{\partial
+x})^2+ (\frac{\partial F}{\partial y})^2}}</span></p>
+<p><span class="math display">\int\int\int_V\rho(x,y,z,t)dV</span> <span
+class="math display">\frac{d}{dt}\int\int\int_V\rho(x,y,z,t)dV</span>
+<span class="math display">=\int\int\int_V\frac{\partial \rho}{\partial
+t}dV=-\int\int_S\rho v\cdot ndS</span> <span
+class="math display">\int\int\int_V\frac{\partial\rho}{\partial
+t}dV=-\int\int\int_V\nabla\cdot(\rho v)dV</span> <span
+class="math display">\frac{\partial\rho}{\partial t}=-\nabla\cdot(\rho
+v)</span> <span class="math display">\frac{\partial\rho}{\partial
+t}+\nabla\cdot\rho v=0</span></p>
+<p>some relationship with Gauss’s law.</p>
+<p><span
+class="math display">\int\int_SE\cdot\vec{n}dS=\frac{1}{\varepsilon_0}\int\int\int_V\rho
+dV</span> <span class="math display">\int\int\int_V\nabla\cdot
+EdV=\int\int\int_V\frac{\rho}{\varepsilon_0}dV</span> <span
+class="math display">\nabla\cdot E=\frac{\rho}{\varepsilon_0}</span>
+more style in 2-d version:</p>
+<p><span class="math display">\int\int_A\nabla\cdot
+FdA=\int_SF\cdot\vec{n}dS</span> <span
+class="math display">F(x,y)=(P(x,y),Q(x,y))</span> <span
+class="math display">\nabla\cdot F=\frac{\partial P}{\partial
+x}+\frac{\partial Q}{\partial y}</span> <span
+class="math display">\vec{n}=\begin{pmatrix}0&amp;-1\\1&amp;0\end{pmatrix}\begin{pmatrix}dx\\dy\end{pmatrix}</span>
+<span
+class="math display">c{n}=(dy,-dx)\\[10pt]F\cdot\vec{n}=Pdx-Qdy</span>
+<span class="math display">\int\int_A(\frac{\partial P}{\partial
+x}+\frac{\partial Q}{\partial y})dA=\int(Pdx-Qdy)</span></p>
+<p>It’s Green’s theorem.Just the 2-d version Divergence Theorem.</p>
+<p>curl</p>
+<p>the curl can be defined:</p>
+<p><span class="math display">(\nabla\times F)\cdot\vec{n}=\lim_{\Delta
+S\to0}\frac{1}{\Delta S}\oint F\cdot\vec{t}d\Delta r</span></p>
+<p>In Cartesian coordinate:</p>
+<p><span class="math display">cur F=\nabla\times
+F=\begin{vmatrix}i&amp;j&amp;k\\\frac{\partial F_x}{\partial
+x}&amp;\frac{\partial F_y}{\partial y}&amp;\frac{\partial F_z}{\partial
+z}\\xz&amp;yz&amp;-y^2\end{vmatrix}</span></p>
+<p>In cylindrical coordinate:</p>
+<p><span
+class="math display">\int_{c_1}D\cdot\vec{t}ds=F(r,\theta-\frac{\Delta\theta}{2},z)\Delta
+r</span> <span
+class="math display">-\int_{c_3}F\cdot\vec{t}ds=-F(r,\theta+\frac{\theta}{2},z)\Delta
+r</span></p>
+</article></main>
+<footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,7 @@
+!index.html
+/tmp/
+*.aux
+*.log
+*.pdf
+*.synctex.gz
+.DS_Store

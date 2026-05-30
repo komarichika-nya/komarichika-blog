@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width", initial-sale="1.0", maximum-sale="5">
+    <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer
+        src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer
+        src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$',  right: '$',  display: false},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false}
+          ],
+          throwOnError: false
+        });"></script>
+        <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.10.0/build/styles/tokyo-night-dark.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.10.0/build/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+    <title>KomariChika❤️</title>
+    <link rel="stylesheet" href="../../s1.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="../../index.html">Home</a>
+        </nav>
+    </header>
+    <main>
+        <article>
+            <h1>ray tracing</h1>
+            <p>
+Rasterization maps objects in a 3D scene onto a 2D screen, while ray tracing maps 2D pixels onto a 3D screen.
+
+Let's first look at rasterization. How does it map objects in a 3D scene onto a 2D screen? An important transformation is called the MVP (Model, View, Projection) transformation.
+
+Let's derive the MVP matrix in detail:
+
+First, we can define the matrix product like this:
+</p>
+<!--kg-card-end: html-->
+<pre><code class="language-cpp">struct M4{float m[4][4];M4(){int x,y;for(x=0;x&lt;4;x++)for(y=0;y&lt;4;y++)m[x][y]=0;m[0][0]=m[1][1]=m[2][2]=m[3][3]=1.0;}
+    inline vec4 operator*(const vec4&amp;v){return{m[0][0]*v.x+m[0][1]*v.y+m[0][2]*v.z+m[0][3]*v.w,
+    m[1][0]*v.x+m[1][1]*v.y+m[1][2]*v.z+m[1][3]*v.w,m[2][0]*v.x+m[2][1]*v.y+m[2][2]*v.z+m[2][3]*v.w,
+    m[3][0]*v.x+m[3][1]*v.y+m[3][2]*v.z+m[3][3]*v.w};}
+    inline M4 operator*(const M4&amp;b){int x,y;M4 ans;for(x=0;x&lt;4;x++)for(y=0;y&lt;4;y++){
+    ans.m[x][y]=m[x][0]*b.m[0][y]+m[x][1]*b.m[1][y]+m[x][2]*b.m[2][y]+m[x][3]*b.m[3][y];}return ans;}};
+</code></pre>
+<p>A camera is essential in any scene; all our observations begin with it. Here, we establish a standard right-handed coordinate system with the default viewpoint towards the -z axis and the y-axis at the top. We use R (right), U (up), and F (front) to represent the three directions of the camera. Let's define the camera's coordinate system, including the rotation section:</p>
+<!--kg-card-begin: html-->
+<p>
+$$
+R=\begin{pmatrix}R_x&R_y&R_z&0\\U_x&U_y&U_z&0\\-F_x&-F_y&-F_z&0\\0&0&0&1\end{pmatrix}
+$$
+
+Translation part: If the camera is at world coordinates $P$, then:
+
+$$
+T=\begin{pmatrix}1&0&0&-P_x\\0&1&0&-P_y\\0&0&1&-P_z\\0&0&0&1\end{pmatrix}
+$$
+
+The coordinate system of all cameras can be defined as:
+
+$$ V=R*T=\begin{pmatrix}R_x&R_y&R_z&-dot(R,P)\\U_x&U_y&U_z&-dot(U,P)\\-F_x&-F_y&-F_z&dot(F,P)\\0&0&0&1\end{pmatrix}
+$$
+
+We can then define a camera class like this:
+</p>
+<!--kg-card-end: html-->
+<pre><code class="language-cpp">struct C{vec3 R,U,P,F;C(vec3 p):P(p){U={0,1.0,0};F={0,0,-1.0};upd();}void upd(){F=nor(F);
+R=nor(cs(F,U));}void FA(float d){P=P+F*d;}void BA(float d){P=P-F*d;}
+void LE(float d){P=P-R*d;}void RI(float d){P=P+R*d;}void obj(vec3 p){F=nor(p-P);
+R=nor(cs(F,vec3{0,1.0,0}));U=nor(cs(R,F));}M4 V(){M4 v;
+v.m[0][0]=R.x;v.m[0][1]=R.y;v.m[0][2]=R.z;v.m[1][0]=U.x;v.m[1][1]=U.y;v.m[1][2]=U.z;
+v.m[2][0]=-F.x;v.m[2][1]=-F.y;v.m[2][2]=-F.z;v.m[0][3]=-dot(R,P);v.m[1][3]=-dot(U,P);v.m[2][3]=dot(F,P);return v;}};</code></pre>
+<!--kg-card-begin: html-->
+<p>
+Using the $V$ matrix, we successfully brought the world to the camera's view. However, since the screen is 2D and the world is 3D, we need a transformation to map the 3D to 2D.
+
+Therefore, we can define a matrix like this:
+
+$$
+\begin{pmatrix}\frac{1}{a\tan\frac{\alpha}{2}}&0&0&0\\0&\frac{1}{\tan\frac{\alpha}{2}}&0&0\\0&0&\frac{f+n}{f-n}&\frac{-2.0*f*n}{f-n}\\0&0&-1.0&0\end{pmatrix}
+
+$$
+Here, $\alpha$ refers to the field of view (fov). We use the tangent value to scale the field of view, but after scaling $x$ and $y$, the depth $z$ remains distorted. We hope to find two constants $a$ and $b$ to correct the depth $z$. Let $n$ be the approach point and $f$ be the apogee.
+
+$$
+z'=\frac{a*z+b}{-z}
+$$
+
+$$
+-1=\frac{a*n+b}{-n}\\[10pt]1=\frac{a*f+b}{-f}\\[10pt]A=\frac{f+n}{f-n},B=\frac{-2.0*f*n}{f-n}
+$$
+
+Now that we've finally brought the world to the camera, let's begin rendering!!!
+</p>
+<!--kg-card-end: html-->
+
+<!--kg-card-begin: html-->
+<p>
+Triangle Traversal
+
+For a point inside the triangle, satisfying: $P(u,v)=(1-u-v)p_0+up_1+vp_2$, simplifying:
+
+$$
+u(p_1-p_0)+v(p_2-p_0)+p_0-P(u,v)=0\\[10pt]dot([u,v,1],[p_1-p_0,p_2-p_0,p_0-P(u,v)])
+$$
+
+Calculate the dot product, then divide by zero to prevent it from spreading out.
+
+Ray Tracing
+
+Ray tracing: The general idea is to emit a ray from the camera; if it hits a triangle, it's rendered. For each pixel, how do we know where the ray went? Simply multiply by $(P*V)^{-1}$.
+
+$$
+(P*V)^{-1}=V^{-1}*P^{-1}\\[10pt]V^{-1}=\begin{pmatrix}R_x&R_y&R_z&0\\U_ x&U_y&U_z&0\\-F_x&-F_y&-F_z&0\\P_x&P_y&P_z&1.0\end{pmatrix}\\[10pt]P^{-1 }=\begin{pmatrix}a\tan\frac{\alpha}{2}&0&0&0\\0&\tan\frac{\alpha}{2}&0&0\\0&0&0&-1.0\\0&0&-\frac{f-n}{2.0*f*n}&\frac{f+n}{2.0*f*n}\end{pmatrix}
+$$
+
+$$
+(P*V)^{-1}=V^{-1}*P^{-1}\\[10pt]V^{-1}=\begin{pmatrix}R_x&R_y&R_z&0\\U_x&U_y&U_z&0\\-F_x&-F_y&-F_z&0\\P_x&P_y&P_z&1.0\end{pmatrix}\\[10pt]P^{-1}=\begin{pmatrix}a\tan\frac{\alpha}{2}&0&0&0\\0&\tan\frac{\alpha}{2}&0&0\\0&0&0&-1.0\\0&0&-\frac{f-n}{2.0*f*n}&\frac{f+n}{2.0*f*n}\end{pmatrix}
+$$
+
+Let's define a ray $P(t) = o + t * d$. The problem is, for each ray, we need to traverse every triangle, which would be incredibly complex. We need to optimize this; there are many methods, such as k-d trees and BVH (Bounded Value Hierarchy). Here's a BVH implementation: The basic idea is to divide the object into a bounding box aligned to the aabb axis. When reaching a leaf node, we insert the object's triangle into it. During traversal, we only need to check if the bounding box contains anything; if not, we return directly.
+
+Specifically, we define the aabb bounding box and maintain the coordinates of the bottom left and top right. We define the time for the ray to travel from $o$ to $d$ as $\frac{P(t) - o}{d}$. The check calculates the time difference between the ray entering and leaving the bounding box. The latest entry time is greater than the earliest exit time.
+
+$$
+[tmn,tmx]=[tx_1,tx_2]\cap[ty_1,ty_2]\cap[tz_1,tz_2]
+$$
+
+To build, call the following function.
+</p>
+<!--kg-card-end: html-->
+
+<!--kg-card-begin: html-->
+<p>
+When the light ray hits the triangle, the following condition is satisfied:
+$$
+o+t*d=(1-u-v)A+uB+vC\\[10pt]o-A=u(B-A)+v(C-A)-t*d
+$$
+Let $T=o-p_0,S_1=B-A,S_2=C-A$, then it can be written as:
+
+$$
+T=\begin{bmatrix}S_1&S_2&-d\end{bmatrix}\begin{bmatrix}u\\v\\t\end{bmatrix}
+$$
+
+According to Cramer's rule, for $Ax=B$, we have $\frac{\det(A_i)}{\det(A)}$, where $A_i$ is the matrix obtained by swapping $B$ to this column. Therefore:
+$$
+let:Det(\begin{bmatrix}S_1&S_2,-d\end{bmatrix})\\[10pt]
+$$
+
+$$
+u=\frac{\det(\begin{bmatrix}T&S_2&-d\end{bmatrix})}{Det}=\frac{dot(cross(T,S_1),-d)}{Det}\\[10pt]
+v=\frac{\det(\begin{bmatrix}S_1&T&-d\end{bmatrix})}{Det}=\frac{dot(cross(S_1,T),-d)}{Det}\\[10pt]
+t=\frac{\det(\begin{bmatrix}S_1&S_2&T\end{bmatrix})}{Det}=\frac{dot(cross(S_1,S_2),T)}{Det}\\[10pt]
+$$
+  
+If and only if the following condition is met:
+
+$$
+u<0\lor u>1\lor v<0\lor u+v>1\lor t< eps
+$$
+
+is not valid. Note the back face culling here; it's best not to perform back face culling before knowing the direction of the triangle's wrapping.
+</p>
+<!--kg-card-end: html-->
+<p>For clarity, I will put all the code at the end.</p>
+<!--kg-card-begin: html-->
+<p>
+Below,I will introduce sereval optimization methods.All optimization are base on suface area heuristic.It can be expressed by the geometric probability model,let $N$ represents the parents node and $N_c$ represents the child node,$Sa(N)$ represents the suface area of bounding box of node $N$ so:
+
+$$
+P(N_c|N)=\frac{Sa(N_c)}{Sa(N)}
+$$
+The efficiency of BVH can be measured by the expected number of times the nearest intersection point is found for given ray.
+$$
+c(N)=\begin{cases}c_T+\sum\limits_{N_c}P(N_c|N)c(N_c)&\text{N is interior node}\\c_I|N|&\text{otherwise}\end{cases}
+$$
+$c_T$ is traversal cost(You can be understood as the cost required to determine whether light pass the box.), $c_I$ is intersection cost,$N$ is the number of primitives.we can solve these equations simultaneosly.so:
+$$
+c(N)=c_T+\sum\limits_{N_c}\frac{Sa(N_c)}{Sa_{N}}(c_T+\sum\limits_{N_{gc}}\frac{Sa({N_{gc})}}{Sa({N_c})}c(N_{gc}))\\=c_T+\sum\limits_{N_c}c_T\frac{Sa(N_c)}{Sa(N)}+\sum\limits_{N_c}\sum\limits_{N_{gc}}\frac{Sa(N_{gc})}{Sa(N))}c(N_{gc})\\=\frac{1}{Sa(N)}(c_TSa(N)+\sum\limits_{N_c}c_TSa(N_c)+\sum\limits_{N_c}\sum\limits_{N_{gc}}Sa(N_{gc})c(N_{gc}))
+$$
+
+Observed $\forall N_i,N_i\notin leaf$,It will be donated $\frac{c_TSa(N_i)}{Sa(N)}$，when we arrive leaf the donatition is $\frac{c_T|N_{leaf}|Sa(N_{leaf})}{Sa(N)}$.We can divide all nodes into two parts.We define interior nodes,say $N_i$ and leaf nodes,say $N_{leaf}$,so we can get:
+
+$$
+c(N)=\frac{1}{Sa(N)}(c_T\sum\limits_{N_i}Sa(N_i)+c_I\sum\limits_{N_{leaf}}Sa(N_{leaf})|N_{leaf}|)
+$$
+
+The important thing is $\frac{c_T}{c_I}$ ,when $c_T>c_I$,that means you must redece the levels.Silmarily $c_T< c_I$，you must increase levels.
+
+SAH
+So we find the equation.Obviously,$\min(c(N))$ is a NP-hard problem.We can construct an approximate solution.
+
+The core idea of SAH is all rays are random and uniform in sence and the probability of hitting ourer node and inner node at same time is equal to the ratio of their areas.So we can construct the cost equation.
+
+$$
+c(split)=c_T+\frac{Sa(L)}{Sa(P)}\cdot c_I\cdot N(L)+\frac{Sa(R)}{Sa(P)}\cdot c_I\cdot N(R)
+$$
+The expect time complexly is $O(n\log n)$.
+
+RDH is another hesurtic function. The plane will be splitted in two parts.say $l,r$. The main idea we can calculate the probability that the ray pass through left and right parts and then estimate the probability that the ray pass through the whole space.At this,we discuss is the number of rays not square.
+
+$$
+P_{l|r}=\frac{|C_{l|r}|}{|C|}\\[10pt]c=c_T+ c_I(P_l|N_L|+P_r|R|)
+$$
+</p>
+<!--kg-card-end: html-->
+<pre><code class="language-cpp">//for test rasterization
+#include&lt;bits/stdc++.h&gt;
+// #pragma omp parallel for schedule(dynamic)
+#pragma GCC optimize("inline")
+#pragma GCC optimize("Ofast,no-stack-protector,fast-math",3)
+#define fs(x) fixed&lt;&lt;setprecision(x)
+#pragma GCC optimize(3)
+#pragma GCC optimize("Ofast")
+using namespace std;
+#define N 1&lt;&lt;20
+struct vec3{float x,y,z;vec3():x(0),y(0),z(0){};
+vec3(float x1,float y1,float z1):x(x1),y(y1),z(z1){};};
+mt19937_64 rg(random_device{}());
+uniform_real_distribution&lt;double&gt;dis(0.0,1.0);
+struct vec4{float x,y,z,w;vec4(){};vec4(float X,float Y,float Z,float W):x(X),y(Y),z(Z),w(W){};};
+inline vec3 operator*(const vec3&amp;b,float a){return{b.x*a,b.y*a,b.z*a};}
+inline vec3 operator*(float a,const vec3&amp;b){return{b.x*a,b.y*a,b.z*a};}
+inline vec3 operator+(const vec3&amp;a,const vec3&amp;b){return{a.x+b.x,a.y+b.y,a.z+b.z};}
+inline vec3 operator+(const vec3&amp;a,float b){return{a.x+b,a.y+b,a.z+b};}
+inline vec3 operator/(const vec3&amp;b,float a){return{b.x/a,b.y/a,b.z/a};}
+inline vec3 operator/=(vec3&amp;b,float a){b.x/=a,b.y/=a,b.z/=a;return{b.x,b.y,b.z};}
+inline vec3 operator-(const vec3&amp;a){return{-a.x,-a.y,-a.z};}
+inline vec3 operator-(const vec3&amp;a,const vec3&amp;b){return{a.x-b.x,a.y-b.y,a.z-b.z};}
+inline vec3 operator-(const vec3&amp;b,float a){return{b.x-a,b.y-a,b.z-a};}
+inline vec4 operator+(const vec4&amp;a,const vec4&amp;b){return{a.x+b.x,a.y+b.y,a.z+b.z,a.w+b.w};}
+float dot(const vec3&amp;a,const vec3&amp;b){return a.x*b.x+a.y*b.y+a.z*b.z;}
+float len(const vec3&amp;a){return sqrt(a.x*a.x+a.y*a.y+a.z*a.z);}
+vec3 nor(const vec3&amp;a){return a/len(a);}
+float ckabs(float a){return a&gt;0?a:-a;}
+vec3 vabs(const vec3&amp;a){return{ckabs(a.x),ckabs(a.y),ckabs(a.z)};}
+vec3 vmax(const vec3&amp;a,float b){return{max(a.x,b),max(a.y,b),max(a.z,b)};}
+vec3 out(vec3 d,vec3 n){return d-2.0f*n*dot(d,n);}
+vec3 cs(const vec3&amp;a,const vec3&amp;b){return{a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x};}
+struct M4{float m[4][4];M4(){int x,y;for(x=0;x&lt;4;x++)for(y=0;y&lt;4;y++)m[x][y]=0;m[0][0]=m[1][1]=m[2][2]=m[3][3]=1.0;}
+inline vec4 operator*(const vec4&amp;v){return{m[0][0]*v.x+m[0][1]*v.y+m[0][2]*v.z+m[0][3]*v.w,
+m[1][0]*v.x+m[1][1]*v.y+m[1][2]*v.z+m[1][3]*v.w,m[2][0]*v.x+m[2][1]*v.y+m[2][2]*v.z+m[2][3]*v.w,
+m[3][0]*v.x+m[3][1]*v.y+m[3][2]*v.z+m[3][3]*v.w};}
+inline M4 operator*(const M4&amp;b){int x,y;M4 ans;for(x=0;x&lt;4;x++)for(y=0;y&lt;4;y++){
+ans.m[x][y]=m[x][0]*b.m[0][y]+m[x][1]*b.m[1][y]+m[x][2]*b.m[2][y]+m[x][3]*b.m[3][y];}return ans;}};
+struct C{vec3 R,U,P,F;C(vec3 p):P(p){U={0,1.0,0};F={0,0,-1.0};upd();}void upd(){F=nor(F);
+R=nor(cs(F,U));}void FA(float d){P=P+F*d;}void BA(float d){P=P-F*d;}
+void LE(float d){P=P-R*d;}void RI(float d){P=P+R*d;}void obj(vec3 p){F=nor(p-P);
+R=nor(cs(F,vec3{0,1.0,0}));U=nor(cs(R,F));}M4 V(){M4 v;
+v.m[0][0]=R.x;v.m[0][1]=R.y;v.m[0][2]=R.z;v.m[1][0]=U.x;v.m[1][1]=U.y;v.m[1][2]=U.z;
+v.m[2][0]=-F.x;v.m[2][1]=-F.y;v.m[2][2]=-F.z;v.m[0][3]=-dot(R,P);v.m[1][3]=-dot(U,P);v.m[2][3]=dot(F,P);return v;}};
+M4 getP(float fov,float a,float n,float f){M4 ans;int x;for(x=0;x&lt;4;x++)ans.m[x][x]=0;
+float rad=tan((fov*3.1415926535/180.0)/2.0);ans.m[0][0]=1.0/(rad*a);ans.m[1][1]=1.0/rad;
+ans.m[2][2]=-(f+n)/(f-n);ans.m[2][3]=-(2.0*f*n)/(f-n);ans.m[3][2]=-1.0;
+ans.m[3][3]=0;return ans;}int fps=60;
+const int w=1960,h=1080;vec4 P1[N];float img[5000][5000],buf[5000][5000];int f[1000000][3];vec4 pt[N];vec3 vn[N];vec3 ray=nor(vec3(1.0,1.0,1.0));
+vec3 bar(vec4 a,vec4 b,vec4 c,vec4 d){vec3 v1(c.x-a.x,b.x-a.x,a.x-d.x),v2(c.y-a.y,b.y-a.y,a.y-d.y);
+vec3 u=cs(v1,v2);if(ckabs(u.z)&lt;1.0)return vec3(-1.0,1.0,1.0);return vec3(1.0-(u.x+u.y)/u.z,u.y/u.z,u.x/u.z);}
+void fill(vec4 p1,vec4 p2,vec4 p3,float c1,float c2,float c3){float mnx=max(0.0f,min({p1.x,p2.x,p3.x})),mxx=min(float(w-1),max({p1.x,p2.x,p3.x}));
+float mny=max(0.0f,min({p1.y,p2.y,p3.y})),mxy=min(float(h-1),max({p1.y,p2.y,p3.y}));
+int x,y;for(x=mnx;x&lt;=mxx;x++)for(y=mny;y&lt;=mxy;y++){vec4 cur={x,y,0,0};vec3 ck=bar(p1,p2,p3,cur);
+if(ck.x&lt;0||ck.y&lt;0||ck.z&lt;0)continue;float d=(1.0/p1.z)*ck.x+(1.0/p2.z)*ck.y+(1.0/p3.z)*ck.z;d=1.0/d;
+if(d&lt;buf[x][y]){buf[x][y]=d;float d1=(1.0/p1.w)*ck.x+(1.0/p2.w)*ck.y+(1.0/p3.w)*ck.z;d1=1.0/d1;
+float clr=(c1/p1.w)*ck.x+(c2/p2.w)*ck.y+(c3/p3.w)*ck.z;clr*=d1;img[x][y]=clr;}}}
+int main(){printf("P3\n%d %d\n255\n",w,h);int x,y;for(x=0;x&lt;5000;x++)for(y=0;y&lt;5000;y++)buf[x][y]=1e8f;
+C c(vec3(0,0,0));c.LE(0);c.BA(0);M4 V=c.V();M4 P=getP(45,(float)w/h,0.1,1000.0);
+M4 VP=P*V;FILE*ptr=fopen("a.in","r");assert(ptr!=nullptr);int num=0;fscanf(ptr,"%d",&amp;num);float cx=0,cy=0,cz=0;
+for(x=0;x&lt;num;x++){fscanf(ptr,"%f%f%f",&amp;P1[x].x,&amp;P1[x].y,&amp;P1[x].z);P1[x].w=1.0;cx+=P1[x].x;cy+=P1[x].y;cz+=P1[x].z;}
+int fc=0;fscanf(ptr,"%d",&amp;fc);for(x=0;x&lt;fc;x++)fscanf(ptr,"%d %d %d",&amp;f[x][0],&amp;f[x][1],&amp;f[x][2]);
+cx/=num;cy/=num;cz/=num;for(x=0;x&lt;num;x++){P1[x].x-=cx;P1[x].y-=cy;P1[x].z-=cz;P1[x].z-=2;vec4 col=VP*P1[x];
+vec3 ncd(col.x/col.w,col.y/col.w,col.z/col.w);if(ncd.z&lt;=0)continue;int X=(ncd.x+1.0)*0.5*w,Y=(1.0-ncd.y)*0.5*h;
+pt[x]=vec4(X,Y,ncd.z,col.w);}for(x=0;x&lt;fc;x++){vec3 v1(P1[f[x][0]].x,P1[f[x][0]].y,P1[f[x][0]].z),v2(P1[f[x][1]].x,P1[f[x][1]].y,P1[f[x][1]].z),
+v3(P1[f[x][2]].x,P1[f[x][2]].y,P1[f[x][2]].z);vec3 L=cs(v2-v1,v3-v1);vn[f[x][0]]=vn[f[x][0]]+L,vn[f[x][1]]=vn[f[x][1]]+L,vn[f[x][2]]=vn[f[x][2]]+L;}
+for(x=0;x&lt;num;x++)if(len(vn[x])&gt;1e-5)vn[x]=nor(vn[x]);
+for(x=0;x&lt;fc;x++){vec4 p1=pt[f[x][0]],p2=pt[f[x][1]],p3=pt[f[x][2]];if(p1.z&lt;=0||p2.z&lt;=0||p3.z&lt;=0)continue;
+float c1=max(0.1f,dot(vn[f[x][0]],ray)),c2=max(0.1f,dot(vn[f[x][1]],ray)),c3=max(0.1f,dot(vn[f[x][2]],ray));
+fill(p1,p2,p3,c1,c2,c3);}for(y=0;y&lt;h;y++)for(x=0;x&lt;w;x++){int val=min(255,max(int(img[x][y]*255.99),0));printf("%d %d %d\n",val,val,val);}return 0;}</code></pre><pre><code class="language-cpp">//for test svh.It implement in bvh-tree.I am very dissatisfied with this code.Just rubbish
+#include&lt;bits/stdc++.h&gt;
+#include &lt;omp.h&gt;
+#pragma GCC optimize("inline")
+#pragma GCC optimize("Ofast,no-stack-protector,fast-math",3)
+#define fs(x) fixed&lt;&lt;setprecision(x)
+#pragma GCC optimize(3)
+using namespace std;
+#define N 1&lt;&lt;20
+struct vec3{float x,y,z;vec3():x(0),y(0),z(0){};
+vec3(float x1,float y1,float z1):x(x1),y(y1),z(z1){};};
+mt19937_64 rg(random_device{}());
+uniform_real_distribution&lt;double&gt;dis(-0.5,0.5);
+struct vec4{float x,y,z,w;vec4(){};vec4(float X,float Y,float Z,float W):x(X),y(Y),z(Z),w(W){};};
+inline vec3 operator*(const vec3&amp;b,float a){return{b.x*a,b.y*a,b.z*a};}
+inline vec3 operator*(float a,const vec3&amp;b){return{b.x*a,b.y*a,b.z*a};}
+inline vec3 operator+(const vec3&amp;a,const vec3&amp;b){return{a.x+b.x,a.y+b.y,a.z+b.z};}
+inline vec3 operator+(const vec3&amp;a,float b){return{a.x+b,a.y+b,a.z+b};}
+inline vec3 operator/(const vec3&amp;b,float a){return{b.x/a,b.y/a,b.z/a};}
+inline vec3 operator/(float a,const vec3&amp;b){return{a/b.x,a/b.y,a/b.z};}
+inline vec3 operator/=(vec3&amp;b,float a){b.x/=a,b.y/=a,b.z/=a;return{b.x,b.y,b.z};}
+inline vec3 operator-(const vec3&amp;a){return{-a.x,-a.y,-a.z};}
+inline vec3 operator-(const vec3&amp;a,const vec3&amp;b){return{a.x-b.x,a.y-b.y,a.z-b.z};}
+inline vec3 operator-(const vec3&amp;b,float a){return{b.x-a,b.y-a,b.z-a};}
+inline vec4 operator+(const vec4&amp;a,const vec4&amp;b){return{a.x+b.x,a.y+b.y,a.z+b.z,a.w+b.w};}
+float dot(const vec3&amp;a,const vec3&amp;b){return a.x*b.x+a.y*b.y+a.z*b.z;}
+float len(const vec3&amp;a){return sqrt(a.x*a.x+a.y*a.y+a.z*a.z);}
+vec3 nor(const vec3&amp;a){return a/len(a);}
+float ckabs(float a){return a&gt;0?a:-a;}
+vec3 vabs(const vec3&amp;a){return{ckabs(a.x),ckabs(a.y),ckabs(a.z)};}
+vec3 vmax(const vec3&amp;a,float b){return{max(a.x,b),max(a.y,b),max(a.z,b)};}
+vec3 out(vec3 d,vec3 n){return d-2.0f*n*dot(d,n);}
+vec3 cs(const vec3&amp;a,const vec3&amp;b){return{a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x};}
+struct M4{float m[4][4];M4(){int x,y;for(x=0;x&lt;4;x++)for(y=0;y&lt;4;y++)m[x][y]=0;m[0][0]=m[1][1]=m[2][2]=m[3][3]=1.0;}
+inline vec4 operator*(const vec4&amp;v){return{m[0][0]*v.x+m[0][1]*v.y+m[0][2]*v.z+m[0][3]*v.w,
+m[1][0]*v.x+m[1][1]*v.y+m[1][2]*v.z+m[1][3]*v.w,m[2][0]*v.x+m[2][1]*v.y+m[2][2]*v.z+m[2][3]*v.w,
+m[3][0]*v.x+m[3][1]*v.y+m[3][2]*v.z+m[3][3]*v.w};}
+inline M4 operator*(const M4&amp;b){int x,y;M4 ans;for(x=0;x&lt;4;x++)for(y=0;y&lt;4;y++){
+ans.m[x][y]=m[x][0]*b.m[0][y]+m[x][1]*b.m[1][y]+m[x][2]*b.m[2][y]+m[x][3]*b.m[3][y];}return ans;}};
+struct C{vec3 R,U,P,F;C(vec3 p):P(p){U={0,1.0,0};F={0,0,-1.0};upd();}void upd(){F=nor(F);
+R=nor(cs(F,U));}void FA(float d){P=P+F*d;}void BA(float d){P=P-F*d;}
+void LE(float d){P=P-R*d;}void RI(float d){P=P+R*d;}void obj(vec3 p){F=nor(p-P);
+R=nor(cs(F,vec3{0,1.0,0}));U=nor(cs(R,F));}M4 V(){M4 v;
+v.m[0][0]=R.x;v.m[0][1]=R.y;v.m[0][2]=R.z;v.m[1][0]=U.x;v.m[1][1]=U.y;v.m[1][2]=U.z;
+v.m[2][0]=-F.x;v.m[2][1]=-F.y;v.m[2][2]=-F.z;v.m[0][3]=-dot(R,P);v.m[1][3]=-dot(U,P);v.m[2][3]=dot(F,P);return v;}};
+M4 getP(float fov,float a,float n,float f){M4 ans;int x;for(x=0;x&lt;4;x++)ans.m[x][x]=0;
+float rad=tan((fov*3.1415926535/180.0)/2.0);ans.m[0][0]=1.0/(rad*a);ans.m[1][1]=1.0/rad;
+ans.m[2][2]=-(f+n)/(f-n);ans.m[2][3]=-(2.0*f*n)/(f-n);ans.m[3][2]=-1.0;
+ans.m[3][3]=0;return ans;}int fps=60;
+M4 invP(float fov,float a,float n,float f){int x;M4 ans;for(x=0;x&lt;4;x++)ans.m[x][x]=0;
+float rad=tan((fov*3.1415926535/180.0)/2.0);ans.m[0][0]=a*rad;ans.m[1][1]=rad;
+ans.m[2][3]=-1.0;ans.m[3][2]=-(f-n)/(2.0*f*n);ans.m[3][3]=(f+n)/(2.0*f*n);return ans;}
+M4 inv(const C&amp;c){M4 a;a.m[0][0]=c.R.x;a.m[1][0]=c.R.y;a.m[2][0]=c.R.z;
+a.m[0][1]=c.U.x;a.m[1][1]=c.U.y;a.m[2][1]=c.U.z;a.m[0][2]=-c.F.x;a.m[1][2]=-c.F.y;a.m[2][2]=-c.F.z;
+a.m[0][3]=c.P.x;a.m[1][3]=c.P.y;a.m[2][3]=c.P.z;a.m[3][3]=1.0;return a;}
+const int w=1960,h=1080;vec3 P1[N];int f[N][3];const float eps=1e-5;const float inf=1e18f;
+const vec3 S=nor(vec3(1.0,1.0,1.0));vec3 vn[N];const int M=12;
+struct aabb{vec3 mx,mn;aabb(){mx={-inf,-inf,-inf};mn={inf,inf,inf};}
+void ins(vec3 a){mx.x=max(mx.x,a.x);mx.y=max(mx.y,a.y);mx.z=max(mx.z,a.z);
+mn.x=min(mn.x,a.x);mn.y=min(mn.y,a.y);mn.z=min(mn.z,a.z);}
+void ins(aabb&amp;a){a.ins(mx),a.ins(mn);}float sq(){vec3 dif=mx-mn;
+float a=max(0.0f,dif.x),b=max(0.0f,dif.y),c=max(0.0f,dif.z);return 2.0*(a*b+b*c+c*a);}
+void dt(){float d=1e-5;mn=mn-d;mx=mx+d;}
+bool ck(const vec3&amp;op,const vec3&amp;ed){float tmx=inf,tmn=-inf;float tx1=(mn.x-op.x)*ed.x;
+float tx2=(mx.x-op.x)*ed.x;tmn=max(tmn,min(tx1,tx2));tmx=min(tmx,max(tx1,tx2));
+float ty1=(mn.y-op.y)*ed.y;float ty2=(mx.y-op.y)*ed.y;tmn=max(tmn,min(ty1,ty2));
+tmx=min(tmx,max(ty1,ty2));float tz1=(mn.z-op.z)*ed.z;float tz2=(mx.z-op.z)*ed.z;
+tmn=max(tmn,min(tz1,tz2));tmx=min(tmx,max(tz1,tz2));return tmx&gt;=max(0.0f,tmn);}};
+struct bvh{aabb bx;int l,r,num,st;bvh():l(-1),r(-1),num(0),st(0){};};vector&lt;bvh&gt;t;int idx[N];
+struct mat{aabb box;int cnt=0;};
+int build(int s,int cnt){int tmp=t.size();t.push_back(bvh());
+int x,y;aabb box;aabb ctr;for(x=0;x&lt;cnt;x++){box.ins(P1[f[idx[x+s]][0]]);
+box.ins(P1[f[idx[x+s]][1]]);box.ins(P1[f[idx[x+s]][2]]);
+vec3 ct=(P1[f[idx[x+s]][0]]+P1[f[idx[x+s]][1]]+P1[f[idx[x+s]][2]])/3.0;ctr.ins(ct);}
+t[tmp].bx=box;if(cnt&lt;=2){t[tmp].st=s;t[tmp].num=cnt;return tmp;}float cst=inf;int gd=-1,zb=0;
+for(x=0;x&lt;3;x++){float mx=(&amp;ctr.mx.x)[x];float mn=(&amp;ctr.mn.x)[x];if(mx-mn&lt;1e-6)continue;
+float e=M/(mx-mn);mat m1[M+1];for(y=0;y&lt;cnt;y++){vec3 ct=(P1[f[idx[s+y]][0]]+P1[f[idx[s+y]][1]]+P1[f[idx[s+y]][2]])/3.0;
+int b=(int)((&amp;ct.x)[x]-mn)*e;if(b&gt;=M)b--;m1[b].cnt++;aabb tp;tp.ins(P1[f[idx[s+y]][0]]);
+tp.ins(P1[f[idx[s+y]][1]]);tp.ins(P1[f[idx[s+y]][2]]);m1[b].box.ins(tp);}
+aabb L[M+1],R[M+1];int l[M+1],r[M+1];aabb ca,cb;int sa=0,sb=0;for(y=0;y&lt;M;y++){
+ca.ins(m1[y].box);sa+=m1[y].cnt;l[y]=sa;L[y].ins(ca);}for(y=M-1;y&gt;=0;y--){
+cb.ins(m1[y].box);sb+=m1[y].cnt;r[y]=sb;R[y].ins(cb);}for(y=0;y&lt;M;y++){
+if(!l[y]||!r[y+1])continue;float c=1.0+(l[y]*L[y].sq()+r[y+1]*R[y+1].sq())/box.sq();
+if(c&lt;cst)cst=c,zb=x,gd=y;}}if(cst&gt;(float)cnt){t[tmp].num=cnt;t[tmp].st=s;return tmp;}
+float mx=(&amp;ctr.mx.x)[zb],mn=(&amp;ctr.mn.x)[zb],e=M/(mx-mn);auto it=partition(idx+s,idx+s+cnt,[&amp;](int id){
+vec3 ctr=(P1[f[id][0]]+P1[f[id][1]]+P1[f[id][2]])/3.0;int b=((int)(&amp;ctr.x)[zb]-mn)*e;if(b&gt;=M)b--;return b&lt;=gd;});
+int mid=it-idx-s;if(!mid||mid==cnt)mid=cnt/2;t[tmp].l=build(s,mid);t[tmp].r=build(s+mid,cnt-mid);
+t[tmp].num=0;return tmp;}struct hit{float t;int id;float x,y,z;};
+vec4 cal(vec3 o,vec3 d,vec3 A,vec3 B,vec3 C){vec3 T=o-A,s1=B-A,s2=C-A;
+float Det=dot(cs(s1,s2),-d);float u=dot(cs(T,s2),-d)/Det;
+if(u&lt;0||u&gt;1)return{-inf,-inf,-inf,-inf};float v=dot(cs(s1,T),(-d))/Det;
+if(v&lt;0||u+v&gt;1)return{-inf,-inf,-inf,-inf};float t=dot(cs(s1,s2),T)/Det;
+if(t&lt;eps)return{-inf,-inf,-inf,-inf};return{1,t,u,v};}
+void render(int p,vec3 o,vec3 d,vec3 invd,hit&amp;bst){
+if(!t[p].bx.ck(o,invd))return;if(t[p].num&gt;0){int x;for(x=0;x&lt;t[p].num;x++){
+int id=idx[t[p].st+x];vec4 pos=cal(o,d,P1[f[id][0]],P1[f[id][1]],P1[f[id][2]]);
+if(pos.x&gt;0&amp;&amp;pos.y&lt;bst.t){bst.t=pos.y;bst.id=id;bst.x=1.0-pos.z-pos.w,bst.y=pos.z;bst.z=pos.w;}}
+return;}render(t[p].l,o,d,invd,bst);render(t[p].r,o,d,invd,bst);}
+vec3 col(hit ok){vec3 v0=vn[f[ok.id][0]];vec3 v1=vn[f[ok.id][1]];vec3 v2=vn[f[ok.id][2]];
+vec3 n=nor(ok.x*v0+ok.y*v1+ok.z*v2);float l=max(0.0f,dot(S,n));return (n*0.5+0.5)*l;}
+float mit(float x){x=ckabs(x);float b=1.0/3,c=b;if(x&lt;1){return 1.0/6*((12-9*b-6*c)*x*x*x+(-18+12*b+6*c)*x*x+(6-2*b));}
+if(x&gt;=1&amp;&amp;x&lt;2){return 1.0/6*((-b-6*c)*x*x*x+(6*b+30*c)*x*x+(-12*b-48*c)*x+(8*b+24*c));}return 0;}
+int main(){printf("P3\n%d %d\n255\n",w,h);C c(vec3(0,1,1));M4 V=c.V();M4 P=invP(90,(float)w/h,0.1,1000.0);
+M4 inVP=inv(c)*P;FILE*ptr=fopen("a.in","r");assert(ptr!=nullptr);int num;int x,y,fc;//the ray is P=o+t*d o=(0,0,0) so is t*d;
+fscanf(ptr,"%d",&amp;num);for(x=0;x&lt;num;x++){fscanf(ptr,"%f%f%f",&amp;P1[x].x,&amp;P1[x].y,&amp;P1[x].z);}fscanf(ptr,"%d",&amp;fc);for(x=0;x&lt;num;x++)vn[x]=vec3(0,0,0);
+for(x=0;x&lt;fc;x++){fscanf(ptr,"%d%d%d",&amp;f[x][0],&amp;f[x][1],&amp;f[x][2]);idx[x]=x;}build(0,fc);
+for(x=0;x&lt;fc;x++){vec3 L=cs(P1[f[x][1]]-P1[f[x][0]],P1[f[x][2]]-P1[f[x][0]]);vn[f[x][0]]=vn[f[x][0]]+L;
+vn[f[x][1]]=vn[f[x][1]]+L;vn[f[x][2]]=vn[f[x][2]]+L;}for(x=0;x&lt;num;x++){if(len(vn[x])&gt;1e-5)vn[x]=nor(vn[x]);}
+// #pragma omp parallel for schedule(dynamic)
+for(y=0;y&lt;h;y++){for(x=0;x&lt;w;x++){int i;float sm=0;vec3 clr(0,0,0),tmp(0,0,0);for(i=1;i&lt;=8;i++){float rx=dis(rg),ry=dis(rg);float ncdx=(2.0*(x+rx))/w-1.0,ncdy=1.0-(2.0*(y+ry))/h;
+vec4 ch(ncdx,ncdy,-1.0,1.0);vec4 wd=inVP*ch;vec3 d=nor(vec3(wd.x/wd.w,wd.y/wd.w,wd.z/wd.w)-c.P);vec3 invd={1.0f/d.x,1.0f/d.y,1.0f/d.z};
+hit ok={inf,-1,0,0,0};render(0,c.P,d,invd,ok);if(ok.id!=-1){tmp=col(ok);}else tmp=vec3(0,0,0);float dx=rx-0.5,dy=ry-0.5;
+clr=clr+tmp;sm+=w;}
+if(sm&lt;1e-6)sm=1.0;clr/=8.0;clr.x=pow(max(clr.x,0.0f),1.0/2.2);clr.y=pow(max(clr.y,0.0f),1.0/2.2);clr.z=pow(max(clr.z,0.0f),1.0/2.2);
+printf("%d %d %d\n",int(max(0.0f,min(0.999f,clr.x)*255.99f)),int(max(0.0f,min(0.999f,clr.y)*255.99f)),int(max(0.0f,min(0.999f,clr.z)*255.99f)));}}return 0;}</code></pre><pre><code class="language-cpp">//kd-tree
+//kd-tree in sah can see https://chika.vin/post_1/ it's so fast
+#include&lt;bits/stdc++.h&gt;
+#pragma omp parallel for schedule(dynamic)
+#pragma GCC optimize("inline")
+#pragma GCC optimize("Ofast,no-stack-protector,fast-math",3)
+#define fs(x) fixed&lt;&lt;setprecision(x)
+#pragma GCC optimize(3)
+using namespace std;
+#define N 1&lt;&lt;20
+struct vec3{float x,y,z;vec3():x(0),y(0),z(0){};
+vec3(float x1,float y1,float z1):x(x1),y(y1),z(z1){};};
+mt19937_64 rg(random_device{}());
+uniform_real_distribution&lt;double&gt;dis(0.0,1.0);
+struct vec4{float x,y,z,w;vec4(){};vec4(float X,float Y,float Z,float W):x(X),y(Y),z(Z),w(W){};};
+inline vec3 operator*(const vec3&amp;b,float a){return{b.x*a,b.y*a,b.z*a};}
+inline vec3 operator*(float a,const vec3&amp;b){return{b.x*a,b.y*a,b.z*a};}
+inline vec3 operator+(const vec3&amp;a,const vec3&amp;b){return{a.x+b.x,a.y+b.y,a.z+b.z};}
+inline vec3 operator+(const vec3&amp;a,float b){return{a.x+b,a.y+b,a.z+b};}
+inline vec3 operator/(const vec3&amp;b,float a){return{b.x/a,b.y/a,b.z/a};}
+inline vec3 operator/(float a,const vec3&amp;b){return{a/b.x,a/b.y,a/b.z};}
+inline vec3 operator/=(vec3&amp;b,float a){b.x/=a,b.y/=a,b.z/=a;return{b.x,b.y,b.z};}
+inline vec3 operator-(const vec3&amp;a){return{-a.x,-a.y,-a.z};}
+inline vec3 operator-(const vec3&amp;a,const vec3&amp;b){return{a.x-b.x,a.y-b.y,a.z-b.z};}
+inline vec3 operator-(const vec3&amp;b,float a){return{b.x-a,b.y-a,b.z-a};}
+inline vec4 operator+(const vec4&amp;a,const vec4&amp;b){return{a.x+b.x,a.y+b.y,a.z+b.z,a.w+b.w};}
+float dot(const vec3&amp;a,const vec3&amp;b){return a.x*b.x+a.y*b.y+a.z*b.z;}
+float len(const vec3&amp;a){return sqrt(a.x*a.x+a.y*a.y+a.z*a.z);}
+vec3 nor(const vec3&amp;a){return a/len(a);}
+float ckabs(float a){return a&gt;0?a:-a;}
+vec3 vabs(const vec3&amp;a){return{ckabs(a.x),ckabs(a.y),ckabs(a.z)};}
+vec3 vmax(const vec3&amp;a,float b){return{max(a.x,b),max(a.y,b),max(a.z,b)};}
+vec3 out(vec3 d,vec3 n){return d-2.0f*n*dot(d,n);}
+vec3 cs(const vec3&amp;a,const vec3&amp;b){return{a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x};}
+struct M4{float m[4][4];M4(){int x,y;for(x=0;x&lt;4;x++)for(y=0;y&lt;4;y++)m[x][y]=0;m[0][0]=m[1][1]=m[2][2]=m[3][3]=1.0;}
+inline vec4 operator*(const vec4&amp;v){return{m[0][0]*v.x+m[0][1]*v.y+m[0][2]*v.z+m[0][3]*v.w,
+m[1][0]*v.x+m[1][1]*v.y+m[1][2]*v.z+m[1][3]*v.w,m[2][0]*v.x+m[2][1]*v.y+m[2][2]*v.z+m[2][3]*v.w,
+m[3][0]*v.x+m[3][1]*v.y+m[3][2]*v.z+m[3][3]*v.w};}
+inline M4 operator*(const M4&amp;b){int x,y;M4 ans;for(x=0;x&lt;4;x++)for(y=0;y&lt;4;y++){
+ans.m[x][y]=m[x][0]*b.m[0][y]+m[x][1]*b.m[1][y]+m[x][2]*b.m[2][y]+m[x][3]*b.m[3][y];}return ans;}};
+struct C{vec3 R,U,P,F;C(vec3 p):P(p){U={0,1.0,0};F={0,0,-1.0};upd();}void upd(){F=nor(F);
+R=nor(cs(F,U));}void FA(float d){P=P+F*d;}void BA(float d){P=P-F*d;}
+void LE(float d){P=P-R*d;}void RI(float d){P=P+R*d;}void obj(vec3 p){F=nor(p-P);
+R=nor(cs(F,vec3{0,1.0,0}));U=nor(cs(R,F));}M4 V(){M4 v;
+v.m[0][0]=R.x;v.m[0][1]=R.y;v.m[0][2]=R.z;v.m[1][0]=U.x;v.m[1][1]=U.y;v.m[1][2]=U.z;
+v.m[2][0]=-F.x;v.m[2][1]=-F.y;v.m[2][2]=-F.z;v.m[0][3]=-dot(R,P);v.m[1][3]=-dot(U,P);v.m[2][3]=dot(F,P);return v;}};
+M4 getP(float fov,float a,float n,float f){M4 ans;int x;for(x=0;x&lt;4;x++)ans.m[x][x]=0;
+float rad=tan((fov*3.1415926535/180.0)/2.0);ans.m[0][0]=1.0/(rad*a);ans.m[1][1]=1.0/rad;
+ans.m[2][2]=-(f+n)/(f-n);ans.m[2][3]=-(2.0*f*n)/(f-n);ans.m[3][2]=-1.0;
+ans.m[3][3]=0;return ans;}int fps=60;
+M4 invP(float fov,float a,float n,float f){int x;M4 ans;for(x=0;x&lt;4;x++)ans.m[x][x]=0;
+float rad=tan((fov*3.1415926535/180.0)/2.0);ans.m[0][0]=a*rad;ans.m[1][1]=rad;
+ans.m[2][3]=-1.0;ans.m[3][2]=-(f-n)/(2.0*f*n);ans.m[3][3]=(f+n)/(2.0*f*n);return ans;}
+M4 inv(const C&amp;c){M4 a;a.m[0][0]=c.R.x;a.m[1][0]=c.R.y;a.m[2][0]=c.R.z;
+a.m[0][1]=c.U.x;a.m[1][1]=c.U.y;a.m[2][1]=c.U.z;a.m[0][2]=-c.F.x;a.m[1][2]=-c.F.y;a.m[2][2]=-c.F.z;
+a.m[0][3]=c.P.x;a.m[1][3]=c.P.y;a.m[2][3]=c.P.z;a.m[3][3]=1.0;return a;}
+const int w=1960,h=1080;vec3 P1[N];int f[N][3];const float eps=1e-5;const float inf=1e18f;int idx[N];
+const vec3 S=nor(vec3(1.0,1.0,1.0));vec3 vn[N];const int M=12;
+struct aabb{vec3 mx,mn;aabb(){mx={-inf,-inf,-inf};mn={inf,inf,inf};}
+void ins(vec3 a){mx.x=max(mx.x,a.x);mx.y=max(mx.y,a.y);mx.z=max(mx.z,a.z);
+mn.x=min(mn.x,a.x);mn.y=min(mn.y,a.y);mn.z=min(mn.z,a.z);}
+void ins(aabb&amp;a){a.ins(mx),a.ins(mn);}float sq(){vec3 dif=mx-mn;
+float a=max(0.0f,dif.x),b=max(0.0f,dif.y),c=max(0.0f,dif.z);return 2.0*(a*b+b*c+c*a);}
+void dt(){float d=1e-5;mn=mn-d;mx=mx+d;}
+bool ck(const vec3&amp;op,const vec3&amp;ed){float tmx=inf,tmn=-inf;float tx1=(mn.x-op.x)*ed.x;
+float tx2=(mx.x-op.x)*ed.x;tmn=max(tmn,min(tx1,tx2));tmx=min(tmx,max(tx1,tx2));
+float ty1=(mn.y-op.y)*ed.y;float ty2=(mx.y-op.y)*ed.y;tmn=max(tmn,min(ty1,ty2));
+tmx=min(tmx,max(ty1,ty2));float tz1=(mn.z-op.z)*ed.z;float tz2=(mx.z-op.z)*ed.z;
+tmn=max(tmn,min(tz1,tz2));tmx=min(tmx,max(tz1,tz2));return tmx&gt;=max(0.0f,tmn);}};
+float lx[N],rx[N],ly[N],ry[N],lz[N],rz[N];int ls[N],rs[N];//kd blance tree
+void up(int x){int qx=idx[x];lx[x]=min(P1[f[qx][0]].x,min(P1[f[qx][1]].x,P1[f[qx][2]].x));
+rx[x]=max(P1[f[qx][0]].x,max(P1[f[qx][1]].x,P1[f[qx][2]].x));ly[x]=min(P1[f[qx][0]].y,min(P1[f[qx][1]].y,P1[f[qx][2]].y));
+ry[x]=max(P1[f[qx][0]].y,max(P1[f[qx][1]].y,P1[f[qx][2]].y));lz[x]=min(P1[f[qx][0]].z,min(P1[f[qx][1]].z,P1[f[qx][2]].z));
+rz[x]=max(P1[f[qx][0]].z,max(P1[f[qx][1]].z,P1[f[qx][2]].z));
+if(ls[x]){lx[x]=min(lx[ls[x]],lx[x]);ly[x]=min(ly[ls[x]],ly[x]);lz[x]=min(lz[ls[x]],lz[x]);
+rx[x]=max(rx[ls[x]],rx[x]);ry[x]=max(ry[ls[x]],ry[x]);rz[x]=max(rz[ls[x]],rz[x]);}
+if(rs[x]){rx[x]=max(rx[rs[x]],rx[x]);ry[x]=max(ry[rs[x]],ry[x]);rz[x]=max(rz[rs[x]],rz[x]);
+lx[x]=min(lx[rs[x]],lx[x]);ly[x]=min(ly[rs[x]],ly[x]);lz[x]=min(lz[rs[x]],lz[x]);}}
+bool ck(int x,vec3 op,vec3 ed){float tmn=-inf,tmx=inf;float tx1=(lx[x]-op.x)*ed.x;
+float tx2=(rx[x]-op.x)*ed.x;tmn=max(tmn,min(tx1,tx2));tmx=min(tmx,max(tx1,tx2));
+float ty1=(ly[x]-op.y)*ed.y;float ty2=(ry[x]-op.y)*ed.y;tmn=max(tmn,min(ty1,ty2));tmx=min(tmx,max(ty1,ty2));
+float tz1=(lz[x]-op.z)*ed.z;float tz2=(rz[x]-op.z)*ed.z;tmn=max(tmn,min(tz1,tz2));tmx=min(tmx,max(tz1,tz2));
+return tmx&gt;=max(0.0f,tmn);}struct hit{int id;float t,u,v;};
+hit cal(vec3 o,vec3 d,int p){vec3 A=P1[f[p][0]],B=P1[f[p][1]],C=P1[f[p][2]];
+vec3 T=o-A,s1=B-A,s2=C-A;float Det=dot(cs(s1,s2),-d);float u=dot(cs(T,s2),-d)/Det;
+if(u&lt;0||u&gt;1)return{-1,inf,0,0};float v=dot(cs(s1,T),(-d))/Det;
+if(v&lt;0||u+v&gt;1)return{-1,inf,0,0};float t=dot(cs(s1,s2),T)/Det;
+if(t&lt;eps)return{-1,inf,0,0};return{p,t,u,v};}
+void ask(int p,vec3 o,vec3 d,vec3 invd,hit&amp;bst){if(!p||!ck(p,o,invd))return;
+hit pos=cal(o,d,idx[p]);if(pos.t&lt;bst.t){bst=pos;}ask(ls[p],o,d,invd,bst);ask(rs[p],o,d,invd,bst);}
+//so get away and escape to freedom
+bool cmp1(int a,int b){a=idx[a];b=idx[b];float ca=P1[f[a][0]].x+P1[f[a][1]].x+P1[f[a][2]].x;float cb=P1[f[b][0]].x+P1[f[b][1]].x+P1[f[b][2]].x;return ca&lt;cb;}
+bool cmp2(int a,int b){a=idx[a];b=idx[b];float ca=P1[f[a][0]].y+P1[f[a][1]].y+P1[f[a][2]].y;float cb=P1[f[b][0]].y+P1[f[b][1]].y+P1[f[b][2]].y;return ca&lt;cb;}
+bool cmp3(int a,int b){a=idx[a];b=idx[b];float ca=P1[f[a][0]].z+P1[f[a][1]].z+P1[f[a][2]].z;float cb=P1[f[b][0]].z+P1[f[b][1]].z+P1[f[b][2]].z;return ca&lt;cb;}
+int build(int l,int r,int ck){if(l&gt;r)return 0;int mid=l+r&gt;&gt;1;if(ck==1)nth_element(idx+l,idx+mid,idx+r+1,cmp1);
+else if(ck==2){nth_element(idx+l,idx+mid,idx+r+1,cmp2);}else nth_element(idx+l,idx+mid,idx+r+1,cmp3);
+ls[mid]=build(l,mid-1,(ck+1)%3);rs[mid]=build(mid+1,r,(ck+1)%3);up(mid);return mid;}
+vec3 col(vec3 clr,hit ok){vec3 v0=vn[f[ok.id][0]];vec3 v1=vn[f[ok.id][1]];vec3 v2=vn[f[ok.id][2]];
+vec3 n=nor((1-ok.u-ok.v)*v0+ok.u*v1+ok.v*v2);float l=max(0.0f,dot(S,n));return (n*0.5+0.5)*l;}
+int main(){printf("P3\n%d %d\n255\n",w,h);C c(vec3(0,1,1));M4 V=c.V();M4 P=invP(90,(float)w/h,0.1,1000.0);
+M4 inVP=inv(c)*P;FILE*ptr=fopen("a.in","r");assert(ptr!=nullptr);int num;int x,y,fc;//the ray is P=o+t*d o=(0,0,0) so is t*d;
+fscanf(ptr,"%d",&amp;num);for(x=0;x&lt;num;x++){fscanf(ptr,"%f%f%f",&amp;P1[x].x,&amp;P1[x].y,&amp;P1[x].z);}fscanf(ptr,"%d",&amp;fc);for(x=0;x&lt;num;x++)vn[x]=vec3(0,0,0);
+for(x=0;x&lt;fc;x++){fscanf(ptr,"%d%d%d",&amp;f[x][0],&amp;f[x][1],&amp;f[x][2]);idx[x]=x;}cerr&lt;&lt;1;int ro=build(0,fc,1);
+for(x=0;x&lt;fc;x++){vec3 L=cs(P1[f[x][1]]-P1[f[x][0]],P1[f[x][2]]-P1[f[x][1]]);
+vn[f[x][0]]=vn[f[x][0]]+L;vn[f[x][1]]=vn[f[x][1]]+L;vn[f[x][2]]=vn[f[x][2]]+L;}
+for(x=0;x&lt;num;x++)if(len(vn[x])&gt;1e-5)vn[x]=nor(vn[x]);for(y=0;y&lt;h;y++){for(x=0;x&lt;w;x++){
+int i;vec3 clr(0,0,0);for(i=1;i&lt;=1;i++){float ncdx=(2.0*(x+dis(rg)))/w-1.0,ncdy=1.0-(2.0*(y+dis(rg)))/h;
+vec4 ch(ncdx,ncdy,-1.0,1.0);vec4 wd=inVP*ch;vec3 d=nor(vec3(wd.x/wd.w,wd.y/wd.w,wd.z/wd.w)-c.P);
+vec3 invd={1.0f/d.x,1.0f/d.y,1.0f/d.z};hit ok={-1,inf,0,0};ask(ro,c.P,d,invd,ok);
+if(ok.id!=-1){clr=clr+col(clr,ok);}else clr=clr+vec3(0,0,0);}clr/=1;clr.x=pow(clr.x,1.0/2.2);clr.y=pow(clr.y,1.0/2.2);clr.z=pow(clr.z,1.0/2.2);
+printf("%d %d %d\n",int(max(0.0f,min(0.999f,clr.x)*255.99f)),int(max(0.0f,min(0.999f,clr.y)*255.99f)),int(max(0.0f,min(0.999f,clr.z)*255.99f)));}}return 0;}</code></pre>
+        </article>
+    </main>
+    <footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+    </footer>
+</body>

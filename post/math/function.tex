@@ -1,0 +1,95 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true
+}
+\begin{document}
+\section{function}
+A function $f$ set $X\to Y$ is an assignment of one element $Y$ to each of element $X$.\\
+
+A function $f$ is called $total$ if and only if :
+\[\forall x\in X,\exists y\in Y,(x,y)\in f\]
+\[\forall x\in X,\exists y_1,y_2\in Y,((x,y_1)\in f\land(x,y_2)\in f)\to y_1=y_2\]
+
+A function $f$ is called $partial$ if and only if :
+\[\forall x\in X,\forall y_1,y_2\in Y,((x,y_1)\in f\land(x,y_2\in f))\to y_1=y_2\]
+\[dom(f)=\{x\in X|\exists y\in Y,(x,y)\in f\}\subseteq X\]
+\[ran(f)=\{y\in Y|\exists x\in X,(x,y)\in f\}\subseteq Y\]
+
+Give two functions $f,g$, the domain are $X_f,X_g$, the range are $Y_f,Y_g$, the composite function will be given by:
+\[g\circ f:\{(x,z)|(\exists y\in Y_f\cap X_g)[y=f(x)\land z=g(y)]\}\]
+
+\begin{theorem}
+    if $f: X\to Y,g: Y\to Z$, $f,g$ are full,$g\circ f: X\to Z$ is full.
+\end{theorem}
+\begin{proof}
+    Because of $f,g$ are full, so:
+    \[\forall x\in X,\exists y\in Y,(x,y)\in f\]
+    \[\forall y\in Y,\exists z\in Z,(y,z)\in g\]
+    \[(g\circ f)(x)=g(f(x)),\forall x\in X\]
+\end{proof}
+I have a question here: $\forall g\circ f$ is full, $f$ is full? $g$ is full?\\
+
+A function is called injective if and only if:
+\[\forall x,x',y,\{((x,y)\in f\land (x',y)\in f)\to x=x'\}\]
+A function is called surjective if and only if:
+\[\forall y\in Y,\exists x\in X,f(x)=y\]
+A function is called bijective if and only if:
+\[\forall x_1,x_2\in X,f(x_1)=f(x_2)\Rightarrow x_1=x_2\]
+\section{Complutable function}
+Define:
+\[f:X\to \Sigma^*\]
+we say $f$ is complutable if and only if:
+\[\exists P,\forall x\in X,f(x)\downarrow=P(x)\]
+where $P$ is any program.
+\begin{theorem}
+    \[\exists P^*,\forall x\in X,f(x)\downarrow=P(x)=P^*(x)\]
+\end{theorem}
+\subsubsection{primitive function}
+The primitive function class $\mathcal{P}$ are given:
+\[Z:\mathbb{N}\to\mathbb{N},Z(x)=0\]
+\[S:\mathbb{N}\to\mathbb{N},S(x)=x+1\]
+\[P:\mathbb{N}^n\to\mathbb{N},P_{i}^{n}(x_1,x_2,\cdots,x_n)=x_i,i\in[1,n]\]
+if $g,h:\mathbb{N}^m\to\mathbb{N},f:\mathbb{N}^k\to\mathbb{N}\in\mathcal{P}$, the composition is defined as:
+\[f(x_1,x_2,\cdot x_k)=g(h_1(x_1,x_2,\cdots,x_m),\cdots h_m(x_1,x_2,\cdots,x_m))\]
+\begin{lemma}
+    Define $f:D_f\to R_f,g:D_g\to R_g$, if $g$ is 
+    not complutable directly, $\exists f$ which is complutable illsorm to $g$ if and only if
+    \[\exists\alpha:D_f\to R_f\land\forall x_1,x_2\in D_f,\alpha(x_1)=\alpha(x_2)\Rightarrow x_1=x_2\land\exists\beta:D_g\to R_g\land\forall x_1,x_2\in D_g,\beta(x_1)=\beta(x_2)\Rightarrow x_1=x_2\]
+\end{lemma}
+\begin{proof}
+    \[\forall x\in D_g,y\in R_g g(y)=\beta(x)f(x)\alpha^{-1}(x)\]
+\end{proof}
+\begin{theorem}[smn]
+    \[\forall n,m\ge 1,\exists s_n^m:\mathbb{N}^{m+1}\to\mathbb{N},\forall e,x_1,\cdots x_m,y_1,y_2,\cdots y_n\in\mathbb{N}\]
+    \[\Phi_{{s_n^m}(e_,x_1,x_2,\cdots,x_m)}^n(y_1,\cdots,y_n)\simeq\Phi_{e}^{m+n}(x_1,\cdots,x_m,y_1,\cdots,y_n)\]
+\end{theorem}
+\begin{proof}
+    let:
+    \[\langle\cdot,\cdot\rangle\to\mathbb{N}^2\to\mathbb{N},m\ge 1\]
+    \[\langle x_1,\cdots,x_m\rangle=\langle x_1,\langle x_2,\cdots,\langle x_{m-1},x_m\rangle\cdots\rangle\rangle\]
+    \[\Phi_e^k(x_1,x_2,\cdots,x_m)\simeq\Phi_e(\langle x_1,x_2,\cdots,x_m\rangle)\]
+    when $n=1,m=0$
+    \[s_1^0=e\]
+    \[s_1^{k+1}(e,x_1,x_2,\cdots,x_{k+1})=s(s_1^k(e,x_1,x_2,\cdots,x_k),x_{k+1})\]
+    so:\[\Phi_{s_1^m(e,\vec{x})}^1(\vec{y})\simeq\Phi_{s_1^m}^1(\langle\vec{x},y\rangle)\]
+    \[\Phi_{s_n^m}^1(\langle\vec{x},y_1,\cdots,y_n\rangle):=\Phi_{s_1^m}^1(\langle\vec{x},y\rangle)\]
+\end{proof}
+\end{document}
+
+     

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sample · KomariChika</title>
+<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
+</head>
+<body>
+<header><nav><a href="../../index.html">Home</a></nav></header>
+<main><article>
+<section id="pseudo-random-generator" class="level2">
+<h2>pseudo-random generator</h2>
+<p>A pseudo-random number generator can be abstracted as a finite state
+machine <span class="math inline">\mathcal{G}=(S,O,s_0,f,g)</span>.
+where <span class="math inline">S</span> is finite set contains all
+possible internal states of spaces, <span class="math inline">O</span>
+is the output spaces, <span class="math inline">s_0\in S</span> is the
+seed, <span class="math inline">f:S\to S</span> is the transition
+function and the <span class="math inline">g:S\to O</span> is the output
+function.<br />
+The generation process involves repeatedly executing the following
+transfers: <span class="math display">s_{n+1}=f(s_n)</span><span
+class="math display">o_n=g(s_n)</span> Ideally, we want <span
+class="math inline">f</span> is bijective. If <span
+class="math inline">f</span> is not bijective, that means when the
+generator enter <span class="math inline">f(S)</span>, it will not visit
+the state <span class="math inline">S/f(S)</span>. That would means we’d
+spend a lot of memery storing a rapidl iterating generator.<br />
+The quality of random number generator is constrained by is internal
+state. Suppose we have a generator which have <span
+class="math inline">b</span> bits internal states and output <span
+class="math inline">r</span> bits number everytime.<span
+class="math inline">(b\ge r)</span> So the cycle is <span
+class="math inline">2^b</span> and the types of numbers are <span
+class="math inline">2^r</span>. Uniformly requires us the number which
+is <span class="math inline">r</span> bit must appear <span
+class="math inline">2^{b-r}</span>. An extreme example is <span
+class="math inline">r=32,b=32</span>. That means each number will not
+repeat before the cycle is completely traversed. However, this is not
+the case in real randomness. In real randomness, each number are
+independently repeatable. We can use birthday problem to model this.
+Given <span class="math inline">m=2^b</span> possibilities, draw <span
+class="math inline">n=2^r</span> independent and uniform samples, <span
+class="math inline">X</span> is the repeat at least once. The birthday
+problem given: <span
+class="math display">P(X)=1-\frac{m(m-1)(m-2)\cdots(m-n+1)}{m^n}</span>
+Actually, we can use Poisson distribution approximation. <span
+class="math display">\lambda\approx\binom{n}{2}\frac{1}{m}=\frac{n(n-1)}{2m}</span>
+<span class="math display">P(X)\approx\exp(-\frac{n(n-1)}{2m})</span>
+Ideally, the possibility of repeating at least once is hightest around
+time <span class="math inline">\sqrt{m}</span>.<br />
+Q: The birthday problem tell us that repeatition of output values always
+occurs too early. So does the finite-state PRNG fail statistically even
+earlier?<br />
+A: Not at all. Repeatition is a normal phenomenon in birthday problem.
+Evluating whether a PRNG is failed depends on whether it stochastic
+model. For any PRNG, it should simulate the birthday problem as closely
+as possible, which is why the high bit is used to generate the low
+bit.<br />
+Q: Consider a uniform mapping with an internal value state sapce of
+<span class="math inline">2^b</span> and an output value state of <span
+class="math inline">2^r</span>, where <span
+class="math inline">b&gt;r</span>. According to the pigeonhole
+principle, each number appears approximationly <span
+class="math inline">2^{b-r}</span> times within one period. What is the
+expected number of times the output value appears more than <span
+class="math inline">2^{b-r}</span> times? What is the expected
+occurrence of such an event?<br />
+A: Let internal state <span class="math inline">N=2^b</span> and output
+state <span class="math inline">V=2^r</span>. Each output value <span
+class="math inline">i</span> and its frequently <span
+class="math inline">X_i</span> follow a multinomial distribution <span
+class="math display">X_i\sim\mathcal{B}(N,\frac{1}{V})</span> <span
+class="math inline">\lambda\approx\frac{N}{V}=2^{b-r}</span>, so: <span
+class="math display">I_i=\begin{cases}1&amp;X_i&gt;\lambda\\0&amp;\mathtt{otherwise}\end{cases}</span>
+<span class="math display">E[\sum\limits_{i=1}^{V}I_i]=V\cdot
+P(X_i&gt;\lambda)</span> <span
+class="math display">P(X_1&gt;\lambda)=1-\sum\limits_{k=0}^{\lambda}\binom{n}{k}p^k(1-p)^{n-k}</span>
+In fact, a normal approximation can be used(Poisson distribution also
+works). <span class="math display">P(X&gt;\lambda)=P(X\ge\lambda)\approx
+P(X\ge\lambda+1-0.5)=P(X\ge\lambda+1+0.5)</span> normalize so: <span
+class="math display">P(\frac{X-\lambda}{\sqrt{\lambda}})=1-\Phi(\frac{0.5}{\sqrt{\lambda}})=\Phi(\frac{0.5}{\sqrt{\lambda}})\approx\frac{1}{2}-\frac{1}{2\sqrt{2\pi\lambda}}</span>
+<span class="math display">\mathbb{E}[\#\{i:X_i&gt;\lambda\}]\approx
+2^{r-1}-\frac{2^r}{\sqrt{2\pi\lambda}}\cdot 2^{r-1}</span> so,
+obversely, the expected is approximation <span
+class="math inline">2^{r-1}</span>.<br />
+Let’s look at the second problem. <span
+class="math display">P(X_1&gt;\lambda,X_2&gt;\lambda,\cdots,X_k&gt;\lambda)</span>
+<span
+class="math display">X\sim\mathcal{M}(N;V^{-1},V^{-1},\cdots,1-nV^{-1})</span>
+<span
+class="math display">P(X_1&gt;\lambda,X_2&gt;\lambda,\cdots,X_k&gt;\lambda)=\sum\limits_{X_i&gt;\lambda\land\sum\limits_ia_i=k}\frac{\Gamma(k+1)}{\prod\limits_{i=1}^{k}\Gamma(a_i+1)}(\frac{1}{V})^{\sum
+a_i}(1-\frac{k}{V})^{N-\sum a_i}</span></p>
+</section>
+<section id="lcg" class="level2">
+<h2>LCG</h2>
+<p>A classic generator is <span class="math inline">LCG</span>: <span
+class="math display">X_{n+1}=(aX_n+c)\mod m</span> where <span
+class="math inline">m&gt;0</span> is modulus, <span
+class="math inline">m&gt;a&gt;0</span> is the multiplier, <span
+class="math inline">m&gt;c\ge 0</span> is the increment and <span
+class="math inline">X_0</span> is the seed. It can addressable in <span
+class="math inline">O(n\log n)</span> <span
+class="math display">X_{n+i}=(a^iX_n+\frac{c(a^i-1)}{a-1})</span></p>
+<div class="sourceCode" id="cb1" data-language="C++"><pre
+class="sourceCode c++"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>u64 qp<span class="op">(</span>u64 a<span class="op">,</span>u64 b<span class="op">,</span>u64 m<span class="op">){</span>u64 ans<span class="op">=</span><span class="dv">1</span><span class="bu">ull</span><span class="op">;</span>a<span class="op">%=</span>m<span class="op">;</span><span class="cf">for</span><span class="op">(;</span>b<span class="op">;</span>b<span class="op">&gt;&gt;=</span><span class="dv">1</span><span class="op">,</span>a<span class="op">=</span>a<span class="op">*</span>a<span class="op">%</span>m<span class="op">)(</span>b<span class="op">&amp;</span><span class="dv">1</span><span class="op">)&amp;&amp;(</span>ans<span class="op">=</span>ans<span class="op">*</span>a<span class="op">%</span>m<span class="op">);</span><span class="cf">return</span> ans<span class="op">;}</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>u64 sum<span class="op">(</span>u64 a<span class="op">,</span>u64 c<span class="op">,</span>u64 m<span class="op">,</span>u64 x<span class="op">){</span>u64 ans<span class="op">=</span><span class="dv">0</span><span class="op">,</span>cur<span class="op">=</span><span class="dv">1</span><span class="op">;</span>a<span class="op">%=</span>m<span class="op">;</span><span class="cf">for</span><span class="op">(;</span>x<span class="op">;</span>x<span class="op">&gt;&gt;=</span><span class="dv">1</span><span class="op">,</span>cur<span class="op">=</span>cur<span class="op">*(</span><span class="dv">1</span><span class="op">+</span>a<span class="op">)%</span>m<span class="op">,</span>a<span class="op">=</span>a<span class="op">*</span>a<span class="op">%</span>m<span class="op">)(</span>x<span class="op">&amp;</span><span class="dv">1</span><span class="op">)&amp;&amp;(</span>ans<span class="op">=(</span>ans<span class="op">*</span>a<span class="op">%</span>m<span class="op">+</span>cur<span class="op">%</span>m<span class="op">));</span><span class="cf">return</span> ans<span class="op">;}</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>u64 rng<span class="op">(</span>u64 a<span class="op">,</span>u64 c<span class="op">,</span>u64 m<span class="op">,</span>u64 x0<span class="op">,</span><span class="dt">int</span> x<span class="op">){</span><span class="cf">if</span><span class="op">(!</span>x<span class="op">)</span><span class="cf">return</span> x0<span class="op">;</span>u64 ai<span class="op">=</span>qp<span class="op">(</span>a<span class="op">,</span>x<span class="op">,</span>m<span class="op">),</span>gs<span class="op">=</span>sum<span class="op">(</span>a<span class="op">,</span>c<span class="op">,</span>m<span class="op">,</span>x<span class="op">);</span><span class="cf">return</span> <span class="op">(</span>ai<span class="op">*</span>x0<span class="op">+</span>c<span class="op">*</span>gs<span class="op">)%</span>m<span class="op">;}</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>string ec<span class="op">(</span>u64 a<span class="op">,</span>u64 c<span class="op">,</span>u64 m<span class="op">,</span>u64 sd<span class="op">){</span><span class="dt">int</span> n<span class="op">=</span>s<span class="op">.</span>size<span class="op">();</span>string ans<span class="op">;</span>ans<span class="op">.</span>resize<span class="op">(</span>n<span class="op">);</span><span class="dt">int</span> x<span class="op">;</span><span class="cf">for</span><span class="op">(</span>x<span class="op">=</span><span class="dv">0</span><span class="op">;</span>x<span class="op">&lt;</span>n<span class="op">;</span>x<span class="op">++){</span>u64 ks<span class="op">=</span>rng<span class="op">(</span>a<span class="op">,</span>c<span class="op">,</span>m<span class="op">,</span>sd<span class="op">,</span>x<span class="op">);</span>ans<span class="op">[</span>x<span class="op">]=</span>s<span class="op">[</span>x<span class="op">]^(</span><span class="dt">char</span><span class="op">)(</span>ks<span class="op">&amp;</span><span class="bn">0xff</span><span class="op">);}</span><span class="cf">return</span> ans<span class="op">;}</span></span></code></pre></div>
+<p>Actually, LCG is excellent. It have a long period, high speed, low
+memory useage and it’s simple to implement(Um...you may care this). But
+the problem isn’t with LCG itself, but with we shoudn’t have directly
+output the LCG status unchanged. So what should we do ? How to improve
+it ?</p>
+</section>
+<section id="pcg" class="level2">
+<h2>PCG</h2>
+<p>A efficent idea is (<span
+class="math inline">permutation-function</span>, Melissa
+O’Neill).Essentially, the permutation-function is adding a non-linear
+function before the output layer. Commonly, it contains following
+functions:<span class="math inline">Xorshift</span>, <span
+class="math inline">BitRotation</span>. Formally, it may express <span
+class="math inline">f\circ X_n</span> where <span
+class="math inline">f</span> is the permutation-function.<br />
+64-bits to 32-bits.</p>
+<div class="sourceCode" id="cb2" data-language="C++"><pre
+class="sourceCode c++"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> u32<span class="op">=</span><span class="dt">uint32_t</span><span class="op">;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>u64 st<span class="op">=</span><span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span>u32 s<span class="op">){</span>st<span class="op">=</span>s<span class="op">|</span><span class="dv">1</span><span class="op">;}</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>u32 pcg<span class="op">(){</span>u32 la<span class="op">=</span>st<span class="op">;</span>st<span class="op">=</span>st<span class="op">*</span><span class="dv">747796405</span><span class="bu">u</span><span class="op">+</span><span class="dv">2891336453</span><span class="bu">u</span><span class="op">;</span>u32 u<span class="op">=</span>la<span class="op">&gt;&gt;(</span><span class="dv">29</span><span class="op">-(</span>st<span class="op">&gt;&gt;</span><span class="dv">61</span><span class="op">));</span><span class="cf">return</span> u<span class="op">;}</span></span></code></pre></div>
+<div class="sourceCode" id="cb3" data-language="C++"><pre
+class="sourceCode c++"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>u32 pcg32<span class="op">(){</span>u64 la<span class="op">=</span>st<span class="op">;</span>st<span class="op">=</span>st<span class="op">*</span><span class="dv">747796405</span><span class="bu">u</span><span class="op">+</span><span class="dv">2891336453</span><span class="bu">u</span><span class="op">;</span>u32 u<span class="op">=(</span>la<span class="op">^(</span>la<span class="op">&gt;&gt;</span><span class="dv">22</span><span class="bu">u</span><span class="op">))&gt;&gt;(</span><span class="dv">22</span><span class="bu">u</span><span class="op">+(</span>la<span class="op">&gt;&gt;</span><span class="dv">61</span><span class="bu">u</span><span class="op">));</span><span class="cf">return</span> u<span class="op">;}</span></span></code></pre></div>
+<div class="sourceCode" id="cb4" data-language="C++"><pre
+class="sourceCode c++"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>u32 r32<span class="op">(</span>u32 v<span class="op">,</span>u32 r<span class="op">){</span><span class="cf">return</span> <span class="op">(</span>v<span class="op">&gt;&gt;</span>r<span class="op">)|(</span>v<span class="op">&lt;&lt;</span><span class="dv">32</span><span class="op">-</span>r<span class="op">);}</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>u32 pcg1<span class="op">(){</span>u64 la<span class="op">=</span>st<span class="op">;</span>st<span class="op">=</span>st<span class="op">*</span><span class="dv">747796405</span><span class="bu">u</span><span class="op">+</span><span class="dv">2891336453</span><span class="bu">u</span><span class="op">;</span>u32 u<span class="op">=</span>r32<span class="op">(</span>st<span class="op">^(</span>st<span class="op">&gt;&gt;</span><span class="dv">18</span><span class="op">)&gt;&gt;</span><span class="dv">27</span><span class="op">,</span>st<span class="op">&gt;&gt;</span><span class="dv">59</span><span class="op">);</span><span class="cf">return</span> u<span class="op">;}</span></span></code></pre></div>
+<p>In fact, you can make use of your image to design.</p>
+</section>
+</article></main>
+<footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+    </footer>
+</body>
+</html>

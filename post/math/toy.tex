@@ -1,0 +1,41 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\begin{document}
+\subsubsection{AM-GM}
+\begin{theorem}[AM-GM]
+    define $x_1,x_2,\cdots,x_i\ge0, w_1,w_2,\cdots>0$
+    \[\sum\limits_{i=1}^{n}w_ix_i\ge\prod\limits_{i=1}^{n}x_i^{w_i}\]
+\end{theorem}
+\begin{proof}
+    \[\log(\sum\limits_{i=1}^{n}w_ix_i)\ge\log(\prod\limits_{i=1}^{n}x_i^{w_i})=\sum\limits_{i=1}^{n}w_i\log x_i\]
+    According Jensen's inequality :\\\[f(\sum\limits_i w_ix_i)\ge\sum\limits_i w_if(x_i)\]
+\end{proof}
+\subsubsection{Yong inequality}
+\begin{theorem}[Yong inequality]
+    define $p,q>1\land \frac{1}{p}+\frac{1}{q}=1,u,v\ge0$
+    \[\frac{u^p}{p}+\frac{v^q}{q}\ge uv\]
+\end{theorem}
+\begin{proof}
+    when $u,v=0$ obviously established.\\
+    when $u,v>0$. According Jensen's inequality :\\
+    \[\frac{1}{p}\log(u^p)+\frac{1}{q}\log(v^q)\le\log(\frac{u^p}{p}+\frac{v^q}{q})\]
+    \[(u^p)^{\frac{1}{p}}(v^q)^{\frac{1}{q}}\le\frac{u^p}{p}+\frac{v^q}{q}\]
+\end{proof}
+\subsubsection{Jacobian}
+Consider $f:\mathbf{R^n}\to\mathbf{R^m},n=m$, the Jacobian's matrix is be defined as :
+\[J_F(x_1,x_2,\cdots,x_n)=\frac{\partial(y_1,y_2,\cdots,y_n)}{\partial(x_1,x_2,\cdots x_n)}=
+\begin{pmatrix}
+\frac{\partial y_1}{\partial x_1}&\frac{\partial y_2}{\partial x_1}&\cdots&\frac{\partial y_n}{\partial x_1}\\
+\frac{\partial y_1}{\partial x_2}&\frac{\partial y_2}{\partial x_2}&\cdots&\frac{\partial y_n}{\partial x_2}\\
+\vdots&\vdots&\vdots\\
+\frac{\partial y_1}{\partial x_n}&\frac{\partial y_2}{\partial x_n}&\cdots&\frac{\partial y_n}{\partial x_n}
+\end{pmatrix}\]
+\end{document}
+

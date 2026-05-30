@@ -1,0 +1,37 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true
+}
+\begin{document}
+\begin{theorem}[smn]
+    \[\forall n,m\ge 1,\exists s_n^m:\mathbb{N}^{m+1}\to\mathbb{N},\forall e,x_1,\cdots x_m,y_1,y_2,\cdots y_n\in\mathbb{N}\]
+    \[\Phi_{{s_n^m}(e_,x_1,x_2,\cdots,x_m)}^n(y_1,\cdots,y_n)\simeq\Phi_{e}^{m+n}(x_1,\cdots,x_m,y_1,\cdots,y_n)\]
+\end{theorem}
+\begin{proof}
+    let:
+    \[\langle\cdot,\cdot\rangle\to\mathbb{N}^2\to\mathbb{N},m\ge 1\]
+    \[\langle x_1,\cdots,x_m\rangle=\langle x_1,\langle x_2,\cdots,\langle x_{m-1},x_m\rangle\cdots\rangle\rangle\]
+    \[\Phi_e^k(x_1,x_2,\cdots,x_m)\simeq\Phi_e(\langle x_1,x_2,\cdots,x_m\rangle)\]
+    when $n=1,m=0$
+    \[s_1^0=e\]
+    \[s_1^{k+1}(e,x_1,x_2,\cdots,x_{k+1})=s(s_1^k(e,x_1,x_2,\cdots,x_k),x_{k+1})\]
+    so:\[\Phi_{s_1^m(e,\vec{x})}^1(\vec{y})\simeq\Phi_{s_1^m}^1(\langle\vec{x},y\rangle)\]
+    \[\Phi_{s_n^m}^1(\langle\vec{x},y_1,\cdots,y_n\rangle):=\Phi_{s_1^m}^1(\langle\vec{x},y\rangle)\]
+\end{proof}
+\end{document}

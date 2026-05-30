@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>space · KomariChika</title>
+<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
+</head>
+<body>
+<header><nav><a href="../../index.html">Home</a></nav></header>
+<main><article>
+<section id="vector-space" class="level3">
+<h3>Vector space</h3>
+<p>Giving the field <span class="math inline">\mathbf{F}</span>, the
+vector space <span class="math inline">\langle V,+,\cdot,\rangle</span>
+is an nonempty set over the <span
+class="math inline">\mathbf{F}</span>.It satisfies two operations and
+axioms. <span class="math display">V\times V\to V</span> <span
+class="math display">F\times V\to V</span> if <span
+class="math inline">V</span> is the vector space over field <span
+class="math inline">\mathbf{F}</span>, the <span
+class="math inline">W</span> is called the <span
+class="math inline">subspace</span> when satisfies <span
+class="math inline">W\subseteq V</span>. if: <span
+class="math display">\vec{0}\in W\land V\land\forall u,v\in W,u+v\in
+W\land\forall u\in\mathbf{F},\forall k\in W,uk\in W</span> we say <span
+class="math inline">W</span> is vector space over field <span
+class="math inline">\mathbf{F}</span>.<br />
+The trival subspace <span class="math inline">S</span> is defined as:
+<span
+class="math display">\mathrm{subspace}(S):=\mathrm{subspace}(S)\land
+S=\vec{0}\land S=V</span> The nontrivial subspace <span
+class="math inline">S</span> is defined as: <span
+class="math display">\mathrm{subspace}(S):=\mathrm(S)\land\mathbf{subspace}(S)/\{0\}\land
+S/V</span> if <span class="math inline">S</span> is a subset of vector
+space <span class="math inline">V</span> over field <span
+class="math inline">\mathbf{F}</span>. The S’s linear combination <span
+class="math inline">\mathrm{span}(S)</span> will be given: <span
+class="math display">\mathrm{span}(S)=\{a_1v_1+a_2v_2+a_3v_3+\cdots+a_kv_k:v_1,v_2,v_3\cdots\in
+V,a_1,a_2,a_3\in\mathbf{F},k\in 1,2,3\cdots\}</span> The linear
+combination is defined as finite many elements in vector space.<br />
+vectors <span class="math inline">v_1,v_2,v_3\cdots v_n</span> is in
+vector space <span class="math inline">V</span> over field <span
+class="math inline">\mathbf{F}</span>, let <span
+class="math inline">S\subseteq V</span>, we say <span
+class="math inline">S</span> is linear dependent if and only if: <span
+class="math display">\forall n\in\mathbf{N^+},\forall v_1,v_2\cdots
+v_n\in S,a_1,a_2\cdots a_n\in\mathbf{F}</span> <span
+class="math display">\sum\limits_{i=1}^{n}a_iv_i=0\Rightarrow
+a_1=a_2=\cdots=a_n</span> we say <span class="math inline">S</span> is
+linear independent if and only if: <span class="math display">\forall
+n,\forall v_1,v_2\cdots v_n\in S,\exists a_1,a_2\cdots
+a_n\in\mathbf{F}</span> <span
+class="math display">(\sum\limits_{i=1}^{n}a_iv_i=0)\land\neg(a_1\land
+a_2\land\cdots\land a_n=0)</span> let <span class="math inline">V</span>
+is the vector space over field <span
+class="math inline">\mathbf{F}</span>, <span
+class="math inline">S\subseteq V</span>, we say <span
+class="math inline">S</span> is a basis of <span
+class="math inline">V</span>, if and only if: <span
+class="math display">\forall n\in\mathbf{N^+}\forall a_1,a_2\cdots\in
+F,\forall v_1,v_2\cdots S\sum\limits_{i=1}^{n}a_iv_i=0\Rightarrow
+a_i=0\land\forall v\in V,\mathrm{span}(S)=V</span></p>
+<div class="theorem theorem-box">
+<p><strong>Theorem. </strong></p>
+<p><strong>Theorem 1</strong>. <em>let: <span
+class="math inline">\forall V</span> is the vector space over field
+<span class="math inline">\mathbb{F}</span>, <span
+class="math inline">U\subseteq V,W\subseteq V</span>. <span
+class="math display">\dim{U+W}=\dim{U}+\dim{W}-\dim(U\cap
+W)</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> let:<span class="math display">\dim{U\cap W}=k</span>
+take a set of basis for <span class="math inline">U\cap W</span>: <span
+class="math display">\mathcal{B}_0\{e_1,e_2,\cdots,e_k\}</span> expanded
+to bases <span class="math inline">U</span> and <span
+class="math inline">W</span> respectively: <span
+class="math display">\mathcal{B}_U\{u_1,u_2,\cdots,u_r\}</span> <span
+class="math display">\mathcal{B}_W\{w_1,w_2,\cdots,w_m\}</span> so:<span
+class="math display">\dim{U}=k+r,\dim{W}=k+m,\mathcal{B}=\{e_1,e_2,\cdots,e_n,u_1,u_2,\cdots,u_n,w_1,w_2,\cdots,w_n\}</span>
+<span class="math display">\forall\mathbf{u}\in U,\mathbf{w}\in
+W,\mathbf{x}\in U+W,\mathbf{x}=\mathbf{u}+\mathbf{w}</span> <span
+class="math display">\mathbf{u}\in\mathrm{span}(\mathcal{B}_U),\mathbf{w}\in\mathrm{span}(\mathcal{B}_W)</span>
+<span
+class="math display">\mathbf{x}\in\mathrm{span}(\mathcal{B}_U\cup\mathcal{B}_W)\Rightarrow\mathcal{B}_U\cup\mathcal{B_W}\subseteq\mathrm{span}(\mathcal{B})</span>
+<span
+class="math display">\mathbf{x}\in\mathrm{span}(\mathcal{B})</span>
+<span class="math display">U+W\subseteq\mathrm{span}(\mathcal{B})</span>
+<span class="math display">\mathrm{span}(\mathcal{B})\subseteq
+U+W</span> <span
+class="math display">U+W=\mathrm{span}(\mathcal{B})</span> suppose:
+<span class="math display">\exists
+\{e_1,e_2,\cdots,e_k\},\{u_1,u_2,\cdots,u_r\},\{w_1,w_2,\cdots,w_m\}</span>
+<span
+class="math display">\sum\limits_{i=1}^{k}a_ie_i+\sum\limits_{j=1}^{r}b_ju_j+\sum\limits_{l=1}^{m}c_lw_l=0</span>
+<span
+class="math display">\sum\limits_{i=1}^{k}a_ie_i+\sum\limits_{j=1}^{r}b_ju_j=-\sum\limits_{l=1}^{m}c_lw_l</span>
+<span class="math display">e_i,u_j\in U,w_l\in
+W\Rightarrow\sum\limits_{i=1}^{k}a_ie_i+\sum\limits_{j=1}^{r}b_ju_j\in
+U\cap W</span> because of: <span class="math inline">U\cap
+W\in\mathrm{span}(\mathcal{B}_0)</span>, so:<span
+class="math inline">\exists\{d_1,d_2,\cdots,d_k\}</span> satisfies:
+<span
+class="math display">\sum\limits_{i=1}^{k}a_ie_i+\sum\limits_{j=1}^{r}b_ju_j=\sum\limits_{i=1}^{k}d_ie_i</span>
+<span
+class="math display">\sum\limits_{i=1}^{k}(a_i-d_i)e_i+\sum\limits_{j=1}^{r}b_ju_j=0</span>
+because of <span
+class="math inline">\{e_1,e_2,\cdots,e_k,u_1,u_2,\cdots,u_r\}</span> is
+the base of <span class="math inline">U</span>. so:<span
+class="math display">a_i-d_i=0,b_j=0</span><span
+class="math display">\sum\limits_{i=1}^{k}a_ie_i+\sum\limits_{l=1}^{m}c_l+w_l=0</span>
+because of <span
+class="math inline">\{e_1,e_2,\cdots,e_k,w_1,w_2,\cdots,w_r\}</span> is
+the base of <span class="math inline">W</span>. so:<span
+class="math display">a_i=0,c_l=0</span> so:<span
+class="math inline">\mathcal{B}</span> is linear dependent. <span
+class="math display">\dim(U+W)=k+r+m=\dim(U)+\dim(W)-\dim(U\cap
+W)</span> ◻</p>
+</div>
+<div class="theorem theorem-box">
+<p><strong>Theorem. </strong></p>
+<p><strong>Theorem 2</strong>. <em>let: <span
+class="math inline">\forall V</span> is the vector space over field
+<span class="math inline">\mathbb{F}</span>, <span
+class="math inline">\forall U\subseteq V</span>. <span
+class="math display">\dim(\sum\limits_{i=1}^{n}U_i)=\sum\limits_{k=1}^{n}\dim(U_k)-\sum\limits_{k=2}^{n}\dim(U_k\cap\sum\limits_{i=1}^{k-1}U_i)</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> when <span class="math inline">n=1</span>: <span
+class="math display">\dim(U_1)=\dim(U_1)</span> suppose <span
+class="math inline">n=k</span> <span
+class="math display">\dim(\sum\limits_{i=1}^{k}U_i)=\sum\limits_{i=1}^{k}\dim{U_i}-\sum\limits_{j=2}^{k}(\dim
+U_j\cap\sum\limits_{i=1}^{j-1}U_i)</span> when <span
+class="math inline">n=k+1</span> <span
+class="math display">\dim(\sum\limits_{i=1}^{k+1}U_i)=\sum\limits_{i=1}^{k}\dim{U_i}+\dim{U_{k+1}}-\sum\limits_{j=2}^{k}(\dim{U_j}\cap\sum\limits_{i=1}{j-1}U_i)-(\dim{U_{j+1}}\cap\sum\limits_{i=1}^{j}U_j)</span>
+<span
+class="math display">\dim(\sum\limits_{i=1}^{k+1}U_i)=\dim(\sum\limits_{i=1}^{k}U_i)+\dim{U_{k+1}}-\dim({U_{j+1}\cap\sum\limits_{i=1}^{j}}U_i)</span>
+<span
+class="math display">\dim(\sum\limits_{i=1}^{k+1}U_i)=\dim(\sum\limits_{i=1}^{k+1}U_i)-\dim({U_{j+1}\cap\sum\limits_{i=1}^{j}}U_i)</span> ◻</p>
+</div>
+</section>
+</article></main>
+<footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,39 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+
+\begin{document}
+\[(n+x)!=x!(x+1)(x+2)\cdots(x+n)=n!(n+1)(n+2)\cdots(n+x)\]
+\[x!=\frac{n!(n+1)(n+2)\cdots(n+x)}{(x+1)(x+2)\cdots(x+n)}\]
+\[\lim_{n\to\infty}\frac{n!(n+1)(n+2)\cdots(n+x)}{n^x}=1\]
+\[x!=\lim_{n\to\infty}\frac{n!}{(x+1)(x+2)\cdots(x+n)}\cdot n^x\cdot\frac{(n+1)(n+2)\cdots(n+x)}{n^x}=\frac{n!n^x}{(x+1)(x+2)\cdots(x+n)}\]
+
+But the problem is that there are infinitely many functions satisfy $f(1)=1\land f(x+1)=xf(x)$\\
+For  example, let $P(1)=1,P(x)=P(x+1)$,$g(x)=f(x)P(x)$, so:\[g(x+1)=f(x+1)P(x+1)=xf(x)P(x)\]
+when you choose different $P$, it will generate different functions.The Bohr-Mollerup's theorem tells us
+\section{Bohr-Mollerup}
+\begin{theorem}[Bohr-Mollerup]
+    when $x\in (0,+\infty)$, the $f(x)$ is unique if and only if it satisfies $f(1)=1\land f(x+1)=xf(x)\land \frac{d^2}{dx^2}\log{f(x)}>0$
+\end{theorem}
+\begin{proof}
+    let $x\in(0,\infty)$, $n\ge 1$,$g(x)=\log{f(x)}$ so we have:\\
+    part 1: \[\frac{g(n)-g(n-1)}{1}\le\frac{g(n+x)-g(n)}{x}\]
+    \[g(x+n)\ge x(g(n)-g(n-1))+g(n)\]
+    \[g(x+n)\ge x\log{n-1}+g(n)\]
+    \[f(x+n)\ge f(n)(n-1)^x\]
+    \[f(x+n)\ge (n-1)!(n-1)^x\]
+    part 2:\[\frac{g(x+n)-g(n)}{x}\le\frac{g(n+1)-g(n)}{1}\]
+    \[g(x+n)\le g(n)+x\log{n}\]
+    \[f(x+n)\le(n-1)!n^x\]
+    \[(n-1)!(n-1)^x\le f(x+n)\le(n-1)n^x\]
+    \[\frac{(n-1)!(n-1)^x}{x(x+1)(x+2)\cdots(x+n-1)}\le f(x)\le\frac{(n-1)n^x}{x(x+1)(x+2)\cdots(x+n-1)}\]
+    \[\lim_{n\to\infty}(\frac{n}{n-1})^x=1\]
+    \[f(x)=\lim_{n\to\infty}\frac{(n-1)!n^x}{x(x+1)(x+2)\cdots(x+n-1)}\]
+\end{proof}
+\end{document}

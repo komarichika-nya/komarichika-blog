@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bsdf · KomariChika</title>
+<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
+</head>
+<body>
+<header><nav><a href="../../index.html">Home</a></nav></header>
+<main><article>
+<section id="bsdf" class="level3">
+<h3>BSDF</h3>
+<p>define: <span class="math display">J[u(x)+c*h(x)]=\int
+F(x,u(x)+c*h(x),u&#39;(x)+c*h&#39;(x))</span> when:<span
+class="math inline">c\to0</span> <span
+class="math display">\int\frac{d}{dc}F(x,u(x)+c*h(x),u&#39;(x)+c*h&#39;(x))</span>
+<span class="math display">\int\frac{\partial}{\partial
+c}F(x,u(x)+c*h(x),u&#39;(x)+c*h&#39;(x))dx</span> <span
+class="math display">\int(\frac{\partial F}{\partial
+x}\cdot\frac{\partial x}{\partial c}+\frac{\partial
+F}{\partial(u(x)+c*h(x))}\cdot\frac{\partial(u(x)+c*h(x))}{\partial
+c}+\frac{\partial
+F}{\partial(u&#39;(x)+c*h&#39;(x))}\cdot\frac{\partial(u&#39;(x)+c*h&#39;(x))}{\partial
+c})dx</span> <span class="math display">\int(\frac{\partial
+F}{\partial(u(x))}*h+\frac{\partial F}{\partial
+u(x)&#39;}h(x)&#39;)dx</span> BSDF,it can be defined: <span
+class="math display">f(i,o,n)=\int\frac{|i\cdot m|}{|i\cdot
+n|}f_r^m(i,o,m)\frac{|o\cdot m|}{|o\cdot n|}G(i,o,m)D(m)dw_m</span>
+where <span class="math inline">D(m)</span> is micro surface area, <span
+class="math inline">G(i,o,m)</span> shadow occlusion function,<span
+class="math inline">f_r^m(i,o,m)</span> is describe the reflectively and
+refractively.</p>
+<p><span class="math display">\delta w_o(s,o)\to\delta
+w_m(h(i,o),m)</span> <span
+class="math display">\int_{\Omega}\delta_{w_o}(s,o)dw_o=\int_{\Omega}\delta_{w_m}(h(i,o),m)dw_m||\frac{\partial(h(i,o),m)}{\partial(s,o)}||</span></p>
+<p>For specular reflection,the half vector <span
+class="math inline">h</span> can be defined: <span
+class="math inline">\frac{i+o}{|i+o|}</span> we want to know fixed <span
+class="math inline">i</span>,when <span class="math inline">o</span>
+change,what is the change in <span class="math inline">h</span>?
+Obviously,the azimuth angle changes synchronously and <span
+class="math inline">h</span> is the angle bisector.</p>
+<p><span class="math display">h=\frac{i+o}{||i+o||}</span> <span
+class="math display">o=i_{\parallel}+i_{\perp}</span> <span
+class="math display">=(i\cdot h)h-(i-h(i\cdot h))=2(i\cdot h)h-i</span>
+<span class="math display">dw_0=\sin\theta d\theta d\phi</span> <span
+class="math display">dw_0=4|o\cdot h|dw_h</span></p>
+<p>(a native way to calculate the Jacobians. Just have fun)</p>
+<p><span
+class="math display">||\frac{\partial(h(i,o),m)}{\partial(s,o)}||=\begin{vmatrix}\frac{\partial(h(i,o))}{\partial
+s}&amp;\frac{\partial(h(i,o))}{\partial o}\\\frac{\partial m}{\partial
+s}&amp;\frac{\partial m}{\partial o}\end{vmatrix}</span> <span
+class="math display">=\frac{\partial(h(i,o))}{\partial s}\frac{\partial
+m}{\partial o}-\frac{\partial(h(i,o))}{\partial o}\frac{\partial
+m}{\partial s}</span> <span class="math display">=\frac{\partial
+h}{\partial i}\frac{\partial(i,m)}{\partial(s,o)}-\frac{\partial
+h}{\partial o}\frac{\partial m}{\partial s}</span></p>
+<p>Suppose <span class="math inline">m=h</span>: <span
+class="math display">||\frac{\partial(h,h)}{\partial(i,o)}||</span>
+Suppose <span class="math inline">m!=h</span>,m is indepence,you can
+get:</p>
+<p><span class="math display">\frac{\partial m}{\partial
+o}=\frac{\partial m}{\partial i}=0</span></p>
+<p>Obviously,we can’t simply use <span class="math inline">(h,m)</span>
+to determine this,because the degrees of freedom are mismatched.
+Actually,we should write it in an integral form.</p>
+<p>so: <span
+class="math display">\int_{\Omega}\delta_{w_m}(h(i,o),m)dw_m||\frac{\partial(h(i,o),m)}{\partial(s,o)}||=\int_{\Omega}\delta_{w_m}(h(i,o),m)dw_m\frac{1}{4|\hat
+o\cdot\hat h|}=\begin{cases}\frac{1}{4|\hat o\cdot\hat
+h|}&amp;h(i,o)\in\Omega\\0&amp;\text{otherwise}\end{cases}</span> <span
+class="math display">f_r^m=\rho*\frac{\delta_{w_m}(h(i,o),m)}{4|o\cdot
+m||o\cdot h|}\\[10pt]f_r(i,o,n)=\int\frac{|i\cdot m|}{|i\cdot
+n|}\frac{\rho\cdot\delta_{w_m}(h(i,o),m)}{4|o\cdot m||o\cdot
+h|}\frac{|o\cdot m|}{|o\cdot n|}G(i,o,m)D(m)dw_m</span> let: <span
+class="math display">h(i,o)=m=\frac{i+o}{||i+o||}</span> <span
+class="math display">f_r(i,o,n)=\frac{\rho\cdot G(i,o,m)D(m)}{4|i\cdot
+n||o\cdot n|}</span></p>
+<p>Precisely,we should use Fresnel equations to describe the
+reflection.</p>
+<p><span
+class="math display">f_r(i,o,n)=\frac{F(i,m)G(i,o,m)D(m)}{4|i\cdot
+n||o\cdot n|}</span> Similarly,we need to calculate the the refraction
+<span class="math inline">f_t</span>.(we amusse the <span
+class="math inline">i,o</span> is normalize) <span
+class="math display">x=\eta_ii+\eta_oo</span> <span
+class="math display">h=-\frac{x}{||x||}</span> <span
+class="math display">d(\frac{x}{||x||})=\frac{1}{||x||}-(I-\vec{x}\vec{x}^T)dx</span>
+<span
+class="math display">dh=-\frac{1}{||x||}(I-\vec{h}\vec{h}^T)dx</span>
+<span class="math display">dx=\eta_odo</span> <span
+class="math display">dh=-\frac{\eta_o}{||x||}(I-\vec{h}\vec{h}^T)do</span>
+We get the <span class="math inline">R^3\to R^3</span>,but we want to
+get the <span class="math inline">R^2\to R^2</span>.so,we can construct
+<span class="math inline">e_1,e_2,f_1,f_2</span> equal to: <span
+class="math display">e_1\times e_2=o,e_1\times o=e_2,e_2\times
+o=e_1</span> <span class="math display">f_1\times f_2=h,f_1\times
+h=f_2,f_2\times h=f_1</span> Obviously,the tangent plane we choose is
+generate by <span class="math inline">e_1,e_2</span> and <span
+class="math inline">f_1,f_2</span>.</p>
+<p><span
+class="math display">(I-\vec{h}\vec{h}^T)|_{R^2}=\begin{pmatrix}\cos\theta&amp;0\\0&amp;1\end{pmatrix},\cos\theta=|o\cdot
+h||</span> <span
+class="math display">\det(I-\vec{h}\vec{h}^T)|=|\cos\theta|</span> <span
+class="math display">dh=-\frac{\eta_0}{||x||}(I-\vec{h}\vec{h}^T)do</span>
+<span class="math display">\frac{dw_h}{dw_o}=-\frac{\eta_o^2|o\cdot
+h|}{(\eta_ii\cdot h+\eta_oo\cdot h)^2}</span> <span
+class="math display">f_t^m(i,o,m)=\frac{|i\cdot m||o\cdot m|}{|i\cdot
+n||o\cdot n|}(1-F(i,m))\frac{\eta_o^2G(i,o,m)D(m)}{(\eta_ii\cdot
+h+\eta_oo\cdot h)^2}</span> <span
+class="math display">f_s=f_t+f_r</span></p>
+</section>
+</article></main>
+<footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+    </footer>
+</body>
+</html>

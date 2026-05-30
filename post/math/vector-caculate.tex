@@ -1,0 +1,74 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true
+}
+\begin{document}
+div
+\[\vec{n}=\vec{u}\times\vec{v}\]
+\[\vec{u}=iu_x+k(\frac{\partial F}{\partial x})u_x\]
+\[\vec{v}=jv_y+k(\frac{\partial F}{\partial y})v_y\]
+\[\vec{u}\times\vec{v}=(-i\frac{\partial F}{\partial x}-j\frac{\partial F}{\partial y}+k)u_xu_y\]
+\[normalize(n)=\frac{-i\frac{\partial F}{\partial x}-j\frac{\partial F}{\partial y}+k}{\sqrt{1+(\frac{\partial F}{\partial x})^2+ (\frac{\partial F}{\partial y})^2}}\]
+
+\[\int\int\int_V\rho(x,y,z,t)dV\]
+\[\frac{d}{dt}\int\int\int_V\rho(x,y,z,t)dV\]
+\[=\int\int\int_V\frac{\partial \rho}{\partial t}dV=-\int\int_S\rho v\cdot ndS\]
+\[\int\int\int_V\frac{\partial\rho}{\partial t}dV=-\int\int\int_V\nabla\cdot(\rho v)dV\]
+\[\frac{\partial\rho}{\partial t}=-\nabla\cdot(\rho v)\]
+\[\frac{\partial\rho}{\partial t}+\nabla\cdot\rho v=0\]
+
+some relationship with Gauss's law.
+
+\[\int\int_SE\cdot\vec{n}dS=\frac{1}{\varepsilon_0}\int\int\int_V\rho dV\]
+\[\int\int\int_V\nabla\cdot EdV=\int\int\int_V\frac{\rho}{\varepsilon_0}dV\]
+\[\nabla\cdot E=\frac{\rho}{\varepsilon_0}\]
+more style in 2-d version:
+
+\[\int\int_A\nabla\cdot FdA=\int_SF\cdot\vec{n}dS\]
+\[F(x,y)=(P(x,y),Q(x,y))\]
+\[\nabla\cdot F=\frac{\partial P}{\partial x}+\frac{\partial Q}{\partial y}\]
+\[\vec{n}=\begin{pmatrix}0&-1\\1&0\end{pmatrix}\begin{pmatrix}dx\\dy\end{pmatrix}\]
+\[c{n}=(dy,-dx)\\[10pt]F\cdot\vec{n}=Pdx-Qdy\]
+\[\int\int_A(\frac{\partial P}{\partial x}+\frac{\partial Q}{\partial y})dA=\int(Pdx-Qdy)\]
+
+It's Green's theorem.Just the 2-d version Divergence Theorem.
+
+curl
+
+the curl can be defined:
+
+\[(\nabla\times F)\cdot\vec{n}=\lim_{\Delta S\to0}\frac{1}{\Delta S}\oint F\cdot\vec{t}d\Delta r\]
+
+In Cartesian coordinate:
+
+\[cur F=\nabla\times F=\begin{vmatrix}i&j&k\\\frac{\partial F_x}{\partial x}&\frac{\partial F_y}{\partial y}&\frac{\partial F_z}{\partial z}\\xz&yz&-y^2\end{vmatrix}\]
+
+In cylindrical coordinate:
+
+\[\int_{c_1}D\cdot\vec{t}ds=F(r,\theta-\frac{\Delta\theta}{2},z)\Delta r\]
+\[-\int_{c_3}F\cdot\vec{t}ds=-F(r,\theta+\frac{\theta}{2},z)\Delta r\]
+\end{document}
+
+
+
+
+
+
+
+

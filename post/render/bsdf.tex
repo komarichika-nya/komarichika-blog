@@ -1,0 +1,90 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true
+}
+\begin{document}
+\subsubsection{BSDF}
+define:
+\[J[u(x)+c*h(x)]=\int F(x,u(x)+c*h(x),u'(x)+c*h'(x))\]
+when:$c\to0$
+\[\int\frac{d}{dc}F(x,u(x)+c*h(x),u'(x)+c*h'(x))\]
+\[\int\frac{\partial}{\partial c}F(x,u(x)+c*h(x),u'(x)+c*h'(x))dx\]
+\[\int(\frac{\partial F}{\partial x}\cdot\frac{\partial x}{\partial c}+\frac{\partial F}{\partial(u(x)+c*h(x))}\cdot\frac{\partial(u(x)+c*h(x))}{\partial c}+\frac{\partial F}{\partial(u'(x)+c*h'(x))}\cdot\frac{\partial(u'(x)+c*h'(x))}{\partial c})dx\]
+\[\int(\frac{\partial F}{\partial(u(x))}*h+\frac{\partial F}{\partial u(x)'}h(x)')dx\]
+BSDF,it can be defined:
+\[f(i,o,n)=\int\frac{|i\cdot m|}{|i\cdot n|}f_r^m(i,o,m)\frac{|o\cdot m|}{|o\cdot n|}G(i,o,m)D(m)dw_m\]
+where $D(m)$ is micro surface area, $G(i,o,m)$ shadow occlusion function,$f_r^m(i,o,m)$ is describe the reflectively and refractively.
+
+\[\delta w_o(s,o)\to\delta w_m(h(i,o),m)\]
+\[\int_{\Omega}\delta_{w_o}(s,o)dw_o=\int_{\Omega}\delta_{w_m}(h(i,o),m)dw_m||\frac{\partial(h(i,o),m)}{\partial(s,o)}||\]
+
+For specular reflection,the half vector $h$ can be defined: $\frac{i+o}{|i+o|}$ we want to know fixed $i$,when $o$ change,what is the change in $h$? Obviously,the azimuth angle changes synchronously and $h$ is the angle bisector.
+
+\[h=\frac{i+o}{||i+o||}\]
+\[o=i_{\parallel}+i_{\perp}\]
+\[=(i\cdot h)h-(i-h(i\cdot h))=2(i\cdot h)h-i\]
+\[dw_0=\sin\theta d\theta d\phi\]
+\[dw_0=4|o\cdot h|dw_h\]
+
+(a native way to calculate the Jacobians. Just have fun)
+
+\[||\frac{\partial(h(i,o),m)}{\partial(s,o)}||=\begin{vmatrix}\frac{\partial(h(i,o))}{\partial s}&\frac{\partial(h(i,o))}{\partial o}\\\frac{\partial m}{\partial s}&\frac{\partial m}{\partial o}\end{vmatrix}\]
+\[=\frac{\partial(h(i,o))}{\partial s}\frac{\partial m}{\partial o}-\frac{\partial(h(i,o))}{\partial o}\frac{\partial m}{\partial s}\]
+\[=\frac{\partial h}{\partial i}\frac{\partial(i,m)}{\partial(s,o)}-\frac{\partial h}{\partial o}\frac{\partial m}{\partial s}\]
+
+Suppose $m=h$:
+\[||\frac{\partial(h,h)}{\partial(i,o)}||\]
+Suppose $m!=h$,m is indepence,you can get:
+
+\[\frac{\partial m}{\partial o}=\frac{\partial m}{\partial i}=0\]
+
+Obviously,we can't simply use $(h,m)$ to determine this,because the degrees of freedom are mismatched. Actually,we should write it in an integral form.
+
+so:
+\[\int_{\Omega}\delta_{w_m}(h(i,o),m)dw_m||\frac{\partial(h(i,o),m)}{\partial(s,o)}||=\int_{\Omega}\delta_{w_m}(h(i,o),m)dw_m\frac{1}{4|\hat o\cdot\hat h|}=\begin{cases}\frac{1}{4|\hat o\cdot\hat h|}&h(i,o)\in\Omega\\0&\text{otherwise}\end{cases}\]
+\[f_r^m=\rho*\frac{\delta_{w_m}(h(i,o),m)}{4|o\cdot m||o\cdot h|}\\[10pt]f_r(i,o,n)=\int\frac{|i\cdot m|}{|i\cdot n|}\frac{\rho\cdot\delta_{w_m}(h(i,o),m)}{4|o\cdot m||o\cdot h|}\frac{|o\cdot m|}{|o\cdot n|}G(i,o,m)D(m)dw_m\]
+let:
+\[h(i,o)=m=\frac{i+o}{||i+o||}\]
+\[f_r(i,o,n)=\frac{\rho\cdot G(i,o,m)D(m)}{4|i\cdot n||o\cdot n|}\]
+
+Precisely,we should use Fresnel equations to describe the reflection.
+
+\[f_r(i,o,n)=\frac{F(i,m)G(i,o,m)D(m)}{4|i\cdot n||o\cdot n|}\]
+Similarly,we need to calculate the the refraction $f_t$.(we amusse the $i,o$ is normalize)
+\[x=\eta_ii+\eta_oo\]
+\[h=-\frac{x}{||x||}\]
+\[d(\frac{x}{||x||})=\frac{1}{||x||}-(I-\vec{x}\vec{x}^T)dx\]
+\[dh=-\frac{1}{||x||}(I-\vec{h}\vec{h}^T)dx\]
+\[dx=\eta_odo\]
+\[dh=-\frac{\eta_o}{||x||}(I-\vec{h}\vec{h}^T)do\]
+We get the $R^3\to R^3$,but we want to get the $R^2\to R^2$.so,we can construct $e_1,e_2,f_1,f_2$ equal to:
+\[e_1\times e_2=o,e_1\times o=e_2,e_2\times o=e_1\]
+\[f_1\times f_2=h,f_1\times h=f_2,f_2\times h=f_1\]
+Obviously,the tangent plane we choose is generate by $e_1,e_2$ and $f_1,f_2$.
+
+\[(I-\vec{h}\vec{h}^T)|_{R^2}=\begin{pmatrix}\cos\theta&0\\0&1\end{pmatrix},\cos\theta=|o\cdot h||\]
+\[\det(I-\vec{h}\vec{h}^T)|=|\cos\theta|\]
+\[dh=-\frac{\eta_0}{||x||}(I-\vec{h}\vec{h}^T)do\]
+\[\frac{dw_h}{dw_o}=-\frac{\eta_o^2|o\cdot h|}{(\eta_ii\cdot h+\eta_oo\cdot h)^2}\]
+\[f_t^m(i,o,m)=\frac{|i\cdot m||o\cdot m|}{|i\cdot n||o\cdot n|}(1-F(i,m))\frac{\eta_o^2G(i,o,m)D(m)}{(\eta_ii\cdot h+\eta_oo\cdot h)^2}\]
+\[f_s=f_t+f_r\]
+\end{document}
+
+
+

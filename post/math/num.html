@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>num · KomariChika</title>
+<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
+</head>
+<body>
+<header><nav><a href="../../index.html">Home</a></nav></header>
+<main><article>
+<section id="greatest-common-divisor" class="level3">
+<h3>Greatest Common Divisor</h3>
+<p>The Greatest Common Divisor is defined (<span
+class="math inline">gcd</span>) as if <span
+class="math inline">a,b\in\mathbb{Z}-\{0\}</span>, satisfy : <span
+class="math display">a\mid d,b\mid d\land e\mid a,e\mid b,e\mid d</span>
+we say <span class="math inline">\gcd(a,b)=d</span>, speaialy <span
+class="math inline">\gcd(a,b)=1</span> if and only if <span
+class="math inline">a,b</span> is prime</p>
+<div class="theorem theorem-box">
+<p><strong>Theorem. </strong></p>
+<p><strong>Theorem 1</strong>. <em><span class="math display">\forall
+d\mid a,d\mid b, \forall x,y, d\mid ax+by</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> According to the define : <span
+class="math inline">\exists m,n\in\mathbb{Z}</span> equal : <span
+class="math display">a=md,b=nd</span> <span
+class="math display">ax+by=(mx+ny)d</span> <span
+class="math display">d\mid ax+by</span> ◻</p>
+</div>
+</section>
+<section id="steins-algorithm" class="level3">
+<h3>Stein’s algorithm</h3>
+<p>if <span class="math inline">2\mid a,2\mid b,
+\gcd(a,b)=2\gcd(\frac{a}{2},\frac{b}{2})</span> else <span
+class="math inline">\gcd(a,b)=\gcd(\frac{a}{2},b)</span></p>
+<div class="sourceCode" id="cb1" data-language="C++"><pre
+class="sourceCode c++"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ll <span class="va">gcd_</span><span class="op">(</span>ll a<span class="op">,</span> ll b<span class="op">){</span><span class="cf">if</span><span class="op">(!</span>a<span class="op">)</span><span class="cf">return</span> b<span class="op">;</span><span class="cf">if</span><span class="op">(!</span>b<span class="op">)</span><span class="cf">return</span> a<span class="op">;</span><span class="dt">int</span> la<span class="op">=</span>ctz<span class="op">(</span>a<span class="op">),</span>lb<span class="op">=</span>ctz<span class="op">(</span>b<span class="op">);</span><span class="dt">int</span> v<span class="op">=</span>la<span class="op">&gt;</span>lb<span class="op">?</span>lb<span class="op">:</span>la<span class="op">;</span>a<span class="op">&gt;&gt;=</span>la<span class="op">;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span><span class="op">(;;){</span>b<span class="op">&gt;&gt;=</span>lb<span class="op">;</span><span class="cf">if</span><span class="op">(</span>a<span class="op">&gt;</span>b<span class="op">)</span>swap<span class="op">(</span>a<span class="op">,</span>b<span class="op">);</span>b<span class="op">-=</span>a<span class="op">;</span><span class="cf">if</span><span class="op">(!</span>b<span class="op">)</span><span class="cf">break</span><span class="op">;</span>lb<span class="op">=</span>ctz<span class="op">(</span>b<span class="op">);}</span><span class="cf">return</span> a<span class="op">&lt;&lt;</span>v<span class="op">;}</span></span></code></pre></div>
+<p>time complexly <span class="math inline">O(\log n)</span></p>
+</section>
+<section id="extended-euclidean-algorithm" class="level3">
+<h3>Extended Euclidean algorithm</h3>
+<p>The problem is to find a solution <span
+class="math inline">(x,y)</span> to equation <span
+class="math inline">ax+by=\gcd(a,b)</span>. let <span
+class="math inline">(x_1,y_1),(x_2,y_2)</span> are solutions to <span
+class="math inline">ax+by=\gcd(a,b)</span>, so we have : <span
+class="math display">ax_1+by_1=\gcd(a,b)</span> <span
+class="math display">a_x2+by_2=\gcd(a,b)</span></p>
+<div class="theorem theorem-box">
+<p><strong>Theorem. </strong></p>
+<p><strong>Theorem 2</strong>. <em>if <span
+class="math inline">b!=0</span><span
+class="math display">\gcd(a,b)=\gcd(a,a\mod{b})</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> let <span class="math inline">a=bq+r</span>, <span
+class="math inline">\gcd(a,b)=d,\gcd(a,a\mod{b})=e</span>, <span
+class="math inline">r\in[1,|b|]</span>. According to theorem 0.1. :<span
+class="math display">d\mid a,d\mid b,d\mid a-bq</span> so : <span
+class="math display">\gcd(a,b)\mid\gcd(a,a\mod b)</span> <span
+class="math display">e\mid a,e\mid a\mod{b},e\mid bq+r</span> so: <span
+class="math display">\gcd(a,b)=\gcd(a,a\mod b)</span> ◻</p>
+</div>
+<p>the base cases are <span class="math inline">(1,0),(0,1)</span>,
+according to the defination of modular arithmetic : <span
+class="math display">bx_2+(a-\lfloor\frac{a}{b}\rfloor\cdot
+b)y_2=\gcd(b,(a-\lfloor\frac{a}{b}\rfloor\cdot b))</span> so :<span
+class="math display">x_1=y_2</span><span
+class="math display">y_1=(x_2-\lfloor\frac{a}{b}\rfloor)y_2</span></p>
+<div class="sourceCode" id="cb2" data-language="C++"><pre
+class="sourceCode c++"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ll exgcd<span class="op">(</span>ll a<span class="op">,</span>ll b<span class="op">,</span>ll<span class="op">&amp;</span>x<span class="op">,</span>ll<span class="op">&amp;</span>y<span class="op">){</span><span class="cf">if</span><span class="op">(!</span>b<span class="op">){</span>x<span class="op">=</span><span class="dv">1</span><span class="op">,</span>y<span class="op">=</span><span class="dv">0</span><span class="op">;</span><span class="cf">return</span> a<span class="op">;}</span><span class="dt">int</span> v<span class="op">=</span>exgcd<span class="op">(</span>b<span class="op">,</span>a<span class="op">%</span>b<span class="op">,</span>x<span class="op">,</span>y<span class="op">);</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ll k<span class="op">=</span>x<span class="op">;</span>x<span class="op">=</span>y<span class="op">;</span>y<span class="op">=</span>k<span class="op">-(</span>a<span class="op">/</span>b<span class="op">)*</span>y<span class="op">;</span><span class="cf">return</span> v<span class="op">;}</span></span></code></pre></div>
+</section>
+<section id="eulers-totient-function" class="level3">
+<h3>Euler’s totient function</h3>
+<p>For <span class="math inline">n\in\mathbb{Z^{+}}</span>, the Euler’s
+totient function <span class="math inline">\phi(n)</span> is defined as
+a postive number <span class="math inline">a\le n</span> and relatively
+prime. <span
+class="math display">\phi(n)=n\prod\limits_{i=1}^{k}(1-\frac{1}{p_i})</span>,
+<span class="math inline">p</span> is prime. According to theorem 0.1.,
+an obvious conclusions is <span class="math inline">\phi(n) is
+even</span> when <span class="math inline">n&gt;2</span>. that’s because
+the <span class="math inline">\gcd</span> is always come out by a pair.
+Going by a step further, the sum of numbers less than or equal to <span
+class="math inline">n</span> and coprime to <span
+class="math inline">n</span> is <span
+class="math inline">\frac{n}{2}\phi(n),n&gt;1</span></p>
+<div class="theorem theorem-box">
+<p><strong>Theorem. </strong></p>
+<p><strong>Theorem 3</strong>. <em>Given <span
+class="math inline">N</span>, the number of n such that <span
+class="math inline">\phi(n)</span> is finite.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span
+class="math display">n=\prod\limits_{i=1}^{k}p_i^{\alpha_i}</span> <span
+class="math display">\phi(n)=\prod\limits_{i=1}^{k}p_i^{\alpha_i-1}(p_i-1)=N</span>
+<span class="math display">p_i-1\mid N,p_i\le N+1</span> Obviously,the
+number of <span class="math inline">p_i</span> is finite. so <span
+class="math inline">\alpha_i</span> is finite. ◻</p>
+</div>
+<p>If we perform a discrete Fourier transform on the Euler’s totient
+function, we can calculate <span class="math inline">\phi(n)</span>
+online in nlogn time. According to DFT we have : <span
+class="math display">\mathbf{F}[x][m]=\sum\limits_{k=1}^{n}x_i\exp(-2\pi\frac{mk}{n})</span>where
+<span class="math inline">m=1,x_i=\gcd(k,n)</span> <span
+class="math display">\phi(n)=\sum\limits_{k=1}{n}\gcd(k,n)\exp(-2\pi\frac{mk}{n})</span>
+<span
+class="math display">\phi(n)=\sum\limits_{k=1}{n}\gcd(k,n)\exp(\frac{2\pi
+k}{n})</span></p>
+<p>if:<span class="math inline">\gcd(a,n)=1,\gcd(b,n)=1</span>,<span
+class="math inline">\gcd(ab,n)=1</span></p>
+</section>
+</article></main>
+<footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+    </footer>
+</body>
+</html>

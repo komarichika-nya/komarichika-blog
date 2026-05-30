@@ -1,0 +1,37 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+
+\begin{document}
+\subsubsection{Binary Operation}
+Binary Operation is a rule for combining two elements produce to another element. The binary peration
+on $S$ is a mapping of the elements of Cartesian product $S\times S\to S$.
+\[f:S\times S\to S\]
+For each binary operation, it have to satisfy :
+\[\forall a,b\in S, f(a,b)\in S\land f(a,b)\:is\:unique\]
+Let's define the binary operation $*$ on $S$, we say $*$ it satisfy the communicative law if and only if :
+\[\forall a,b\in S, a*b=b*a\]
+we say it satisfy the associative law :
+\[\forall a,b,c\in S (a*b)*c=a*(b*c)\]
+we say it has neutral $e$ :
+\[\forall a\in S, a*e=e*a\]
+we say it has inverse :
+\[\forall a*a^{-1}=e\]
+
+suppose: $A\cap B=\varnothing$
+\[A+e=(A-e)\cup(e-A)=A\cup e=A\]
+\[e\subsetneq A\] suppose is wrong\\
+otherwise:\\
+\[(A-e)\cup(e-A)=A\]
+\[(A-A\cap e)\cup(e-A\cap e)=A\]
+\[2(A\cap e)=e\]
+
+
+\end{document}
+

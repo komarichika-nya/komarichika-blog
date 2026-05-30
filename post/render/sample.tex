@@ -1,0 +1,100 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true
+}
+\begin{document}
+\subsection{pseudo-random generator}
+A pseudo-random number generator can be abstracted as a finite state machine $\mathcal{G}=(S,O,s_0,f,g)$.
+where $S$ is finite set contains all possible internal states of spaces, $O$ is the output spaces, $s_0\in S$ 
+is the seed, $f:S\to S$ is the transition function and the $g:S\to O$ is the output function.\\
+The generation process involves repeatedly executing the following transfers:
+\[s_{n+1}=f(s_n)\]\[o_n=g(s_n)\]
+Ideally, we want $f$ is bijective. If $f$ is not bijective, that means when the generator enter $f(S)$,
+it will not visit the state $S/f(S)$. That would means we'd spend a lot of memery storing a rapidl
+iterating generator.\\
+The quality of random number generator is constrained by is internal state. Suppose we have a generator which 
+have $b$ bits internal states and output $r$ bits number everytime.$(b\ge r)$ So the cycle is $2^b$ and the types of numbers are $2^r$.
+Uniformly requires us the number which is $r$ bit must appear $2^{b-r}$. An extreme example is $r=32,b=32$.
+That means each number will not repeat before the cycle is completely traversed. However, this is not the case in real randomness.
+In real randomness, each number are independently repeatable. We can use birthday problem to model this.
+Given $m=2^b$ possibilities, draw $n=2^r$ independent and uniform samples, $X$ is the repeat at least once. The birthday problem given:
+\[P(X)=1-\frac{m(m-1)(m-2)\cdots(m-n+1)}{m^n}\]
+Actually, we can use Poisson distribution approximation.
+\[\lambda\approx\binom{n}{2}\frac{1}{m}=\frac{n(n-1)}{2m}\]
+\[P(X)\approx\exp(-\frac{n(n-1)}{2m})\]
+Ideally, the possibility of repeating at least once is hightest around time $\sqrt{m}$.\\
+Q: The birthday problem tell us that repeatition of output values always occurs too early.
+So does the finite-state PRNG fail statistically even earlier?\\
+A: Not at all. Repeatition is a normal phenomenon in birthday problem.
+Evluating whether a PRNG is failed depends on whether it stochastic model.
+For any PRNG, it should simulate the birthday problem as closely as possible, which is why the
+high bit is used to generate the low bit.\\
+Q: Consider a uniform mapping with an internal value state sapce of $2^b$ and an output value state of $2^r$, where $b>r$.
+According to the pigeonhole principle, each number appears approximationly $2^{b-r}$ times within one period. What is the expected number of times the output
+value appears more than $2^{b-r}$ times? What is the expected occurrence of such an event?\\
+A: Let internal state $N=2^b$ and output state $V=2^r$. Each output value $i$ and its frequently $X_i$ follow a multinomial distribution
+\[X_i\sim\mathcal{B}(N,\frac{1}{V})\]
+$\lambda\approx\frac{N}{V}=2^{b-r}$, so:
+\[I_i=\begin{cases}1&X_i>\lambda\\0&\mathtt{otherwise}\end{cases}\]
+\[E[\sum\limits_{i=1}^{V}I_i]=V\cdot P(X_i>\lambda)\]
+\[P(X_1>\lambda)=1-\sum\limits_{k=0}^{\lambda}\binom{n}{k}p^k(1-p)^{n-k}\]
+In fact, a normal approximation can be used(Poisson distribution also works).
+\[P(X>\lambda)=P(X\ge\lambda)\approx P(X\ge\lambda+1-0.5)=P(X\ge\lambda+1+0.5)\]
+normalize so:
+\[P(\frac{X-\lambda}{\sqrt{\lambda}})=1-\Phi(\frac{0.5}{\sqrt{\lambda}})=\Phi(\frac{0.5}{\sqrt{\lambda}})\approx\frac{1}{2}-\frac{1}{2\sqrt{2\pi\lambda}}\]
+\[\mathbb{E}[\#\{i:X_i>\lambda\}]\approx 2^{r-1}-\frac{2^r}{\sqrt{2\pi\lambda}}\cdot 2^{r-1}\]
+so, obversely, the expected is approximation $2^{r-1}$.\\
+Let's look at the second problem.
+\[P(X_1>\lambda,X_2>\lambda,\cdots,X_k>\lambda)\]
+\[X\sim\mathcal{M}(N;V^{-1},V^{-1},\cdots,1-nV^{-1})\]
+\[P(X_1>\lambda,X_2>\lambda,\cdots,X_k>\lambda)=\sum\limits_{X_i>\lambda\land\sum\limits_ia_i=k}\frac{\Gamma(k+1)}{\prod\limits_{i=1}^{k}\Gamma(a_i+1)}(\frac{1}{V})^{\sum a_i}(1-\frac{k}{V})^{N-\sum a_i}\]
+\subsection{LCG}
+A classic generator is $LCG$:
+\[X_{n+1}=(aX_n+c)\mod m\]
+where $m>0$ is modulus, $m>a>0$ is the multiplier, $m>c\ge 0$ is the increment and $X_0$ is the seed.
+It can addressable in $O(n\log n)$
+\[X_{n+i}=(a^iX_n+\frac{c(a^i-1)}{a-1})\]
+\begin{lstlisting}[language=C++]
+u64 qp(u64 a,u64 b,u64 m){u64 ans=1ull;a%=m;for(;b;b>>=1,a=a*a%m)(b&1)&&(ans=ans*a%m);return ans;}
+u64 sum(u64 a,u64 c,u64 m,u64 x){u64 ans=0,cur=1;a%=m;for(;x;x>>=1,cur=cur*(1+a)%m,a=a*a%m)(x&1)&&(ans=(ans*a%m+cur%m));return ans;}
+u64 rng(u64 a,u64 c,u64 m,u64 x0,int x){if(!x)return x0;u64 ai=qp(a,x,m),gs=sum(a,c,m,x);return (ai*x0+c*gs)%m;}
+string ec(u64 a,u64 c,u64 m,u64 sd){int n=s.size();string ans;ans.resize(n);int x;for(x=0;x<n;x++){u64 ks=rng(a,c,m,sd,x);ans[x]=s[x]^(char)(ks&0xff);}return ans;}
+\end{lstlisting}
+Actually, LCG is excellent. It have a long period, high speed, low memory useage and it's simple to implement(Um...you may care this).
+But the problem isn't with LCG itself, but with we shoudn't have directly output the LCG status unchanged. So what should we do ? How to improve it ?
+\subsection{PCG}
+A efficent idea is ($permutation-function$, Melissa O'Neill).Essentially, the permutation-function is adding a non-linear function before the output layer. Commonly, it contains following functions:$Xorshift$, $BitRotation$. 
+Formally, it may express $f\circ X_n$ where $f$ is the permutation-function.\\ 
+64-bits to 32-bits.
+\begin{lstlisting}[language=C++]
+using u32=uint32_t;
+u64 st=0;
+void f(u32 s){st=s|1;}
+u32 pcg(){u32 la=st;st=st*747796405u+2891336453u;u32 u=la>>(29-(st>>61));return u;}
+\end{lstlisting}
+\begin{lstlisting}[language=C++]
+u32 pcg32(){u64 la=st;st=st*747796405u+2891336453u;u32 u=(la^(la>>22u))>>(22u+(la>>61u));return u;}
+\end{lstlisting}
+\begin{lstlisting}[language=C++]
+u32 r32(u32 v,u32 r){return (v>>r)|(v<<32-r);}
+u32 pcg1(){u64 la=st;st=st*747796405u+2891336453u;u32 u=r32(st^(st>>18)>>27,st>>59);return u;}
+\end{lstlisting}
+In fact, you can make use of your image to design.
+\end{document}
+
