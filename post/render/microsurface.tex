@@ -1,0 +1,95 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true
+}
+\begin{document}
+\subsubsection{Microsurface}
+From the perspective of optical path transformission, macroscopic surface rendering and microscopic rendering are complementary. In macroscopic surface rendering, geometric normals can be easily used to depict macrosocpic imformation such as occlusion and shadows.
+A microsurface can be seen by the convexity of unit geometric planar $\mathcal{G}$, for all points $p_m$ in microsurface have the normal $\omega_m$. Given the geometric normal $\omega$, the distribution of normals decribes the microsurface normal $\omega_m$ which towards to $\omega$. 
+Since microsurfaces are defined based on probability density, some of our function should also be wrriten by corresponding form.
+The distribution of normals will be defined as:
+\[D(\omega)=\int_\mathcal{M}\delta_\omega(\omega_m(p_m))dp_m\:D(\omega)\in[0,1]\]
+An obvious but important property is:
+\[\int_\Omega D(\omega_m)d\omega_m=\int_\mathcal{M}dp_m\]
+It connect the geometric spatial distribution and the number of normal. Our next discussion will be based on this.
+If we define the $f(\omega_m)$ is any normal function of the microsurface, the spatial integration and the statistical's transform will be given:
+\[\int_\Omega f(\omega_m)D(\omega_m)d\omega_m=\int_\mathcal{M}f(\omega_m(p_m))dp_m\]
+This give us what should the normals of a microsurface look like.
+However, in rendering, we are more concerned with which normals are visable. In light scattering, reflection will only occur if the following two 
+condition met:\\
+The microsurface is not obscured when viewed from the incident direction.\\
+The microsurface is not obscured when viewed from the exit direction.\\
+We can find only the visable area normals actually play a role. So we introduce shadow-masking-function.
+The masking-function decribes how many normals are visable when viewed from the sigle direction $\omega$.
+\[G_1(\omega_o,\omega_m)=\frac{\int_{\mathcal{M}}\delta(\omega_m-\omega_m(p_m))V(\omega_o,\omega_m(p_m))dp_m}{\int_{\mathcal{M}}\delta(\omega_m-\omega_m(p_m))dp_m}\]
+According to this defination, we can get visable normal distribution function immaediately.
+\[D_v(\omega_o,\omega_m)\propto G(\omega_o,\omega_m)D(\omega_m)\langle\omega_o,\omega_m\rangle\]
+\[D_{\omega_o}(\omega_m)=\frac{G_1(\omega_o,\omega_m)\langle\omega_o,\omega_m\rangle D(\omega_m)}{\langle\omega_o,\omega_n\rangle}\]
+Intuitively,it is the proportion of the visable normal projection area to the total projection area. This distribution function satisfies the normlization condition:
+\[\int_{\Omega}D(\omega_m)d\omega_n=1\]
+\subsubsection{BRDF}
+We will derive BSDF. It'a easy to write $L(\omega_o)$ into:\\
+\[dL(\omega_o,\omega_m)=f_r^m(\omega_o,\omega_i,\omega_m)\langle\omega_i,\omega_m\rangle L(\omega_i)d\omega_i\]
+\[dL(\omega_o,\omega_m)=\int_{\Omega}dL(\omega_o,\omega_m)D_{\omega_o}(m)d\omega_m\]
+\[dL(\omega_o,\omega_m)=L(\omega_i)d\omega_i\int_{\Omega}f_r^m(\omega_o,\omega_i,\omega_m)\langle\omega_i,\omega_m\rangle D_{\omega_o}(\omega_m)d\omega_m\]
+\[f_r^m(\omega_o,\omega_i,\omega_m)=\frac{dL(\omega_o,\omega_m)}{L(\omega_i)\langle\omega_i,\omega_m\rangle d\omega_i}\]
+\[f_r^m(\omega_o,\omega_i,\omega_m)=\frac{\int_{\Omega}f_r^m(\omega_o,\omega_i,\omega_m)\langle\omega_i,\omega_m\rangle D_{\omega_o}(\omega_m)d\omega_m}{\langle\omega_i,\omega_m\rangle}\]
+\[f_r^m(\omega_o,\omega_i)=\frac{\int_{\Omega}f_r^m(\omega_o,\omega_i,\omega_m)\langle\omega_o,\omega_m\rangle G(\omega_i,\omega_o,\omega_m)\langle\omega_i,\omega_m\rangle D(\omega_m)d\omega_m}{|\omega_g\cdot\omega_o||\omega_g\cdot\omega_i|}\]
+A forwardstraight idea is to consider the diffuse reflection of a macroscopic surface as the total reflection of serveral microscopic surfaces.
+so the micro-BRDF for mirror-like will be given:
+\[f_r^m(\omega_i,\omega_o,\omega_m)=\frac{F(\omega_i,\omega_h)\delta_{\omega_h}(\omega_m)}{|\omega_o\cdot\omega_h|}\]
+But the core problem is the $\delta_{\omega_h}(\omega_m)$ is the distribution of the normal of microsurface. In path tracing, we want to get the discribution of exit direction $\omega_o$.
+We need to transform. Naturally, the Jacobian came to mind.
+\[f_r^m(\omega_i,\omega_o,\omega_m)=||\frac{\partial\omega_h}{\partial\omega_o}||\frac{F(\omega_i,\omega_h)\delta_{\omega_o}(\omega_m)}{|\omega_o\cdot\omega_m|}\]
+\[f_r^m(\omega_i,\omega_o,\omega_m)=\frac{F(\omega_i,\omega_h)\delta_{\omega_o}(\omega_m)}{4|\omega_o\cdot\omega_m|^2}\]
+\[f_r(\omega_o,\omega_i)=\frac{\int_{\Omega^+}\frac{F(\omega_i,\omega_h)\delta_{\omega_o(\omega_m)}}{4|\omega_o\cdot\omega_h|^2}
+\langle\omega_o,\omega_m\rangle\langle\omega_o,\omega_m\rangle G(\omega_o,\omega_i,\omega_m)D(\omega_m)d\omega_m}{|\omega_g\cdot\omega_o||\omega_g\cdot\omega_i|}\]
+\[f_r(\omega_i,\omega_o)=\frac{F(\omega_i,\omega_h)G(\omega_i,\omega_o,\omega_h)D(\omega_h)}{4|\omega_g\cdot\omega_o||\omega_g\cdot\omega_i|}\]
+For diffuse reflection, $f_r^m$ is fixed.
+\[f_r^m(\omega_i,\omega_o,\omega_m)=\frac{1}{\pi}\]
+\[f_r=\frac{1}{\pi|\omega_g\cdot\omega_i||\omega_g\cdot\omega_i|}\int_{\Omega^+}\langle\omega_o,\omega_m\rangle\langle\omega_i,\omega_m\rangle G(\omega_i,\omega_o,\omega_m)D(m)d\omega_m\]
+It hasn't analytical solution.
+Normally, we assume that a sphere is uniformly visible to a light source. However, in real physics, whether on a macroscopic or microscopic surface, 
+areas where light cannot reach are invisible. The reason for the lack of an analytical solution is visibility. 
+For a microscopic surface G, the design of D is inherently based on visibility. 
+Therefore, for diffuse reflection, we can still use the Simth approximation to choose a suitable distribution. 
+The core issue is how to use visibility to model diffuse reflection on microscopic surfaces. 
+Is this the reason why there is no analytical solution for diffuse reflection on microscopic surfaces?
+\subsubsection{Beckmann distribution}
+Any distribution should satisfy:
+\[\int_{\Omega}D(\omega_m)\langle\omega_m,\omega_g\rangle\]
+ensure energy conservation. the Beckmann distribution will be given by(Walter 2007.):
+\[D(m)=\frac{\mathcal{X}\omega_m\cdot\omega_g}{\pi\alpha_b^2\cos\theta_{m}^4}\exp(\frac{-\tan\theta_{m}^2}{\alpha_b^2})\]
+let $\xi_1,\xi_2\sim\mathcal{U}(0,1)$:
+\[d\omega=\sin\theta_m d\phi\]
+\[p(\theta,\phi)=\frac{\mathcal{X}(m,n)\sin\theta_m}{\pi\alpha_b^2\cos\theta_m^3}\exp(\frac{-\tan^2\theta_m}{\alpha_b})\]
+\[\phi=2\pi\xi_1\]
+\[F(\theta_m)=\int_{0}^{2\pi}p(\theta,\phi)d\phi=\int_{0}^{2\pi}\frac{2\tan\theta}{\alpha_b^2\cos^2\theta}\exp(-\frac{-\tan^2\theta}{\alpha_b^2})d\theta\]
+\[F(t)=\int_0^t\frac{2t}{\alpha_b^2}\exp(-\frac{t^2}{\alpha_b2})dt\]
+\[\xi_2=\arctan\sqrt{-\alpha_b^2\log(1-\xi_1)}\]
+\subsubsection{Sample}
+An straightforward idea is to sample the geometric normals
+\begin{lstlisting}[language=C++]
+template<typename T>
+vec3<T,V>sph(const vec3<T,V>&n,Sampler<T>&s){
+T u=s.get1d(),v=s.get1d();T theta=atan(sqrt(-aph<T>*aph<T>*log(max(1-u,T(1e-9)))));
+T phi=T(2)*T(3.1415926535)*v;T st=sin(theta),ct=cos(theta);vec3<T,V>t=abs(n.z)>T(0.9999)?cs(vec3<T,V>(1,0,0),n):cs(vec3<T,V>(0,0,1),n);
+vec3<T,V>b=cs(n,t);return nor(st*cos(phi)*t+ct*n+st*sin(phi)*b);}
+\end{lstlisting}
+\end{document}

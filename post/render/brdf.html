@@ -118,7 +118,7 @@ class="sourceCode c++"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> u1<span class="op">=</span>nor<span class="op">(</span>cs<span class="op">(</span>vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;(</span><span class="fl">1.0</span><span class="op">,</span><span class="dv">0</span><span class="op">,</span><span class="dv">0</span><span class="op">),</span>n<span class="op">));</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;</span>v1<span class="op">=</span>cs<span class="op">(</span>n<span class="op">,</span>u1<span class="op">);</span><span class="cf">return</span> x<span class="op">*</span>u1<span class="op">+</span>y<span class="op">*</span>n<span class="op">+</span>z<span class="op">*</span>v1<span class="op">;</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<figure id="fig:ball">
+<figure id="fig:ball" data-latex-placement="htbp">
 <img src="figures/brdf/a.png" loading="lazy" />
 <figcaption>100spp</figcaption>
 </figure>
@@ -167,11 +167,11 @@ class="sourceCode c++"><code class="sourceCode cpp"><span id="cb2-1"><a href="#c
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;</span>dir<span class="op">=</span>pt<span class="op">-</span>p<span class="op">;</span>vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;</span>n1<span class="op">=</span>nor<span class="op">(</span>cs<span class="op">(</span>e1<span class="op">&lt;</span>T<span class="op">&gt;,</span>e2<span class="op">&lt;</span>T<span class="op">&gt;));</span></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    T s<span class="op">=</span>len<span class="op">(</span>cs<span class="op">(</span>e1<span class="op">&lt;</span>T<span class="op">&gt;,</span>e2<span class="op">&lt;</span>T<span class="op">&gt;));</span>T dis<span class="op">=</span>max<span class="op">(</span>len<span class="op">(</span>dir<span class="op">),</span>eps<span class="op">);</span><span class="cf">return</span> nor<span class="op">(</span>dir<span class="op">);</span></span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<figure id="fig:ball">
+<figure id="fig:ball" data-latex-placement="htbp">
 <img src="figures/brdf/b.png" loading="lazy" />
 <figcaption>light intensity:10 100spp</figcaption>
 </figure>
-<figure id="fig:ball">
+<figure id="fig:ball" data-latex-placement="htbp">
 <img src="figures/brdf/c.png" loading="lazy" />
 <figcaption>light intensity:1 1024spp</figcaption>
 </figure>

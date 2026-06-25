@@ -4,7 +4,7 @@ html="${tex%.tex}.html"
 title=$(basename "${tex%.tex}")
 dep=$(echo "$tex"|tr -cd '/'|wc -c)
 pre=$(printf '../%.0s' $(seq 1 $dep))
-pandoc "$tex" --katex --section-divs --lua-filter=theorem.lua --lua-filter=image-lazy.lua --highlight-style=tango -o /tmp/body.html
+pandoc "$tex" --katex --section-divs --lua-filter=theorem.lua --lua-filter=image-lazy.lua --syntax-highlighting=tango -o /tmp/body.html
 cat > "$html" <<EOF
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +53,7 @@ if [ -f "$LOG" ]; then
       in_entry=1
     elif [[ "$line" == ":::" ]]; then
       # 遇到单独的 ":::" —— 一条结束，渲染它
-      printf '%s' "$body" | pandoc --katex --highlight-style=tango -o /tmp/entry.html
+      printf '%s' "$body" | pandoc --katex --syntax-highlighting=tango -o /tmp/entry.html
       {
         echo "<article class=\"log-entry\">"
         echo "<time>${date}</time>"

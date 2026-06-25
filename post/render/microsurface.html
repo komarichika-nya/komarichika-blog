@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>microsurface · KomariChika</title>
+<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
+</head>
+<body>
+<header><nav><a href="../../index.html">Home</a></nav></header>
+<main><article>
+<section id="microsurface" class="level3">
+<h3>Microsurface</h3>
+<p>From the perspective of optical path transformission, macroscopic
+surface rendering and microscopic rendering are complementary. In
+macroscopic surface rendering, geometric normals can be easily used to
+depict macrosocpic imformation such as occlusion and shadows. A
+microsurface can be seen by the convexity of unit geometric planar <span
+class="math inline">\mathcal{G}</span>, for all points <span
+class="math inline">p_m</span> in microsurface have the normal <span
+class="math inline">\omega_m</span>. Given the geometric normal <span
+class="math inline">\omega</span>, the distribution of normals decribes
+the microsurface normal <span class="math inline">\omega_m</span> which
+towards to <span class="math inline">\omega</span>. Since microsurfaces
+are defined based on probability density, some of our function should
+also be wrriten by corresponding form. The distribution of normals will
+be defined as: <span
+class="math display">D(\omega)=\int_\mathcal{M}\delta_\omega(\omega_m(p_m))dp_m\:D(\omega)\in[0,1]</span>
+An obvious but important property is: <span
+class="math display">\int_\Omega
+D(\omega_m)d\omega_m=\int_\mathcal{M}dp_m</span> It connect the
+geometric spatial distribution and the number of normal. Our next
+discussion will be based on this. If we define the <span
+class="math inline">f(\omega_m)</span> is any normal function of the
+microsurface, the spatial integration and the statistical’s transform
+will be given: <span class="math display">\int_\Omega
+f(\omega_m)D(\omega_m)d\omega_m=\int_\mathcal{M}f(\omega_m(p_m))dp_m</span>
+This give us what should the normals of a microsurface look like.
+However, in rendering, we are more concerned with which normals are
+visable. In light scattering, reflection will only occur if the
+following two condition met:<br />
+The microsurface is not obscured when viewed from the incident
+direction.<br />
+The microsurface is not obscured when viewed from the exit
+direction.<br />
+We can find only the visable area normals actually play a role. So we
+introduce shadow-masking-function. The masking-function decribes how
+many normals are visable when viewed from the sigle direction <span
+class="math inline">\omega</span>. <span
+class="math display">G_1(\omega_o,\omega_m)=\frac{\int_{\mathcal{M}}\delta(\omega_m-\omega_m(p_m))V(\omega_o,\omega_m(p_m))dp_m}{\int_{\mathcal{M}}\delta(\omega_m-\omega_m(p_m))dp_m}</span>
+According to this defination, we can get visable normal distribution
+function immaediately. <span
+class="math display">D_v(\omega_o,\omega_m)\propto
+G(\omega_o,\omega_m)D(\omega_m)\langle\omega_o,\omega_m\rangle</span>
+<span
+class="math display">D_{\omega_o}(\omega_m)=\frac{G_1(\omega_o,\omega_m)\langle\omega_o,\omega_m\rangle
+D(\omega_m)}{\langle\omega_o,\omega_n\rangle}</span> Intuitively,it is
+the proportion of the visable normal projection area to the total
+projection area. This distribution function satisfies the normlization
+condition: <span
+class="math display">\int_{\Omega}D(\omega_m)d\omega_n=1</span></p>
+</section>
+<section id="brdf" class="level3">
+<h3>BRDF</h3>
+<p>We will derive BSDF. It’a easy to write <span
+class="math inline">L(\omega_o)</span> into:<br />
+<span
+class="math display">dL(\omega_o,\omega_m)=f_r^m(\omega_o,\omega_i,\omega_m)\langle\omega_i,\omega_m\rangle
+L(\omega_i)d\omega_i</span> <span
+class="math display">dL(\omega_o,\omega_m)=\int_{\Omega}dL(\omega_o,\omega_m)D_{\omega_o}(m)d\omega_m</span>
+<span
+class="math display">dL(\omega_o,\omega_m)=L(\omega_i)d\omega_i\int_{\Omega}f_r^m(\omega_o,\omega_i,\omega_m)\langle\omega_i,\omega_m\rangle
+D_{\omega_o}(\omega_m)d\omega_m</span> <span
+class="math display">f_r^m(\omega_o,\omega_i,\omega_m)=\frac{dL(\omega_o,\omega_m)}{L(\omega_i)\langle\omega_i,\omega_m\rangle
+d\omega_i}</span> <span
+class="math display">f_r^m(\omega_o,\omega_i,\omega_m)=\frac{\int_{\Omega}f_r^m(\omega_o,\omega_i,\omega_m)\langle\omega_i,\omega_m\rangle
+D_{\omega_o}(\omega_m)d\omega_m}{\langle\omega_i,\omega_m\rangle}</span>
+<span
+class="math display">f_r^m(\omega_o,\omega_i)=\frac{\int_{\Omega}f_r^m(\omega_o,\omega_i,\omega_m)\langle\omega_o,\omega_m\rangle
+G(\omega_i,\omega_o,\omega_m)\langle\omega_i,\omega_m\rangle
+D(\omega_m)d\omega_m}{|\omega_g\cdot\omega_o||\omega_g\cdot\omega_i|}</span>
+A forwardstraight idea is to consider the diffuse reflection of a
+macroscopic surface as the total reflection of serveral microscopic
+surfaces. so the micro-BRDF for mirror-like will be given: <span
+class="math display">f_r^m(\omega_i,\omega_o,\omega_m)=\frac{F(\omega_i,\omega_h)\delta_{\omega_h}(\omega_m)}{|\omega_o\cdot\omega_h|}</span>
+But the core problem is the <span
+class="math inline">\delta_{\omega_h}(\omega_m)</span> is the
+distribution of the normal of microsurface. In path tracing, we want to
+get the discribution of exit direction <span
+class="math inline">\omega_o</span>. We need to transform. Naturally,
+the Jacobian came to mind. <span
+class="math display">f_r^m(\omega_i,\omega_o,\omega_m)=||\frac{\partial\omega_h}{\partial\omega_o}||\frac{F(\omega_i,\omega_h)\delta_{\omega_o}(\omega_m)}{|\omega_o\cdot\omega_m|}</span>
+<span
+class="math display">f_r^m(\omega_i,\omega_o,\omega_m)=\frac{F(\omega_i,\omega_h)\delta_{\omega_o}(\omega_m)}{4|\omega_o\cdot\omega_m|^2}</span>
+<span
+class="math display">f_r(\omega_o,\omega_i)=\frac{\int_{\Omega^+}\frac{F(\omega_i,\omega_h)\delta_{\omega_o(\omega_m)}}{4|\omega_o\cdot\omega_h|^2}
+\langle\omega_o,\omega_m\rangle\langle\omega_o,\omega_m\rangle
+G(\omega_o,\omega_i,\omega_m)D(\omega_m)d\omega_m}{|\omega_g\cdot\omega_o||\omega_g\cdot\omega_i|}</span>
+<span
+class="math display">f_r(\omega_i,\omega_o)=\frac{F(\omega_i,\omega_h)G(\omega_i,\omega_o,\omega_h)D(\omega_h)}{4|\omega_g\cdot\omega_o||\omega_g\cdot\omega_i|}</span>
+For diffuse reflection, <span class="math inline">f_r^m</span> is fixed.
+<span
+class="math display">f_r^m(\omega_i,\omega_o,\omega_m)=\frac{1}{\pi}</span>
+<span
+class="math display">f_r=\frac{1}{\pi|\omega_g\cdot\omega_i||\omega_g\cdot\omega_i|}\int_{\Omega^+}\langle\omega_o,\omega_m\rangle\langle\omega_i,\omega_m\rangle
+G(\omega_i,\omega_o,\omega_m)D(m)d\omega_m</span> It hasn’t analytical
+solution. Normally, we assume that a sphere is uniformly visible to a
+light source. However, in real physics, whether on a macroscopic or
+microscopic surface, areas where light cannot reach are invisible. The
+reason for the lack of an analytical solution is visibility. For a
+microscopic surface G, the design of D is inherently based on
+visibility. Therefore, for diffuse reflection, we can still use the
+Simth approximation to choose a suitable distribution. The core issue is
+how to use visibility to model diffuse reflection on microscopic
+surfaces. Is this the reason why there is no analytical solution for
+diffuse reflection on microscopic surfaces?</p>
+</section>
+<section id="beckmann-distribution" class="level3">
+<h3>Beckmann distribution</h3>
+<p>Any distribution should satisfy: <span
+class="math display">\int_{\Omega}D(\omega_m)\langle\omega_m,\omega_g\rangle</span>
+ensure energy conservation. the Beckmann distribution will be given
+by(Walter 2007.): <span
+class="math display">D(m)=\frac{\mathcal{X}\omega_m\cdot\omega_g}{\pi\alpha_b^2\cos\theta_{m}^4}\exp(\frac{-\tan\theta_{m}^2}{\alpha_b^2})</span>
+let <span class="math inline">\xi_1,\xi_2\sim\mathcal{U}(0,1)</span>:
+<span class="math display">d\omega=\sin\theta_m d\phi</span> <span
+class="math display">p(\theta,\phi)=\frac{\mathcal{X}(m,n)\sin\theta_m}{\pi\alpha_b^2\cos\theta_m^3}\exp(\frac{-\tan^2\theta_m}{\alpha_b})</span>
+<span class="math display">\phi=2\pi\xi_1</span> <span
+class="math display">F(\theta_m)=\int_{0}^{2\pi}p(\theta,\phi)d\phi=\int_{0}^{2\pi}\frac{2\tan\theta}{\alpha_b^2\cos^2\theta}\exp(-\frac{-\tan^2\theta}{\alpha_b^2})d\theta</span>
+<span
+class="math display">F(t)=\int_0^t\frac{2t}{\alpha_b^2}\exp(-\frac{t^2}{\alpha_b2})dt</span>
+<span
+class="math display">\xi_2=\arctan\sqrt{-\alpha_b^2\log(1-\xi_1)}</span></p>
+</section>
+<section id="sample" class="level3">
+<h3>Sample</h3>
+<p>An straightforward idea is to sample the geometric normals</p>
+<div class="sourceCode" id="cb1" data-language="C++"><pre
+class="sourceCode c++"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">typename</span> T<span class="op">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;</span>sph<span class="op">(</span><span class="at">const</span> vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;&amp;</span>n<span class="op">,</span>Sampler<span class="op">&lt;</span>T<span class="op">&gt;&amp;</span>s<span class="op">){</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>T u<span class="op">=</span>s<span class="op">.</span>get1d<span class="op">(),</span>v<span class="op">=</span>s<span class="op">.</span>get1d<span class="op">();</span>T theta<span class="op">=</span>atan<span class="op">(</span>sqrt<span class="op">(-</span>aph<span class="op">&lt;</span>T<span class="op">&gt;*</span>aph<span class="op">&lt;</span>T<span class="op">&gt;*</span>log<span class="op">(</span>max<span class="op">(</span><span class="dv">1</span><span class="op">-</span>u<span class="op">,</span>T<span class="op">(</span><span class="fl">1e-9</span><span class="op">)))));</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>T phi<span class="op">=</span>T<span class="op">(</span><span class="dv">2</span><span class="op">)*</span>T<span class="op">(</span><span class="fl">3.1415926535</span><span class="op">)*</span>v<span class="op">;</span>T st<span class="op">=</span>sin<span class="op">(</span>theta<span class="op">),</span>ct<span class="op">=</span>cos<span class="op">(</span>theta<span class="op">);</span>vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;</span>t<span class="op">=</span>abs<span class="op">(</span>n<span class="op">.</span>z<span class="op">)&gt;</span>T<span class="op">(</span><span class="fl">0.9999</span><span class="op">)?</span>cs<span class="op">(</span>vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;(</span><span class="dv">1</span><span class="op">,</span><span class="dv">0</span><span class="op">,</span><span class="dv">0</span><span class="op">),</span>n<span class="op">):</span>cs<span class="op">(</span>vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;(</span><span class="dv">0</span><span class="op">,</span><span class="dv">0</span><span class="op">,</span><span class="dv">1</span><span class="op">),</span>n<span class="op">);</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;</span>b<span class="op">=</span>cs<span class="op">(</span>n<span class="op">,</span>t<span class="op">);</span><span class="cf">return</span> nor<span class="op">(</span>st<span class="op">*</span>cos<span class="op">(</span>phi<span class="op">)*</span>t<span class="op">+</span>ct<span class="op">*</span>n<span class="op">+</span>st<span class="op">*</span>sin<span class="op">(</span>phi<span class="op">)*</span>b<span class="op">);}</span></span></code></pre></div>
+</section>
+</article></main>
+<footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+    </footer>
+</body>
+</html>

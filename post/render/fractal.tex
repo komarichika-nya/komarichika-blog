@@ -1,0 +1,40 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    breaklines=true
+}
+\begin{document}
+\subsubsection{previous}
+The Holomorphic function is defined as:
+\[\{U\subseteq\mathbb{C},f:U\to\mathbb{C}:\forall z_0\in U,\exists\lim_{h\to0\land h\in\mathbb{C}}\frac{f(z_0+h)-f(z_0)}{h}\}\]
+The Univalent function is defined as:
+\[\{U\subseteq\mathbb{C},f:U\to\mathbb{C}:f is Holomorphic\land\forall z_1,z_2\in U(z_1\ne z_2\implies f(z_1)\ne f(z_2))\}\]
+Obviously, Holomorphic is equal to analytic.\\
+\subsubsection{supperattracting fixed point}
+In Compound power system, a fixed point is a point that remains unchanged after the mapping $f$ is applied. Specifically, an holomorphic mappinng
+$f:\mathbb{C}\to\mathbb{C}$, if $\{\exists z_0:f(z_0)=z_0\}$ then we call $z_0$ is a fixed point. The multiplier $\lambda$ is defined as $\lambda=f'(z_0)$,
+$|\lambda|$ decided the fixed point's locally dynamic.
+let analytic germ $f:(\mathbb{C},0)\to(\mathbb{C},0)$ with the fixed point 0. where $f(0)=0$
+The Taylor expansion of $f$ at 0 is \[f(z)=\sum\limits_{n=1}^{\infty}a_nz_n\]
+the supperattracting fixed point requires $f'(0)=0$, so $a_1=0$ and $f\not\equiv0$. so:
+\[\exists k>=2,f(z)=a_kz^{k}+a_{k+1}z^{k+1}+\cdots=a_kz^k+\mathcal{O}(a_{k+1}z^{k+1}),a_k\ne0\]
+Generally, for analytic germ $f:(\mathbb{C},0)\to(\mathbb{C},0)$, requires $DF(0)=0$. where $D=(\frac{\partial{F_i}}{\partial{z_j}})_{n\times n}$
+\subsubsection{adpated supperattracting fixed point}
+\end{document} 
