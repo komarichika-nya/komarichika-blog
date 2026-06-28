@@ -30,4 +30,6 @@ happy coding daliy life.
 Everyday, I always read papers and write code. Although I enjoy them, I have some hobbies such as tinkering with my linux desktop(Uh...it still ugly), adding new features in my blog, taking a photograph and so on. There are so many novels I want to read. But I always fall asleep after reading less than two pages. Oh well...things will be better if you don't think more.
 :::
 
+::: 2026-06-28
 
+so abstract. btw. :-(

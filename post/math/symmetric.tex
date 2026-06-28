@@ -40,7 +40,7 @@ For a permutation, the cycle decomposition is unique, but each elements in cycle
     then $C_iC_j=C_jC_i$. $\forall x\in C_i,C_j(x)=x,C_i(x)\in\mathrm{supp}(C_i)$(cycle can permute the support set itself.) 
     so:$C_jC_i(x)=C_i(x)=C_i(x)C_j$. another case $x\in C_j$ is symmetric.
 \end{proof}
-
+ 
 \begin{lemma}
     \[\sigma^k=\mathrm{id.}\iff\forall i,C_i^k=\mathrm{id.}\]
 \end{lemma}
@@ -111,6 +111,13 @@ almost books describe the dihedral group with generator and relation like $D_n=\
 what's different?\\
 A:Essentally, they both blong to $free\:group$, but the description of group consists of free group modul normal closure.
 $\langle X\mid R\rangle=F(X)/\langle\langle R\rangle\rangle$. Obviously, is the quotient group. The relators are the quotirnt's id.
-
+\begin{proposition}
+    if $S_{\Omega}\cong S_{\Delta}$ and map $\theta:S_{\Omega}\to S_{\Delta}$, $\exists\varphi:S_{\Omega}\to S_{\sigma}$, $\varphi(\sigma)=\theta\circ\sigma\circ\theta^{-1}$ is surjective.
+\end{proposition}
+\begin{proof}
+    $\theta$ is surjective, so exist $\theta^{-1}:S_{\Delta}\to S_{\Omega}$, $\forall\sigma\in S_{\Omega},\sigma:S_{\Omega}\to S_{\Omega}$.
+    $\forall x\in S_{\Delta},\theta(\sigma(\theta^{-1}(x)))\in S_{\Omega}$, so $\varphi(\sigma):S_{\Delta}\to S_{\Delta}$. obviously, it's surjective.
+\end{proof}
+It's easy to see symmetric group only depend the cardilality of set. 
 \end{document}
 

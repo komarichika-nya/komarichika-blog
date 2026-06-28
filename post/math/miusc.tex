@@ -1,0 +1,28 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xstring}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+%chord
+\newcommand{\sh}{\ensuremath{\sharp}}
+\newcommand{\fl}{\ensuremath{\flat}}
+\newcommand{\chord}[1]{
+    \StrSubstitute{#1}{\#}{\sh}[\temp]
+    \StrSubstitute{\temp}{b}{\fl}
+}
+
+\begin{document}
+note:Our discussion is under three-note chord(triad).\\
+A triad can see a three-pair consists of the root, the thrid, fifth. More generally,
+it can be seen a $D_{12}=\langle r,s\mid r^12=s^2=1,rsr=s^{-1}\rangle$. Both of the triad transform can 
+be seen two group action.
+$S=\{A,\chord{A\#},B,\chord{Bb},\chord{B\#}\}$
+\end{document}
+
+
+

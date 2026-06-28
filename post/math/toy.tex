@@ -37,5 +37,25 @@ Consider $f:\mathbf{R^n}\to\mathbf{R^m},n=m$, the Jacobian's matrix is be define
 \vdots&\vdots&\vdots\\
 \frac{\partial y_1}{\partial x_n}&\frac{\partial y_2}{\partial x_n}&\cdots&\frac{\partial y_n}{\partial x_n}
 \end{pmatrix}\]
+\begin{theorem}
+   $GL_n(F)$ is finite if and only if $F$ is finite.
+\end{theorem}
+\begin{proof}
+   step 1: if $F$ is finite, then $GL_n(F)$ is finite.\\ 
+   obviously, we have,$M_n(F)=q^{n^2}$,$|GL_n(F)|=M_n(F)-\{A\mid A\in M_n(F)\land\det(A)=0\}$, $GL_n(F)\subseteq M_n(F)$,$|GL_n(F)|\le|M_n(F)|$\\
+    step 2: if $GL_n(F)$ is finite, then $F$ is finite.\\
+    let $D(a)\in GL_n(F)$, there exists a map:
+    $\forall a\in F^{\times},a\mapsto D(a)$,it's injective obviously.
+    so:$F^{\times}\to GL_n(F)$,$F^{\times}$ is finite, $F^{\times}\cup\{0\}$ is finite. 
+\end{proof}
+may construct methed: let $D(a)=\mathrm{diag}$.
+\begin{theorem}
+   $F$ is the filed, if $|F|<\infty$, then $|F|=p^k$, where $p$ is prime.
+\end{theorem}
+\begin{proof}
+    $|F|<\infty$, so $\mathbb{F}_p$-vector space(dimnation-$k$)is finite.
+    so $\exists\mathcal{B}_{\mathbb{F}_p}=\{v_1,v_2,\cdots,v_k\}$, $\mathrm{span}(\mathcal{B}_{\mathbb{F}_p})=F$, 
+    obviously, $|F|=p^k$. such we can construct $F_2(x)/(x^2+x+1)$
+\end{proof}
 \end{document}
 

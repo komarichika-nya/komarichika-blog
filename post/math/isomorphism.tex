@@ -1,0 +1,105 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\begin{document}
+\begin{theorem}
+    if $\varphi:G\to H$ is isomorphism, $\forall x\in G,|\varphi(x)|\mid|x|$.
+\end{theorem}
+\begin{proof}
+    $\varphi$ is isomorphism, $\varphi(x^n)=\varphi(x)^n$, this is tirval.
+    if $n$ is the order of $x$, so $\varphi(e)=\varphi(x)^n$, let m is the order of the $\varphi(x)$
+    $\varphi(x)^m=e=\varphi(e)$, so $n=mq+r,\forall r\in[0,m)$, $\varphi(x)^r=\varphi(x)^n(\varphi(x)^m)^{-q}$,
+    so, $n=mq$.
+\end{proof}
+From this we can see, isomorphism ensure the order of elements between two groups are same.
+\begin{lemma}
+    products are unique up to a unique isomorphism.
+\end{lemma}
+\begin{proof}
+    Define category $\mathcal{C}$,$\forall X,A,B\in\mathcal{C}$, and morphism $f:X\to A,g:X\to B,\langle f,g\rangle:X\to A\times B$, 
+    the products 
+    $\langle A\times B,
+    \pi_1:A\times B\to A,
+    \pi_2:A\times B\to B\rangle$, 
+    $\exists\langle f,g\rangle:X\to A\times B\implies\pi_1\circ\langle f,g\rangle=f\land\pi_2\circ\langle f,g\rangle=g$
+    suppose $\langle P,p_1:P\to A,p_2:P\to B\rangle$ and 
+    $\langle Q,q_1:Q\to A,q_2:Q\to B\rangle$ are both product of $A,B$,
+    $\exists u:P\to Q,p_1=q_1\circ u,p_2=q_2\circ u,\langle p_1,p_2\rangle_{P}$,
+    $\exists v:Q\to P,q_1=p_1\circ v,q_2=p_2\circ v,\langle q_1,q_2\rangle_{Q}$,
+    let $X=P,f=p_1,g=p_2$,
+    $P\to P,p_1\circ u\circ v=p_1,p_2\circ u\circ v=p_2$,
+    $u\circ v=\mathrm{id.}_Q$,
+    let $X=Q,f=q_1,g=q_2$,
+    $Q\to Q,q_1\circ u\circ v=q_1,q_2\circ u\circ v=q_2$,
+    $v\circ u=\mathrm{id.}_P$,
+    $q_i\circ u=p_i$.
+\end{proof}
+\begin{proposition}
+    $\forall A,B$,$A\times B\cong B\times A$.
+\end{proposition}
+\begin{proof}
+    condider $\langle A\times B,\pi_1^{A\times B}:A\times B\to A,\pi_2^{A\times B}:A\times B\to B\rangle$ and
+    $\langle B\times A,\pi_1^{B\times A}:B\times A\to B,\pi_2^{B\times A}:B\times A\to A\rangle$, according to univeral-property,
+    $\forall X\in\mathcal C,\exists f:X\to A,g:X\to B$, equal $\pi_1\circ\langle f,g\rangle=f\land\pi_2\circ\langle f,g\rangle=g$.
+    so let $X=A\times B$, then $\pi_1^{A\times B}\circ\langle f,g\rangle=f\land\pi_2^{A\times B}\circ\langle f,g\rangle=g$.
+    let $X=B\times A$, then $\pi_1^{B\times A}\circ\langle f,g\rangle=f\land\pi_2^{B\times A}\circ\langle f,g\rangle=g$.
+    construct $B\times A\to A\times B$ and $A\times B\to B\times A$
+    let $f:=\pi_2^{B\times A}:B\times A\to A,g:=\pi_1^{B\times A}:B\times A\to B,u=f\circ g:=\langle\pi_2^{B\times A},\pi_1^{B\times A}\rangle:B\times A\to A\times B$,
+    so $\pi_1^{B\times A}\circ u=\pi_2^{B\times A},\pi_2^{B\times A}\circ u=\pi_1^{B\times A}$
+    symmetric, let $f:=\pi_1^{A\times B}:A\times B\to A,g:=\pi_2^{A\times B}:A\times B\to A,v=f\circ g=\langle\pi_2^{A\times B},\pi_1^{A\times B}:A\times B\to A\times B\rangle$,
+    condider $B\times A\to B\times A$, then $\pi_1^{B\times A}\circ(v\circ u)=(\pi_2^{A\times B}\circ v)\circ u=\pi_1^{B\times A},\pi_2^{B\times A}\circ(v\circ u)=(\pi_2^{B\times A}\circ v)\circ u=\pi_2^{B\times A}$
+    $v\circ u=\mathrm{id}_{B\times A}.$, it's symmetric in $A\times B\to A\times B$.
+\end{proof}
+\begin{lemma}
+    $\varphi:G\to H$ is homomorphic, $\operatorname{im}\varphi$ is the subgroup of $H$.
+\end{lemma}
+\begin{proof}
+    $\forall a',b'\operatorname,\exists a,b\in G$, $\varphi(a')=a,\varphi(b')=b,ab=\varphi(a'b')=\varphi(a')\varphi(b')\in\operatorname{im}\varphi$. obviously, $\mathrm{id.}$ is also equal.
+    according to theorem 1, $\varphi(a'^{-1})=\varphi(a')^{-1}$, inverse exists. obviously, the map is surjective.
+\end{proof}
+\begin{lemma}
+    $\varphi:G\to H$,$\operatorname{im}(\varphi)$ is the subgroup of $G$.
+\end{lemma}
+\begin{proof}
+   consider a map $\pi:\operatorname{im},\varphi\to G$, $\forall a,b\in\operatorname{im}\varphi,\exists a',b'\in G$. $a\mapsto a',b\mapsto b'$ is injective. more generally, such that map $\pi$ is always injective. 
+\end{proof}
+\begin{lemma}
+    $\varphi$ is injective $\iff\ker\varphi=\{\mathrm{id.}\}$
+\end{lemma}
+\begin{proof}
+    if $\varphi$ is surjective, according to lemma 2, $\varphi:G\to\operatorname{im}\varphi$ is surjective, so $\varphi$ is beijective.
+    so $\ker\varphi=\{\mathrm{id.}\}$. if $\ker\varphi=\{\mathrm{id.}\}$, $\forall a,b\in G$, $\varphi(a)=\varphi(b)\implies\varphi(ab^{-1})=ab^{-1}=\mathrm{id.}\in\ker\varphi\iff a=b$
+\end{proof}
+\begin{proposition}
+    $\operatorname{Aut}(G)$ is a group under compose.
+\end{proposition}
+\begin{proof}
+    $\forall\varphi,\pi\in\operatorname{Aut}(G)$,$\varphi\circ\pi\in\operatorname{Aut}(G)$, obviously, according to the property of homomorphic, $\varphi\circ\pi$ is beijective.
+    $G\to G$, $\varphi\circ\pi(xy)=(\varphi\circ\pi)(x)(\varphi\circ\pi)(y)=\varphi(\pi(x))\varphi(\pi(y))$.
+    $\forall\varphi_1,\varphi_2,\varphi_3\in\operatorname{Aut}(G),\forall x\in G$, $(\varphi_1\circ(\varphi_2\circ\varphi_3))(x)=\varphi_1(\varphi_2(\varphi_3(x)))=(\varphi_1\circ\varphi_2)(\varphi_3(x))=\varphi_1((\varphi_2\circ\varphi_3(x)))$.(keep operation).
+    $\varphi^{-1}(xy)=\varphi^{-1}(\varphi(\varphi^{-1}(x)\varphi(\varphi^{-1}(y))))=\varphi^{-1}(\varphi(\varphi^{-1}(x)\varphi^{-1}(y)))=\varphi^{-1}(x)\varphi^{-1}(y)$(exists inverse). obviously, exists $\mathrm{id.}$.
+\end{proof}
+\begin{proposition}
+    automomorphism $\sigma$ is the fixed point of order 2 of the group $G$, $G$ is the abliean.($|G|<\infty$)
+\end{proposition}
+\begin{proof}
+    condider a map $\pi:x\to x^{-1}\sigma(x)$, $\forall x,y\in G$, amusse $\pi(x)=\pi(y)$, 
+    $x^{-1}\pi(x)=y^{-1}\pi(y)$, $\pi(xy^{-1})=xy^{-1}\iff x=y$. obviously, $\pi$ is injective, 
+    because of $|G|<\infty$, so $\pi$ is beijective. so $\forall x,\in G, x=x^{-1}\sigma(x)$, apply $\sigma$, $x^{-1}\sigma^{2}(x)=x^{-1}$, $x\mapsto x^{-1}$, obviously, $G$ is abliean.
+\end{proof}
+\begin{proposition}
+    x,y is the 2-order of the distinct, $G$ is generate by $x,y$, $G\cong D_{2n}$.
+\end{proposition}
+\begin{proof}
+    construct:let $z=xy,y=x(xy)=xz, |z|=|xy|$, $G=\langle x,z\rangle$. $xzx=x(xy)x=yx=z^{-1}$.
+    $\exists\varphi:z\to r^n,y\to s$
+\end{proof}
+\end{document}
+
+
