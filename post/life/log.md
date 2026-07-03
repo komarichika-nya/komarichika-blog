@@ -33,3 +33,23 @@ Everyday, I always read papers and write code. Although I enjoy them, I have som
 ::: 2026-06-28
 
 so abstract. btw. :-(
+:::
+
+::: 2026-06-29
+
+so real.
+![life](img/life.jpg)
+:::
+
+::: 2026-07-02
+
+code is my blood, math is my soul, and logic is my breath.
+:::
+
+::: 2026-07-03
+
+suki suki suki suki suki suki
+![komarichika](img/komarichika.jpg)
+:::
+
+

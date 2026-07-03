@@ -1,0 +1,17 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\begin{document}
+Construct a set $X$ equal $\mathcal{O}(G\curvearrowright X)=|G|$ and group action is faithful.\\
+Any $G$-set is the disjoint union of orbit. The orbit is isomomorphic to $G/H_i$. where $H_i$ is the stablier. 
+so $X\cong\bigsqcup\limits_i G/H_i$. Actually, our goal is to find a family of $H_i$, $\ker(G\curvearrowright G/H_i)=\operatorname{Core}(H_i)=\bigcap\limits_i\operatorname{Core}(H_i)=\{1\}$.
+A direct idea is $\{H_i\}_{i=1}^{|G|}=\{1\},X=\bigsqcup\limits_{i=1}^{|G|}G_i$. This is trivally. Another view is the faithful action only need one orbit core-free, so we can let $H_1=G$ and serveral fixed points.
+such $H_1=G$,$X=G\sqcup H$, $|X|=2|G|-1$. also, we can $G\curvearrowright G\times G$, $\forall g\in G,g\cdot(x,y)=(gx,gy)$.$\varphi:G\times G\to G,\varphi(x,y)=x^{-1}y$  
+\end{document}
+

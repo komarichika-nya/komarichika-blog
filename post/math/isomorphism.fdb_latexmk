@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1782671740.26332 "isomorphism.tex" "isomorphism.pdf" "isomorphism" 1782671740.36465 0
+["pdflatex"] 1782794141.377 "isomorphism.tex" "isomorphism.pdf" "isomorphism" 1782794141.47597 0
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1775415801 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1775415801 916 f87d7c45f9c908e672703b83b72241a3 ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam5.tfm" 1775415801 924 9904cf1d39e9767e7a3622f2a125a565 ""
@@ -13,8 +13,10 @@
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1775415801 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb" 1775415801 36281 c355509802a035cadc5f15869451dcee ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1775415801 35752 024fb6c41858982481f6968b5fc26508 ""
+  "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb" 1775415801 31809 8670ca339bf94e56da1fc21c80635e2a ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1775415801 32762 224316ccc9ad3ca0423a14971cfa7fc1 ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1775415801 32569 5e5ddc8df908dea60932f3c484a54c0d ""
+  "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb" 1775415801 32915 7bf7720c61a5b3a7ff25b0964421c9b6 ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1775415801 32716 08e384dc442464e7285e891af9f45947 ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb" 1775415801 37944 359e864bd06cde3b1cf57bb20757fb06 ""
   "/usr/share/texmf-dist/tex/generic/iftex/iftex.sty" 1775415801 7984 7dbb9280f03c0a315425f1b4f35d43ee ""
@@ -38,8 +40,8 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1775415801 43569 fd570f2fa160877d211e859f687312ba ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1781131593 325445 e037c2d0d08ad8cbac81cfa7969967b5 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1782481618 2328189 df4daad52de476648b43d1fe9fcf8208 ""
-  "isomorphism.aux" 1782671740.35003 32 044b7f8fc9779af7531264e0c5c84b6d "pdflatex"
-  "isomorphism.tex" 1782671739.1944 6377 133acc204c9b54418df4972ec8136bdb ""
+  "isomorphism.aux" 1782794141.46085 142 3c53af4e0d53692e2c6e7c253e2dde7e "pdflatex"
+  "isomorphism.tex" 1782794141.12758 6849 30d9f536fb5199e58fb4049daa546953 ""
   (generated)
   "isomorphism.aux"
   "isomorphism.log"

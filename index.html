@@ -2,9 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width", initial-sale="1.0", maximum-sale="5">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
     <title>KomariChika♡ </title>
     <link rel="stylesheet" href="s1.css">
+    <style>
+      .feed { margin-top: 32px; }
+
+      .feed-item {
+        display: block;
+        padding: 3px 0;
+      }
+      .feed-line {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+      }
+      .feed-title {
+        font-size: 0.9rem;
+        text-underline-offset: 3px;
+        text-decoration-thickness: 1px;
+      }
+      .feed-item:hover .feed-title { text-decoration: underline; }
+      .feed-item time {
+        font-size: 0.78rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+    </style>
 </head>
 <body>
     <header>
@@ -14,52 +38,48 @@
     </header>
     <main>
         <article>
-            <!-- <h2></h2> -->
-            <p>Hi I'm KomariChika. An oier(AFO). My research focuses on offline rendering. love math deeply btw</p>
+            <p>Hi I'm KomariChika. An oier(AFO). I love math btw.</p>
         </article>
-        <article>
-            <h2>Rendering</h2>
-            <ul>
-                <li><a href="post/render/fractals.html">Fractals</a></li>
-                <li><a href="post/render/path_tracing.html">Path tracing</a></li>
-                <li><a href="post/render/ray_tracing.html">Ray tracing</a></li>
-                <li><a href="post/render/brdf.html">BSDF</a></li>
-                <li><a href="post/render/sample.html">pseudorandom-number</a></li>
-                <li><a href="post/render/microsurface.html">microsurface</a></li>
-            </ul>
-            
-            <h2>Math</h2>
-            <ul>
-                <li><a href="post/math/Group.html">Group(base)</a></li>
-                <li><a href="post/math/symmetric.html">symmetric</a></li>
-                <li><a href="post/math/num.html">Number theory</a></li>
-                <li><a href="post/math/function.html">Recursion theory</a></li>
-                <li><a href="post/math/gamma.html">Gamma function</a></li>
-                <li><a href="post/math/space.html">Matrix theory</a></li>
-                <li><a href="post/math/vector-caculate.html">vector caculate</a></li>
-                <li><a href="post/math/isomorphism.html">isomorphism</a></li>
-                <li><a href="post/math/toy.html">Miscellaneous</a></li>
-            </ul>
-
-            <h2>fsytd (some coding tricks)</h2>
-            <ul>
-                <li><a href="#">allocator (coming soon)</a></li>
-                <li><a href="#">optional (coming soon)</a></li>
-            </ul>
-
-            <h2>Life</h2>
-            <ul>
-                <li><a href="post/life/index.html">Life</a></li>
-            </ul>
-        </article>
+        <section class="feed">
+            <div id="feed"></div>
+        </section>
     </main>
     <footer>
-        <div class="social-links">
-            </div>
+        <div class="social-links"></div>
         <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
         <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
-        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <a href="mailto:xdefan101@gmail.com" style="font-weight: bold;">mail</a>
         <p>© 2026 KomariChika</p>
     </footer>
-</body>
 
+    <script>
+      const posts = [
+        { title: "microsurface",        url: "post/render/microsurface.html",     date: "2026-05-20" },
+        { title: "bsdf",                url: "post/render/brdf.html",              date: "2026-06-03" },
+        { title: "group",               url: "post/math/Group.html",               date: "2026-07-02" },
+        { title: "pseudorandom-number", url: "post/render/sample.html",            date: "2025-12-10" },
+        { title: "number",              url: "post/math/num.html",                 date: "2025-11-15" },
+        { title: "Miscellaneous",       url: "post/math/toy.html",                 date: "2025-08-20" },
+        { title: "some interesting problems", url: "post/math/solved.html",         date: "2026-07-01" },
+        { title: "Life",                url: "post/life/index.html",               date: "2026-07-01" }
+      ];
+
+      const fmt = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "short", day: "numeric" });
+      const feedEl = document.getElementById("feed");
+
+      const sorted = [...posts].sort((a, b) => b.date.localeCompare(a.date));
+
+      for (const p of sorted) {
+        const a = document.createElement("a");
+        a.className = "feed-item";
+        a.href = p.url;
+        a.innerHTML =
+          '<div class="feed-line">' +
+            '<span class="feed-title">' + p.title + '</span>' +
+            '<time datetime="' + p.date + '">' + fmt.format(new Date(p.date + "T00:00:00")) + '</time>' +
+          '</div>';
+        feedEl.appendChild(a);
+      }
+    </script>
+</body>
+</html>

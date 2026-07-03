@@ -76,6 +76,7 @@ From this we can see, isomorphism ensure the order of elements between two group
     if $\varphi$ is surjective, according to lemma 2, $\varphi:G\to\operatorname{im}\varphi$ is surjective, so $\varphi$ is beijective.
     so $\ker\varphi=\{\mathrm{id.}\}$. if $\ker\varphi=\{\mathrm{id.}\}$, $\forall a,b\in G$, $\varphi(a)=\varphi(b)\implies\varphi(ab^{-1})=ab^{-1}=\mathrm{id.}\in\ker\varphi\iff a=b$
 \end{proof}
+
 \begin{proposition}
     $\operatorname{Aut}(G)$ is a group under compose.
 \end{proposition}
@@ -100,6 +101,11 @@ From this we can see, isomorphism ensure the order of elements between two group
     construct:let $z=xy,y=x(xy)=xz, |z|=|xy|$, $G=\langle x,z\rangle$. $xzx=x(xy)x=yx=z^{-1}$.
     $\exists\varphi:z\to r^n,y\to s$
 \end{proof}
+\subsubsection{group action}
+$\forall g\in G,\varphi:G\to\mathrm{Sym}(X),\varphi(g)=\varphi_g,\varphi_g:X\to X$.
+because $G$ is group, for all $g\in G$, exist inverse. $\varphi_g\circ\varphi_{g^{-1}}=\varphi_{gg^{-1}}=\mathrm{id_X.}$,
+$\varphi_{g^{-1}}\varphi_g=\varphi_{g^{-1}g}=\mathrm{id_X.}$, so $\varphi_g$ is a permutation. Generally, both tirvial action($\forall g\in G,\varphi_g=\mathrm{id_X.}$) 
+and faithfull action, homomorphic $\varphi$ is not permutation.  
 \end{document}
 
 

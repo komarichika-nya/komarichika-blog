@@ -38,21 +38,17 @@ done
 LOG="post/life/log.md"
 OUT="post/life/index.html"
 if [ -f "$LOG" ]; then
-  : > /tmp/life_entries.html          # 清空累积文件
+  : > /tmp/life_entries.html
 
   date=""
   body=""
   in_entry=0
-
-  # 末尾补一个换行，确保最后一条能被收尾
   while IFS= read -r line || [ -n "$line" ]; do
     if [[ "$line" =~ ^:::[[:space:]]+(.+)$ ]]; then
-      # 遇到 "::: 日期" —— 一条开始
       date="${BASH_REMATCH[1]}"
       body=""
       in_entry=1
     elif [[ "$line" == ":::" ]]; then
-      # 遇到单独的 ":::" —— 一条结束，渲染它
       printf '%s' "$body" | pandoc --katex --syntax-highlighting=tango -o /tmp/entry.html
       {
         echo "<article class=\"log-entry\">"
@@ -62,7 +58,6 @@ if [ -f "$LOG" ]; then
       } >> /tmp/life_entries.html
       in_entry=0
     elif [ "$in_entry" -eq 1 ]; then
-      # 条目正文，逐行累积
       body+="${line}"$'\n'
     fi
   done < "$LOG"

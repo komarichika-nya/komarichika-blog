@@ -68,7 +68,6 @@ pre, code {
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
-/* 行内代码 */
 code {
   font-size: 0.9em;
   background: rgba(128, 128, 128, 0.18);
@@ -76,7 +75,6 @@ code {
   border-radius: 3px;
 }
 
-/* 代码块 */
 pre {
   background: rgba(128, 128, 128, 0.12);
   padding: 16px 20px;
@@ -86,7 +84,6 @@ pre {
   line-height: 1.5;
 }
 
-/* 代码块里的 code 不要叠加背景 */
 pre code {
   background: none;
   padding: 0;
@@ -119,14 +116,6 @@ figcaption {
   font-size: 0.88rem;
   font-style: italic;
 }
-
-@media (prefers-color-scheme: dark) {
-  figure img {
-    background: #f5f5f5;
-    padding: 8px;
-  }
-}
-
 .log-entry {
   padding: 24px 0;
   border-bottom: 1px solid rgba(128, 128, 128, 0.25);

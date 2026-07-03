@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>solved · KomariChika</title>
+<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
+</head>
+<body>
+<header><nav><a href="../../index.html">Home</a></nav></header>
+<main><article>
+<p>Construct a set <span class="math inline">X</span> equal <span
+class="math inline">\mathcal{O}(G\curvearrowright X)=|G|</span> and
+group action is faithful.<br />
+Any <span class="math inline">G</span>-set is the disjoint union of
+orbit. The orbit is isomomorphic to <span
+class="math inline">G/H_i</span>. where <span
+class="math inline">H_i</span> is the stablier. so <span
+class="math inline">X\cong\bigsqcup\limits_i G/H_i</span>. Actually, our
+goal is to find a family of <span class="math inline">H_i</span>, <span
+class="math inline">\ker(G\curvearrowright
+G/H_i)=\operatorname{Core}(H_i)=\bigcap\limits_i\operatorname{Core}(H_i)=\{1\}</span>.
+A direct idea is <span
+class="math inline">\{H_i\}_{i=1}^{|G|}=\{1\},X=\bigsqcup\limits_{i=1}^{|G|}G_i</span>.
+This is trivally. Another view is the faithful action only need one
+orbit core-free, so we can let <span class="math inline">H_1=G</span>
+and serveral fixed points. such <span
+class="math inline">H_1=G</span>,<span class="math inline">X=G\sqcup
+H</span>, <span class="math inline">|X|=2|G|-1</span>. also, we can
+<span class="math inline">G\curvearrowright G\times G</span>, <span
+class="math inline">\forall g\in G,g\cdot(x,y)=(gx,gy)</span>.<span
+class="math inline">\varphi:G\times G\to
+G,\varphi(x,y)=x^{-1}y</span></p>
+</article></main>
+<footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+    </footer>
+</body>
+</html>
