@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>brdf · KomariChika</title>
-<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="../../s1.css?v=1789874540">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
   onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
@@ -12,102 +12,66 @@
 <body>
 <header><nav><a href="../../index.html">Home</a></nav></header>
 <main><article>
-<section id="bsdf" class="level1">
-<h1>BSDF</h1>
-<p>BSDF carefully defines the reflective properties of object surfaces.
-Before introducing BSDF, let’s clarify two concepts.<br />
-The <span class="math inline">irradiance</span> describles the radiant
-flux reaching a unit area. Simply, it describles actual light intensity
-received by the surface,(so it need <span
-class="math inline">\cos</span>,ha?).<br />
-The <span class="math inline">radiance</span> describles radiant flux
-per unit projected area per unit solid angle.<br />
-The <span class="math inline">differential irradiance</span> describles
-the contribution of incident irradiance <span
-class="math inline">L_i(\omega_i)</span> from a specific direction <span
-class="math inline">w_i</span> to a point on the surface. <span
-class="math display">dE(\omega_i)=dL_i(\omega_i)\cos\theta
-d\omega_i</span> The <span class="math inline">differential
-radiance</span> describles the describles the emissivity of the incident
-direction <span class="math inline">\omega_i</span> in the reflective
-direction <span class="math inline">\omega_o</span>. <span
-class="math display">L_o(\omega_o)=\int_{\Omega}dL_o(\omega_o)</span>
-Differential emissivity is proportional to differential irradiance,
-hence the definition of BSDF. <span
-class="math display">f_r(\omega_i,\omega_o)=\frac{dL_o(\omega_o)}{dL_i(\omega_i)\cos\theta
-d\omega_i}\cdot\frac{1}{\mathtt{sr}}</span> Naturally, we then wrote out
-the rendering equation. <span
-class="math display">L_o(\omega_o)\int_{\Omega}f_r(\omega_i,\omega_o)L_i(\omega_i)\cos\theta_i
-d\omega_i\cdot\frac{1}{\mathtt{sr}}</span></p>
-<section id="sampling-based-on-monte-carlo-integral" class="level2">
-<h2>Sampling based on Monte Carlo integral</h2>
-<p>Monte Carlo integral is an efficent sample method. It’s unbiased and
-the variance decreased to <span
-class="math inline">\frac{1}{N^2}</span>. In rendering,it can be written
-by following style: <span
-class="math display">L_o(\omega_o)=L_e(\omega_o)+\frac{1}{N}\sum\limits_{i=1}^N\frac{f_r(\omega_i,\omega_oo)L_i(\omega_i)\cos\theta}{p(\omega_i)}</span></p>
-<div class="proposition theorem-box">
-<p><strong>Proposition. </strong></p>
-<p><strong>Proposition 1</strong>. <em>Monte Carlo integral is unbiased
-and the variance decreased to <span
-class="math inline">\frac{1}{N^2}</span></em></p>
+<section id="uniform-distribution" class="level1">
+<h1>Uniform Distribution</h1>
+<p>Given the range <span class="math inline">(a,b)</span>, <span
+class="math inline">X\sim\text{Uniform}(a,b)</span>, <span
+class="math inline">\forall a&lt;x&lt;b</span>, the probability density
+is <span class="math inline">p(x)=\frac{1}{b-a}</span>. It can generate
+by <span class="math inline">X=b+(b-a)\mathcal{U}</span>,<span
+class="math inline">\mathcal{U}\sim\text{Uniform}(0,1)</span>.</p>
+<div class="proposition">
+<p><strong>Proposition 1</strong>. <em><span
+class="math inline">P(0&lt;X&lt;1)=P(0\le X\le1)</span></em></p>
 </div>
 <div class="proof">
-<p><em>Proof.</em> Let <span
-class="math inline">g(\omega_i)=\frac{f_r(\omega_i,\omega_o)L_i(\omega_i)\cos\theta}{p(\omega_i)}</span>
-<span
-class="math display">\mathbb{E}[g(\omega_i)]=\int_{\Omega}g(\omega_i)\cdot
-p(\omega_i)d\omega_i=\int_{\Omega}g(\omega_i)d\omega_i</span> <span
-class="math display">\mathbb{Var}[g(\omega_i)]=\mathbb{E}[g^2(\omega_i)]-\mathbb{E}[g^2(\omega_i)]</span>
-<span
-class="math display">\sigma=\int_{\Omega}\frac{g^2(\omega_i)}{p(\omega_i)}-\int_{\Omega}g^2(\omega_i)</span>
-Because of the samples are independent and identically distributed. let:
-<span
-class="math display">\mathbb{V}[ar]=\frac{\sigma}{N^2}</span> ◻</p>
+<p><em>Proof.</em> <span class="math inline">X</span> is the continuous
+random variable, <span class="math inline">f(x)</span> is the
+probability density, <span class="math inline">\forall a</span>, <span
+class="math inline">\int_{a}^af(x)dx=0</span>,<span
+class="math inline">P(0&lt;X&lt;1)=P(0\le X\le1)-P(X=1)-P(X=0)=P(0\le
+X\le1)</span>. ◻</p>
 </div>
-<p>Therefore, choosing a reasonable PDF is crucial. What is the best
-<span class="math inline">p(\omega_i)</span>?<br />
-Let the optimal proposal distribution is <span
-class="math inline">q(\omega_i)</span>. <span
-class="math display">I=\int g(\omega_i)p(\omega_i)d\omega_i</span> <span
-class="math display">\mathbb{Var}[I]=\frac{1}{n}(\int\frac{g^2(\omega_i)p^2(\omega_i)}{q(\omega_i)}-I^2)d\omega_i</span>
-obviously we should minimize <span
-class="math inline">\int\frac{g^2(\omega_i)p^2(\omega_i)}{q(\omega_i)}</span><br />
-Constructing Lanrange multipliers.<span
-class="math display">\mathcal{L}(\omega_i,\lambda)=\int(\frac{g^2(\omega_i)p^2(\omega_i)}{q(\omega_i)}+\lambda
-q(\omega_i))d\omega_i</span> Use the calculus of variations: <span
-class="math display">\frac{\partial(\frac{g^2p^2}{q}+\lambda
-q)}{\partial q}=-\frac{g^2p^2}{q}+\lambda=0</span> <span
-class="math display">q(\omega_i)=\frac{|g(\omega_i)|p(\omega_i)}{\int|g(\omega_i)|p(\omega_i)d\omega_i}</span>
-unfortunately, this is incalaulate. The equation we want appear the
-answer. so we use sample.</p>
+<p>The mean of the uniform distribution is <span
+class="math inline">\mathbb{E}[X]=\int_{a}^{b}a\frac{dx}{b-a}=\frac{b+a}{2}</span>.
+The variance of the uniform distribution is <span
+class="math inline">\mathbb{Var}[X]=\mathbb{E}[(X-\mathbb[E](X))^2]=\frac{b-1}{12}</span>.</p>
 <section id="cosnie-weighted-hemisphere-sampling" class="level3">
 <h3>Cosnie-Weighted Hemisphere sampling</h3>
-<p>In an ideal diffuse reflection model, <span
-class="math inline">f_r=\frac{\rho}{\pi}</span>, this gives us a natural
-idea that let PDF be proportional to <span
-class="math inline">\cos\theta</span>. <span
-class="math display">\int_{\Omega}p(\omega)d\omega=\int_{0}^{2\pi}\int_{0}^{\frac{\pi}{2}}(c\cdot\cos\theta)\sin\theta
-d\theta d\phi=1</span> <span
-class="math display">p(\omega)=\frac{cos\theta}{\pi}</span> <span
-class="math display">L_o(\omega_o)=\frac{\rho}{N}\sum\limits_{i=1}^{N}L_i(\omega_i)</span>
-It’s unbiased. It quite obvious that it uses the idea of importance
-sampling–sample more from areas that makes a significant
-contributions.<br />
-A native way to implement this is use CDF’s inverse function. <span
-class="math display">\int_{0}^{2\pi}\int_{0}^{\frac{\pi}{2}}p(\theta,\phi)d\theta
-d\phi=\int_{0}^{2\pi}\int_{0}^{2\pi}p(\omega)d\theta d\phi=1</span>
-<span class="math display">p(\theta)=\int_{0}^{2\pi}p(\phi)d\theta
-d\phi</span> <span
-class="math display">F(\theta)=\int_{0}^{\theta}p(\theta)=\sin^2\theta</span>
-Give to random number <span
-class="math inline">\xi_1,\xi_2\in[0,1]</span> <span
-class="math display">F(x)=\xi_1\to\sin\theta=\sqrt{\xi_1},\cos\theta=\sqrt{1-\xi_1}</span>
+<p>One efficient method is that we can convert the directional domain to
+solid angles for sampling. Consider the <span
+class="math inline">z&gt;0</span>, the solid angles is <span
+class="math inline">2\pi</span>, probability density is <span
+class="math inline">p(w)=\frac{1}{2\pi}</span>, <span
+class="math inline">u,v\sim\mathcal{U}(0,1)</span>,<span
+class="math inline">\theta=\arccos(z)</span>,<span
+class="math inline">\phi=2\pi u</span>,<span
+class="math inline">r=\sqrt{1-z^2}</span>,<span
+class="math inline">x=r\cos\phi</span>,<span
+class="math inline">y=r\sin\phi</span>. The Monte Carlo estimator at
+this point is <span
+class="math inline">\int_{\Omega^+}f(\omega)d\omega\approx\frac{2\pi}{N}\sum\limits_{i=1}^{N}
+f(w_i)</span>. It’s necessary to distinguish that uniformity in the
+parameter domain of <span class="math inline">(\theta,\phi)</span> is
+not equivalent to uniformityon the spherical domain. That’s because
+<span class="math inline">d\omega=\sin\theta d\theta d\phi</span>.
+Suppose <span class="math inline">\theta\sim\mathcal{U}(0,\pi)</span>,
+<span class="math inline">\phi\sim\mathcal{U}(0,2\pi)</span>. At this
+satuation, the Monte Carlo estimatoris <span
+class="math inline">\int_{\Omega^+}f(\omega)d\omega\approx\frac{\pi^2}{N}\sum\limits_{i=1}^{N}f(\theta_i,\phi_i)\sin\theta_i</span>.
+In practical applications, we still select two random numbers on the
+plane, map them to the sphere, and then reverse-calaulate the planar
+coordinates. That’s because the Jacobian is a constant at this point.
+<span class="math inline">\omega\to\omega(u,v)</span>, the Jacobian is
+<span class="math inline">d=\left\|\frac{\partial\omega}{\partial
+u}\times\frac{\partial\omega}{v}\right\|dudw=2\pi</span>. Give to random
+number <span class="math inline">\xi_1,\xi_2\in[0,1]</span>, <span
+class="math inline">F(x)=\xi_1\to\sin\theta=\sqrt{\xi_1},\cos\theta=\sqrt{1-\xi_1}</span>,
 <span
-class="math display">x=\cos\theta\phi\sin\phi=\cos(2\pi\xi_2)\sqrt{\xi_1}</span>
+class="math inline">x=\cos\theta\phi\sin\phi=\cos(2\pi\xi_2)\sqrt{\xi_1}</span>,
 <span
-class="math display">y=\sin\phi\sin\theta=\sin(2\pi\xi_2)\sqrt{xi_1}</span>
-<span class="math display">z=\sqrt{1-\xi_1}</span></p>
+class="math inline">y=\sin\phi\sin\theta=\sin(2\pi\xi_2)\sqrt{xi_1}</span>,
+<span class="math inline">z=\sqrt{1-\xi_1}</span>.</p>
 <div class="sourceCode" id="cb1" data-language="C++"><pre
 class="sourceCode c++"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">typename</span> T<span class="op">&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;</span>sp<span class="op">(</span><span class="at">const</span> vec3<span class="op">&lt;</span>T<span class="op">,</span>V<span class="op">&gt;&amp;</span>n<span class="op">,</span><span class="dt">int</span> dep<span class="op">){</span></span>
@@ -122,8 +86,6 @@ class="sourceCode c++"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 <img src="figures/brdf/a.png" loading="lazy" />
 <figcaption>100spp</figcaption>
 </figure>
-<p>Another way is uniform disk mapping, it’s so easy to understand and
-implement. Not mentioned much(am I lazy? decided not to).</p>
 </section>
 <section id="light-source-area-sampling" class="level3">
 <h3>Light source area sampling</h3>
@@ -134,17 +96,17 @@ connect the pixel and the light source. But the problem is the render
 equation is defined in the directional domain(soild angle). We need a
 concersion factor. What came to your mind? Jacobian. We need to project
 the surface area onto a plane perpendicular to light rays. <span
-class="math display">dA^\perp=dA\cos\theta_L</span> <span
-class="math display">\frac{dA^\perp}{dA}=\cos\theta_L</span> distance
-scaling <span class="math display">d\omega=\frac{dA^\perp}{r^2}</span>
-<span class="math display">\frac{d\omega}{dA^\perp}=\frac{1}{r^2}</span>
+class="math inline">dA^\perp=dA\cos\theta_L</span>, <span
+class="math inline">\frac{dA^\perp}{dA}=\cos\theta_L</span>, distance
+scaling <span class="math inline">d\omega=\frac{dA^\perp}{r^2}</span>,
+<span class="math inline">\frac{d\omega}{dA^\perp}=\frac{1}{r^2}</span>,
 <span
-class="math display">d\omega=(\frac{dA^\perp}{dA}\cdot\frac{d\omega}{dA^\perp})dA=\frac{\cos\theta_L}{r^2}dA</span>
+class="math inline">d\omega=(\frac{dA^\perp}{dA}\cdot\frac{d\omega}{dA^\perp})dA=\frac{\cos\theta_L}{r^2}dA</span>,
 <span
-class="math display">L_o(x,\omega_o)\approx\frac{A}{N}\sum\limits_{k=1}^{N}L_e(y_k\to
+class="math inline">L_o(x,\omega_o)\approx\frac{A}{N}\sum\limits_{k=1}^{N}L_e(y_k\to
 x,-\omega_k)\cdot\frac{\cos\theta_L}{r^2}\cos\theta_k\cdot
-V(x,y_k)</span> where <span class="math inline">V(x,y)</span> is visable
-function and <span
+V(x,y_k)</span>, where <span class="math inline">V(x,y)</span> is
+visable function and <span
 class="math inline">p(\omega)=\frac{1}{A\cdot|J|}</span></p>
 <div class="sourceCode" id="cb2" data-language="C++"><pre
 class="sourceCode c++"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">typename</span> T<span class="op">&gt;</span></span>
@@ -177,15 +139,14 @@ class="sourceCode c++"><code class="sourceCode cpp"><span id="cb2-1"><a href="#c
 </figure>
 </section>
 </section>
-</section>
 </article></main>
 <footer>
         <div class="social-links">
             </div>
-        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://github.com/komarichika-nya" style="font-weight: bold;">Github</a>
         <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
-        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
-        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+        <a href="mailto:xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
     </footer>
 </body>
 </html>

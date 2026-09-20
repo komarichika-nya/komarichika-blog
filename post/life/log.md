@@ -52,4 +52,87 @@ suki suki suki suki suki suki
 ![komarichika](img/komarichika.jpg)
 :::
 
+::: 2026-07-07
 
+suki suki suki
+![komarichika](img/chika1.jpg)
+:::
+
+::: 2026-07-12
+
+Severely dependent on caffeine
+:::
+
+::: 2026-09-18
+
+**Always check the path before and verify the presence of other mount of points before executing any ```rm -rf *```.**
+
+Recently, I gave gentoo linux a try; the installation process was actually quite arduous--I spend almost a whole day to configuring it. I am performing the installation on an archlinux host. The inital preparations are simple.
+```bash
+sudo mkdir -p /mnt/yuki
+sudo mount /dev/nvme0n1p7 /mnt/yuki
+sudo mkdir -p /mnt/yuki/proc
+sudo mount --types proc /proc /mnt/yuki/proc
+sudo mkdir -p /mnt/yuki/dev
+sudo mount --rbind /dev /mnt/yuki/dev && sudo mount --make-rslave /mnt/yuki/dev
+sudo mkdir -p /mnt/yuki/sys 
+sudo mount --rbind /sys /mnt/yuki/sys && sudo mount --make-rslave /mnt/yuki/sys
+sudo mkdir -p /mnt/yuki/run 
+sudo mount --bind /run /mnt/yuki/run && sudo mount --make-slave /mnt/yuki/run
+sudo cp /etc/resolv.conf /mnt/yuki/etc/
+```
+
+The preliminary preparations are now compleRte.  eady to ```chroot``` the new system.
+```bash
+sudo chroot /mnt/yuki /bin/bash
+```
+The chroot environment inherits the host's network settings;  
+```bash
+export http_proxy=http://127.0.0.1:7890
+export https_proxy=http://127.0.0.1:7890
+export all_proxy=http://127.0.0.1:7890
+```
+Now we will pull the linux source code.
+```bash
+curl -L -o /usr/src/ https://www.kernel.org/pub/linux/kernel/v7.x/linux-7.2.5.tar.xz
+cd /usr/src
+zcat /proc/.config.gz > .config
+./scripts/config --disable SYSTEM_TRUSTED_KEYS
+./scripts/config --disable SYSTEM_REVOCATION_KEYS
+./scripts/config --disable DEBUG_INFO_BTF
+./scripts/config --set-str LOCALVERSION "-chika"
+./scripts/config --disable LOCALVERSION_AUTO
+./scripts/config --enable  EFI_STUB
+./scripts/config --enable  DRM_SIMPLEDRM
+./scripts/config --enable  SYSFB_SIMPLEFB
+./scripts/config --disable CMDLINE_OVERRIDE
+./scripts/config --enable  MODULE_SIG
+./scripts/config --disable MODULE_SIG_FORCE
+make olddefconfig
+```
+make sure config is correct. Given the dependencies, who knows that what happens after ```make olddefconfig``` ?
+```bash
+for s in EFI_STUB DRM_SIMPLEDRM SYSFB_SIMPLEFB BLK_DEV_NVME EXT4_FS \
+         BTRFS_FS DRM_NOUVEAU MODULE_SIG SYSTEM_TRUSTED_KEYS; do
+  printf '%-24s %s\n' "$s" "$(./scripts/config --state $s)"
+done
+```
+write  ```/etc/kernel/cmdline```
+```bash
+root=UUID=<uuid> rw
+```
+```bash
+make "-j$(nproc)"
+```
+Everything is proceeding so smoothly. I installed sucessfully.  However, the number of gentoo mirror sites is pitifully small. I didn't notice the community announcement my IP got banned because I synchronized too many times. 
+After a few twists and truns, I back archlinux. 
+arch is best, pacman is best, AUR is best. ~~(KomariChika is best)~~
+This time, I customized my kernel—a process that took nearly 19 hours, primarily spent on kernel tuning. I chose niri as my desktop environment; I feel it suits me better, as it has a superior approach to tiling. 
+![archlinux](img/archlinux.jpg)
+I probably won't be sprucing up my desktop for a while; the renderer project has already dragged on for a week, and since I have a lot of things I want to do lately, I really need to catch up on progress.
+:::
+
+::: 2026-09-18
+![komarichika](img/komarichika_2.png)
+
+:::

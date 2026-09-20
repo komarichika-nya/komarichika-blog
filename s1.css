@@ -13,12 +13,12 @@
 }
 
 body {
-  max-width: 640px;
-  margin: 40px auto;
+  max-width: 1000px;
+  margin: 10vh auto;
   padding: 0 20px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
   font-size: 16px;
-  line-height: 1.7;
+  line-height: 2;
   color: var(--text);
   background: var(--bg);
 }
@@ -60,7 +60,7 @@ footer {
 
 footer a { color: var(--muted); }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   body { margin: 20px auto; font-size: 17px; }
 }
 

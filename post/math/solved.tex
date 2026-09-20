@@ -1,6 +1,7 @@
 \documentclass[10pt,a4paper]{article}
 \usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathrsfs}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -8,10 +9,55 @@
 \setlength{\parindent}{0pt}
 \onehalfspacing
 \begin{document}
-Construct a set $X$ equal $\mathcal{O}(G\curvearrowright X)=|G|$ and group action is faithful.\\
-Any $G$-set is the disjoint union of orbit. The orbit is isomomorphic to $G/H_i$. where $H_i$ is the stablier. 
-so $X\cong\bigsqcup\limits_i G/H_i$. Actually, our goal is to find a family of $H_i$, $\ker(G\curvearrowright G/H_i)=\operatorname{Core}(H_i)=\bigcap\limits_i\operatorname{Core}(H_i)=\{1\}$.
-A direct idea is $\{H_i\}_{i=1}^{|G|}=\{1\},X=\bigsqcup\limits_{i=1}^{|G|}G_i$. This is trivally. Another view is the faithful action only need one orbit core-free, so we can let $H_1=G$ and serveral fixed points.
-such $H_1=G$,$X=G\sqcup H$, $|X|=2|G|-1$. also, we can $G\curvearrowright G\times G$, $\forall g\in G,g\cdot(x,y)=(gx,gy)$.$\varphi:G\times G\to G,\varphi(x,y)=x^{-1}y$  
+I will share some interesting problem here.\\
+Q: construct a set $X$ equal $\mathcal{O}(G\curvearrowright X)=|G|$ and the group action is faithful.\\
+A: I will present a method based on coset decomposition. For $H\le G$, the left coset space is $G/H=\{xH\mid x\in G\}$.
+Consider act on $G$, so $(\forall g,x\in G)g\cdot(xH)=(gx)H$. Obviously, $G/H$ is an obrit and $|G/H|=[G:H]$.
+The kernel of this action is $\ker(G\curvearrowright G/H)=\bigcap\limits_{g\in G}gHg^{-1}=:\operatorname{Core}_G(H)$.
+The essence of this problem lies in the gluing of coset space. Specificly, let $\{H_i\}_{i\in I}$, $X=\bigsqcup\limits_{i\in I}G/H_i$.
+Every $G/H_i$ is an obrit. we only need $\ker(G\curvearrowright G/H_i)=\{1\}\land|I|=|G|$. A key observation is $(\exists H_i)\operatorname{Core}(H_i)=\{1\}$ not $\forall H_i$.
+\\
+A important truth is $\mathcal{O}=|G|=|X|\iff$ every points are fixed points $\iff$ trivial action.
+In the other word, if you want the action is faithful, then $|X|>|G|$. What is this lower bound? if we split $X$ with orbit, 
+then $X\cong\bigsqcup\limits_{i=1}^{|G|}G/H_i$, in order to ensure faithful $\bigcap\limits_{i=1}^{|G|}\operatorname{Core}(H_i)=\{1\}$.
+so $|X|=\sum[G:H_i]\ge1$. Faithfulness only requires ensuring that one orbit is non-trivial. $|X|\ge(|G|-1)\times1+2=|G|+1$. so $|G|=2$. Interestingly,
+Only $\mathbb{Z}/2\mathbb{Z}$ can equal.
+\\
+\\
+Q: Does there exist a function $f(x)$ defined on $\mathbb{R}/\{0\}$ such that $f(f(x)) = x^{-1}$? If so, provide a construction for $f$.\\
+A: a beautiful construct: $f(x)=\begin{cases}-x&x>0\\-\frac{1}{x}&x<0\end{cases}$. orz
+\\
+\\
+Q: $f$ is continuous in $[0,1]$ and $g$ is $g$ is an integrable function on $\mathbb{R}$ period $1$. Proof \[\lim\limits_{n\to+\infty}\int_{0}^{1}f(x)g(nx)dx=(\int_{0}^{1}f(x)dx)(\int_{0}^{1}g(x)dx)\]
+\begin{proof}
+A: Consider split the interval $[0,1]$ into $n$-parts, so $[0,1]=\bigcup\limits_{k=1}^{n}[\frac{k-1}{n},\frac{k}{n}]$.
+\[\int_{0}^{1}f(x)g(nx)dx=\sum\limits_{k=1}^{n}\int_{\frac{k-1}{n}}^{\frac{k}{n}}f(x)g(nx)dx\]let $t=nx$, $dx=\frac{1}{n}dt$.
+$\forall\varepsilon>0,(\exists\delta>0)|x_1-x_2|<\delta\implies|f(x_1)-f(x_2)|<\varepsilon$. $\forall x\in[\frac{k-1}{n},\frac{k}{n}],|x-\frac{k}{n}|\le\frac{1}{n}<\delta$.
+\[|f(x)-f(\frac{k}{n})|<\varepsilon\]
+\[\Delta x=|\int_{0}^{1}f(x)g(nx)dx-\sum\limits_{k=1}^{n}f(\frac{k}{n})\int_{\frac{k-1}{n}}^{\frac{k}{n}}g(nx)dx|\]
+\[\Delta x=|\sum\limits_{k=1}^{n}\int_{\frac{k-1}{n}}^{\frac{k}{n}}(f(x)-f(\frac{k}{n}))g(nx)dx|\]
+\[\Delta x<\varepsilon\int_{0}^{1}|g(nx)|dx\]
+\[\varepsilon\int_{0}^{1}|g(nx)|dx=\frac{1}{n}\varepsilon\int_{0}^{n}g(t)dt\]
+$n\to+\infty$, $\Delta x\to0$
+\[\lim\limits_{n\to\infty}\int_{0}^{1}f(x)g(nx)dx=\lim\limits_{n\to\infty}\sum\limits_{k=1}^{n}f(\frac{k}{n})\int_{\frac{k-1}{n}}^{\frac{k}{n}}g(nx)dx\]
+\[(\lim\limits_{n\to\infty}\sum\limits_{k=1}^{n}f(\frac{k}{n}))(\int_{0}^{1}g(nx)dx)=\lim\limits_{n\to\infty}\sum\limits_{k=1}^{n}f(\frac{k}{n})\frac{1}{n}(\int_{0}^{1}g(nx)dx)=(\int_{0}^{1}f(x)dx)(\int_{0}^{1}g(x)dx)\]
+\end{proof}
+Q:what is the finite-set? what is the infinite-set?\\
+A:Formlly, a set $S$ is finite if and only if there exists a map(bejective) $\varphi:S\to\{1,2,3,\cdots,n\}$.for infinite, it's opposite.
+\\
+\\
+Q:Consider a set $S$, if it's a finite-set, it can be defined? if it's a infinite-set, it cannot be defined?
+A:the domain of universe is the set theory universe $\mathscr{U}$, a set $A$, $A\subseteq M$ can be defined if and only if there exists a function $\pi(x,y_1,y_2,y_3,\cdots)\rightarrow A=\{y\in M\mid\mathscr{U}|=\pi(y,\bar{x})\}$.
+There is no nescessary connection between finiteness and definability. There exists set which is finite but cannot be defined. such $\langle\pi\rangle$ in field $\langle\mathbb{R},+,\cdot,0,1\rangle$. Also, there exists definability but infinite-set. such both even number in $\mathbb{N}$.
+Specificly, for a finite set, it can defined with parameters. for example, let $A=\{a_1,a_2,\cdots,a_n\}$,the formula $y=a_1\lor y=a_2\lor y=a_3\cdots\lor y=a_n$.
+\\
+\\
+Q:show that $H$ is the subgroup of $G$ and  $\exists\pi:G\to H$, $\pi\mid_H=\mathrm{id_H.}$, then $G=\ker\pi\rtimes H$.
+\begin{proof}
+   $\forall h(h\in H\rightarrow \pi(h)=h)$. $\ker\pi\cap H=\{1\}$, $\ker\varphi\trianglelefteq G$. $\forall g\in G$, $g=(g\cdot(\pi(g))^{-1})\cdot\pi(g)$.
+    $G=\ker\pi\rtimes H$. more generally, we have 
+    \[1\longrightarrow\ker\varphi\overset{\iota}\longrightarrow\ G\longrightarrow H\overset{\pi}\longrightarrow1\]
+\end{proof}
+Q: Given group $G=\prod\limits_{p\in P}\mathbb{Z}/p\mathbb{Z}$, $T=\bigoplus\limits_{p\in P}\mathbb{Z}/p\mathbb{Z}$, show that $G\cong G/T\oplus T$ is false. 
 \end{document}
 

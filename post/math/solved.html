@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>solved · KomariChika</title>
-<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="../../s1.css?v=1789874540">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
   onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
@@ -12,36 +12,136 @@
 <body>
 <header><nav><a href="../../index.html">Home</a></nav></header>
 <main><article>
-<p>Construct a set <span class="math inline">X</span> equal <span
-class="math inline">\mathcal{O}(G\curvearrowright X)=|G|</span> and
+<p>I will share some interesting problem here.<br />
+Q: construct a set <span class="math inline">X</span> equal <span
+class="math inline">\mathcal{O}(G\curvearrowright X)=|G|</span> and the
 group action is faithful.<br />
-Any <span class="math inline">G</span>-set is the disjoint union of
-orbit. The orbit is isomomorphic to <span
-class="math inline">G/H_i</span>. where <span
-class="math inline">H_i</span> is the stablier. so <span
-class="math inline">X\cong\bigsqcup\limits_i G/H_i</span>. Actually, our
-goal is to find a family of <span class="math inline">H_i</span>, <span
+A: I will present a method based on coset decomposition. For <span
+class="math inline">H\le G</span>, the left coset space is <span
+class="math inline">G/H=\{xH\mid x\in G\}</span>. Consider act on <span
+class="math inline">G</span>, so <span class="math inline">(\forall
+g,x\in G)g\cdot(xH)=(gx)H</span>. Obviously, <span
+class="math inline">G/H</span> is an obrit and <span
+class="math inline">|G/H|=[G:H]</span>. The kernel of this action is
+<span class="math inline">\ker(G\curvearrowright
+G/H)=\bigcap\limits_{g\in G}gHg^{-1}=:\operatorname{Core}_G(H)</span>.
+The essence of this problem lies in the gluing of coset space.
+Specificly, let <span class="math inline">\{H_i\}_{i\in I}</span>, <span
+class="math inline">X=\bigsqcup\limits_{i\in I}G/H_i</span>. Every <span
+class="math inline">G/H_i</span> is an obrit. we only need <span
 class="math inline">\ker(G\curvearrowright
-G/H_i)=\operatorname{Core}(H_i)=\bigcap\limits_i\operatorname{Core}(H_i)=\{1\}</span>.
-A direct idea is <span
-class="math inline">\{H_i\}_{i=1}^{|G|}=\{1\},X=\bigsqcup\limits_{i=1}^{|G|}G_i</span>.
-This is trivally. Another view is the faithful action only need one
-orbit core-free, so we can let <span class="math inline">H_1=G</span>
-and serveral fixed points. such <span
-class="math inline">H_1=G</span>,<span class="math inline">X=G\sqcup
-H</span>, <span class="math inline">|X|=2|G|-1</span>. also, we can
-<span class="math inline">G\curvearrowright G\times G</span>, <span
-class="math inline">\forall g\in G,g\cdot(x,y)=(gx,gy)</span>.<span
-class="math inline">\varphi:G\times G\to
-G,\varphi(x,y)=x^{-1}y</span></p>
+G/H_i)=\{1\}\land|I|=|G|</span>. A key observation is <span
+class="math inline">(\exists H_i)\operatorname{Core}(H_i)=\{1\}</span>
+not <span class="math inline">\forall H_i</span>.<br />
+A important truth is <span
+class="math inline">\mathcal{O}=|G|=|X|\iff</span> every points are
+fixed points <span class="math inline">\iff</span> trivial action. In
+the other word, if you want the action is faithful, then <span
+class="math inline">|X|&gt;|G|</span>. What is this lower bound? if we
+split <span class="math inline">X</span> with orbit, then <span
+class="math inline">X\cong\bigsqcup\limits_{i=1}^{|G|}G/H_i</span>, in
+order to ensure faithful <span
+class="math inline">\bigcap\limits_{i=1}^{|G|}\operatorname{Core}(H_i)=\{1\}</span>.
+so <span class="math inline">|X|=\sum[G:H_i]\ge1</span>. Faithfulness
+only requires ensuring that one orbit is non-trivial. <span
+class="math inline">|X|\ge(|G|-1)\times1+2=|G|+1</span>. so <span
+class="math inline">|G|=2</span>. Interestingly, Only <span
+class="math inline">\mathbb{Z}/2\mathbb{Z}</span> can equal.<br />
+<br />
+Q: Does there exist a function <span class="math inline">f(x)</span>
+defined on <span class="math inline">\mathbb{R}/\{0\}</span> such that
+<span class="math inline">f(f(x)) = x^{-1}</span>? If so, provide a
+construction for <span class="math inline">f</span>.<br />
+A: a beautiful construct: <span
+class="math inline">f(x)=\begin{cases}-x&amp;x&gt;0\\-\frac{1}{x}&amp;x&lt;0\end{cases}</span>.
+orz<br />
+<br />
+Q: <span class="math inline">f</span> is continuous in <span
+class="math inline">[0,1]</span> and <span class="math inline">g</span>
+is <span class="math inline">g</span> is an integrable function on <span
+class="math inline">\mathbb{R}</span> period <span
+class="math inline">1</span>. Proof <span
+class="math display">\lim\limits_{n\to+\infty}\int_{0}^{1}f(x)g(nx)dx=(\int_{0}^{1}f(x)dx)(\int_{0}^{1}g(x)dx)</span></p>
+<div class="proof">
+<p><em>Proof.</em> A: Consider split the interval <span
+class="math inline">[0,1]</span> into <span
+class="math inline">n</span>-parts, so <span
+class="math inline">[0,1]=\bigcup\limits_{k=1}^{n}[\frac{k-1}{n},\frac{k}{n}]</span>.
+<span
+class="math display">\int_{0}^{1}f(x)g(nx)dx=\sum\limits_{k=1}^{n}\int_{\frac{k-1}{n}}^{\frac{k}{n}}f(x)g(nx)dx</span>let
+<span class="math inline">t=nx</span>, <span
+class="math inline">dx=\frac{1}{n}dt</span>. <span
+class="math inline">\forall\varepsilon&gt;0,(\exists\delta&gt;0)|x_1-x_2|&lt;\delta\implies|f(x_1)-f(x_2)|&lt;\varepsilon</span>.
+<span class="math inline">\forall
+x\in[\frac{k-1}{n},\frac{k}{n}],|x-\frac{k}{n}|\le\frac{1}{n}&lt;\delta</span>.
+<span class="math display">|f(x)-f(\frac{k}{n})|&lt;\varepsilon</span>
+<span class="math display">\Delta
+x=|\int_{0}^{1}f(x)g(nx)dx-\sum\limits_{k=1}^{n}f(\frac{k}{n})\int_{\frac{k-1}{n}}^{\frac{k}{n}}g(nx)dx|</span>
+<span class="math display">\Delta
+x=|\sum\limits_{k=1}^{n}\int_{\frac{k-1}{n}}^{\frac{k}{n}}(f(x)-f(\frac{k}{n}))g(nx)dx|</span>
+<span class="math display">\Delta
+x&lt;\varepsilon\int_{0}^{1}|g(nx)|dx</span> <span
+class="math display">\varepsilon\int_{0}^{1}|g(nx)|dx=\frac{1}{n}\varepsilon\int_{0}^{n}g(t)dt</span>
+<span class="math inline">n\to+\infty</span>, <span
+class="math inline">\Delta x\to0</span> <span
+class="math display">\lim\limits_{n\to\infty}\int_{0}^{1}f(x)g(nx)dx=\lim\limits_{n\to\infty}\sum\limits_{k=1}^{n}f(\frac{k}{n})\int_{\frac{k-1}{n}}^{\frac{k}{n}}g(nx)dx</span>
+<span
+class="math display">(\lim\limits_{n\to\infty}\sum\limits_{k=1}^{n}f(\frac{k}{n}))(\int_{0}^{1}g(nx)dx)=\lim\limits_{n\to\infty}\sum\limits_{k=1}^{n}f(\frac{k}{n})\frac{1}{n}(\int_{0}^{1}g(nx)dx)=(\int_{0}^{1}f(x)dx)(\int_{0}^{1}g(x)dx)</span> ◻</p>
+</div>
+<p>Q:what is the finite-set? what is the infinite-set?<br />
+A:Formlly, a set <span class="math inline">S</span> is finite if and
+only if there exists a map(bejective) <span
+class="math inline">\varphi:S\to\{1,2,3,\cdots,n\}</span>.for infinite,
+it’s opposite.<br />
+<br />
+Q:Consider a set <span class="math inline">S</span>, if it’s a
+finite-set, it can be defined? if it’s a infinite-set, it cannot be
+defined? A:the domain of universe is the set theory universe <span
+class="math inline">\mathscr{U}</span>, a set <span
+class="math inline">A</span>, <span class="math inline">A\subseteq
+M</span> can be defined if and only if there exists a function <span
+class="math inline">\pi(x,y_1,y_2,y_3,\cdots)\rightarrow A=\{y\in
+M\mid\mathscr{U}|=\pi(y,\bar{x})\}</span>. There is no nescessary
+connection between finiteness and definability. There exists set which
+is finite but cannot be defined. such <span
+class="math inline">\langle\pi\rangle</span> in field <span
+class="math inline">\langle\mathbb{R},+,\cdot,0,1\rangle</span>. Also,
+there exists definability but infinite-set. such both even number in
+<span class="math inline">\mathbb{N}</span>. Specificly, for a finite
+set, it can defined with parameters. for example, let <span
+class="math inline">A=\{a_1,a_2,\cdots,a_n\}</span>,the formula <span
+class="math inline">y=a_1\lor y=a_2\lor y=a_3\cdots\lor
+y=a_n</span>.<br />
+<br />
+Q:show that <span class="math inline">H</span> is the subgroup of <span
+class="math inline">G</span> and <span
+class="math inline">\exists\pi:G\to H</span>, <span
+class="math inline">\pi\mid_H=\mathrm{id_H.}</span>, then <span
+class="math inline">G=\ker\pi\rtimes H</span>.</p>
+<div class="proof">
+<p><em>Proof.</em> <span class="math inline">\forall h(h\in H\rightarrow
+\pi(h)=h)</span>. <span class="math inline">\ker\pi\cap H=\{1\}</span>,
+<span class="math inline">\ker\varphi\trianglelefteq G</span>. <span
+class="math inline">\forall g\in G</span>, <span
+class="math inline">g=(g\cdot(\pi(g))^{-1})\cdot\pi(g)</span>. <span
+class="math inline">G=\ker\pi\rtimes H</span>. more generally, we have
+<span
+class="math display">1\longrightarrow\ker\varphi\overset{\iota}\longrightarrow\
+G\longrightarrow H\overset{\pi}\longrightarrow1</span> ◻</p>
+</div>
+<p>Q: Given group <span class="math inline">G=\prod\limits_{p\in
+P}\mathbb{Z}/p\mathbb{Z}</span>, <span
+class="math inline">T=\bigoplus\limits_{p\in
+P}\mathbb{Z}/p\mathbb{Z}</span>, show that <span
+class="math inline">G\cong G/T\oplus T</span> is false.</p>
 </article></main>
 <footer>
         <div class="social-links">
             </div>
-        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://github.com/komarichika-nya" style="font-weight: bold;">Github</a>
         <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
-        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
-        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+        <a href="mailto:xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
     </footer>
 </body>
 </html>

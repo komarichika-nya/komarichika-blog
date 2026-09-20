@@ -21,60 +21,28 @@
     breaklines=true
 }
 \begin{document}
-\section{BSDF}
-BSDF carefully defines the reflective properties of object surfaces.
-Before introducing BSDF, let's clarify two concepts.\\
-The $irradiance$ describles the radiant flux reaching a unit area.
-Simply, it describles actual light intensity received by the surface,(so it need $\cos$,ha?).\\
-The $radiance$ describles radiant flux per unit projected area per unit solid angle.\\
-The $differential irradiance$ describles the contribution of incident irradiance $L_i(\omega_i)$ from a specific direction $w_i$ to a point on the surface.
-\[dE(\omega_i)=dL_i(\omega_i)\cos\theta d\omega_i\]
-The $differential radiance$ describles the describles the emissivity of the incident direction $\omega_i$
-in the reflective direction $\omega_o$.
-\[L_o(\omega_o)=\int_{\Omega}dL_o(\omega_o)\]
-Differential emissivity is proportional to differential irradiance, hence the definition of BSDF.
-\[f_r(\omega_i,\omega_o)=\frac{dL_o(\omega_o)}{dL_i(\omega_i)\cos\theta d\omega_i}\cdot\frac{1}{\mathtt{sr}}\]
-Naturally, we then wrote out the rendering equation.
-\[L_o(\omega_o)\int_{\Omega}f_r(\omega_i,\omega_o)L_i(\omega_i)\cos\theta_i d\omega_i\cdot\frac{1}{\mathtt{sr}}\]
-\subsection{Sampling based on Monte Carlo integral}
-Monte Carlo integral is an efficent sample method. It's unbiased and the variance decreased to $\frac{1}{N^2}$. In rendering,it can be written by following style:
-\[L_o(\omega_o)=L_e(\omega_o)+\frac{1}{N}\sum\limits_{i=1}^N\frac{f_r(\omega_i,\omega_oo)L_i(\omega_i)\cos\theta}{p(\omega_i)}\]
+\section{Uniform Distribution}
+Given the range $(a,b)$, $X\sim\text{Uniform}(a,b)$, $\forall a<x<b$, the probability density is $p(x)=\frac{1}{b-a}$.
+It can generate by $X=b+(b-a)\mathcal{U}$,$\mathcal{U}\sim\text{Uniform}(0,1)$.
 \begin{proposition}
-    Monte Carlo integral is unbiased and the variance decreased  to $\frac{1}{N^2}$
+    $P(0<X<1)=P(0\le X\le1)$
 \end{proposition}
 \begin{proof}
-    Let $g(\omega_i)=\frac{f_r(\omega_i,\omega_o)L_i(\omega_i)\cos\theta}{p(\omega_i)}$
-    \[\mathbb{E}[g(\omega_i)]=\int_{\Omega}g(\omega_i)\cdot p(\omega_i)d\omega_i=\int_{\Omega}g(\omega_i)d\omega_i\]
-    \[\mathbb{Var}[g(\omega_i)]=\mathbb{E}[g^2(\omega_i)]-\mathbb{E}[g^2(\omega_i)]\]
-    \[\sigma=\int_{\Omega}\frac{g^2(\omega_i)}{p(\omega_i)}-\int_{\Omega}g^2(\omega_i)\]
-    Because of the samples are independent and identically distributed.
-    let: \[\mathbb{V}[ar]=\frac{\sigma}{N^2}\]
+    $X$ is the continuous random variable, $f(x)$ is the probability density, $\forall a$,
+    $\int_{a}^af(x)dx=0$,$P(0<X<1)=P(0\le X\le1)-P(X=1)-P(X=0)=P(0\le X\le1)$.
 \end{proof}
-Therefore, choosing a reasonable PDF is crucial. What is the best $p(\omega_i)$?\\
-Let the optimal proposal distribution is $q(\omega_i)$.
-\[I=\int g(\omega_i)p(\omega_i)d\omega_i\]
-\[\mathbb{Var}[I]=\frac{1}{n}(\int\frac{g^2(\omega_i)p^2(\omega_i)}{q(\omega_i)}-I^2)d\omega_i\]
-obviously we should minimize $\int\frac{g^2(\omega_i)p^2(\omega_i)}{q(\omega_i)}$\\
-Constructing Lanrange multipliers.\[\mathcal{L}(\omega_i,\lambda)=\int(\frac{g^2(\omega_i)p^2(\omega_i)}{q(\omega_i)}+\lambda q(\omega_i))d\omega_i\]
-Use the calculus of variations:
-\[\frac{\partial(\frac{g^2p^2}{q}+\lambda q)}{\partial q}=-\frac{g^2p^2}{q}+\lambda=0\]
-\[q(\omega_i)=\frac{|g(\omega_i)|p(\omega_i)}{\int|g(\omega_i)|p(\omega_i)d\omega_i}\]
-unfortunately, this is incalaulate. The equation we want appear the answer. so we use sample.
+The mean of the uniform distribution is $\mathbb{E}[X]=\int_{a}^{b}a\frac{dx}{b-a}=\frac{b+a}{2}$.
+The variance of the uniform distribution is $\mathbb{Var}[X]=\mathbb{E}[(X-\mathbb[E](X))^2]=\frac{b-1}{12}$.
 \subsubsection{Cosnie-Weighted Hemisphere sampling}
-In an ideal diffuse reflection model, $f_r=\frac{\rho}{\pi}$, this gives us a natural idea that let PDF be proportional to $\cos\theta$.
-\[\int_{\Omega}p(\omega)d\omega=\int_{0}^{2\pi}\int_{0}^{\frac{\pi}{2}}(c\cdot\cos\theta)\sin\theta d\theta d\phi=1\]
-\[p(\omega)=\frac{cos\theta}{\pi}\]
-\[L_o(\omega_o)=\frac{\rho}{N}\sum\limits_{i=1}^{N}L_i(\omega_i)\]
-It's unbiased. It quite obvious that it uses the idea of importance sampling--sample more from areas that makes a significant contributions.\\
-A native way to implement this is use CDF's inverse function. 
-\[\int_{0}^{2\pi}\int_{0}^{\frac{\pi}{2}}p(\theta,\phi)d\theta d\phi=\int_{0}^{2\pi}\int_{0}^{2\pi}p(\omega)d\theta d\phi=1\]
-\[p(\theta)=\int_{0}^{2\pi}p(\phi)d\theta d\phi\]
-\[F(\theta)=\int_{0}^{\theta}p(\theta)=\sin^2\theta\]
-Give to random number $\xi_1,\xi_2\in[0,1]$
-\[F(x)=\xi_1\to\sin\theta=\sqrt{\xi_1},\cos\theta=\sqrt{1-\xi_1}\]
-\[x=\cos\theta\phi\sin\phi=\cos(2\pi\xi_2)\sqrt{\xi_1}\]
-\[y=\sin\phi\sin\theta=\sin(2\pi\xi_2)\sqrt{xi_1}\]
-\[z=\sqrt{1-\xi_1}\]
+One efficient method is that we can convert the directional domain to solid angles for sampling.
+Consider the $z>0$, the solid angles is $2\pi$, probability density is $p(w)=\frac{1}{2\pi}$,
+$u,v\sim\mathcal{U}(0,1)$,$\theta=\arccos(z)$,$\phi=2\pi u$,$r=\sqrt{1-z^2}$,$x=r\cos\phi$,$y=r\sin\phi$.
+The Monte Carlo estimator at this point is $\int_{\Omega^+}f(\omega)d\omega\approx\frac{2\pi}{N}\sum\limits_{i=1}^{N}
+f(w_i)$.
+It's necessary to distinguish that uniformity in the parameter domain of $(\theta,\phi)$ is not equivalent to uniformityon the spherical domain. That's because $d\omega=\sin\theta d\theta d\phi$. Suppose $\theta\sim\mathcal{U}(0,\pi)$, $\phi\sim\mathcal{U}(0,2\pi)$. At this satuation, the Monte Carlo estimatoris $\int_{\Omega^+}f(\omega)d\omega\approx\frac{\pi^2}{N}\sum\limits_{i=1}^{N}f(\theta_i,\phi_i)\sin\theta_i$.
+In practical applications, we still select two random numbers on the plane, map them to the sphere, and then reverse-calaulate the planar coordinates. That's because the Jacobian is a constant at this point.
+$\omega\to\omega(u,v)$, the Jacobian is $d=\left\|\frac{\partial\omega}{\partial u}\times\frac{\partial\omega}{v}\right\|dudw=2\pi$.
+Give to random number $\xi_1,\xi_2\in[0,1]$, $F(x)=\xi_1\to\sin\theta=\sqrt{\xi_1},\cos\theta=\sqrt{1-\xi_1}$, $x=\cos\theta\phi\sin\phi=\cos(2\pi\xi_2)\sqrt{\xi_1}$, $y=\sin\phi\sin\theta=\sin(2\pi\xi_2)\sqrt{xi_1}$, $z=\sqrt{1-\xi_1}$.
 \begin{lstlisting}[language=C++]
 template<typename T>
 vec3<T,V>sp(const vec3<T,V>&n,int dep){
@@ -93,18 +61,16 @@ vec3<T,V>sp(const vec3<T,V>&n,int dep){
     \caption{100spp}
     \label{fig:ball}
 \end{figure} 
-Another way is uniform disk mapping, it's so easy to understand and implement. Not mentioned much(am I lazy? decided not to).
+
+
 \subsubsection{Light source area sampling}
 If the light is too small, the above method has very slow variance canvergence. Since sampling b=objects is slow, let's just sample the light soure directly.
 For any pixel, we sample the light source and connect the pixel and the light source. But the problem is the  render equation is defined in the directional domain(soild angle). We need a concersion factor. What came to your mind? Jacobian. 
 We need to project the surface area onto a plane perpendicular to light rays.
-\[dA^\perp=dA\cos\theta_L\]
-\[\frac{dA^\perp}{dA}=\cos\theta_L\]
-distance scaling 
-\[d\omega=\frac{dA^\perp}{r^2}\]
-\[\frac{d\omega}{dA^\perp}=\frac{1}{r^2}\]
-\[d\omega=(\frac{dA^\perp}{dA}\cdot\frac{d\omega}{dA^\perp})dA=\frac{\cos\theta_L}{r^2}dA\]
-\[L_o(x,\omega_o)\approx\frac{A}{N}\sum\limits_{k=1}^{N}L_e(y_k\to x,-\omega_k)\cdot\frac{\cos\theta_L}{r^2}\cos\theta_k\cdot V(x,y_k)\]
+$dA^\perp=dA\cos\theta_L$, $\frac{dA^\perp}{dA}=\cos\theta_L$, 
+distance scaling $d\omega=\frac{dA^\perp}{r^2}$, $\frac{d\omega}{dA^\perp}=\frac{1}{r^2}$, 
+$d\omega=(\frac{dA^\perp}{dA}\cdot\frac{d\omega}{dA^\perp})dA=\frac{\cos\theta_L}{r^2}dA$, 
+$L_o(x,\omega_o)\approx\frac{A}{N}\sum\limits_{k=1}^{N}L_e(y_k\to x,-\omega_k)\cdot\frac{\cos\theta_L}{r^2}\cos\theta_k\cdot V(x,y_k)$, 
 where $V(x,y)$ is visable function and $p(\omega)=\frac{1}{A\cdot|J|}$
 \begin{lstlisting}[language=C++]
 template<typename T>

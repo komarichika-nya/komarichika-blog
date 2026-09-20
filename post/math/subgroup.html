@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>subgroup · KomariChika</title>
+<link rel="stylesheet" href="../../s1.css?v=1789874540">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+  onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
+</head>
+<body>
+<header><nav><a href="../../index.html">Home</a></nav></header>
+<main><article>
+<div class="definition">
+<p><strong>Definition 1</strong>. <span class="math inline">G</span> is
+a group, we call <span class="math inline">H</span> is the subgroup of
+<span class="math inline">G</span> if and only if <span
+class="math inline">H\subseteq G\land\forall x\forall y(x\in H\land y\in
+H\rightarrow x^{-1}\in H\land xy\in H)</span></p>
+</div>
+<p>Obviously, we can see <span class="math inline">|H|\le|G|</span>.
+Another useful proposition is:</p>
+<div class="proposition">
+<p><strong>Proposition 2</strong>. <em><span
+class="math inline">H\subseteq G</span>, if <span
+class="math inline">H</span> is the subgroup of <span
+class="math inline">G</span> if and only if <span
+class="math inline">\exists x(x\in H)\land\forall x\forall y(x\in H\land
+y\in H\rightarrow xy^{-1}\in H)</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span class="math inline">H</span> is the subgroup of
+<span class="math inline">G</span>, for <span
+class="math inline">H</span>, the operation is closed obviously. let
+<span class="math inline">y=x^{-1}</span>, <span
+class="math inline">xy=xx^{-1}=\mathrm{id.}\in H</span>. <span
+class="math inline">\forall x\in H,\mathrm{id.}\in
+H,\mathrm{id.}a^{-1}=a^{-1}\in H</span>. <span
+class="math inline">\forall x,y\in H</span>, <span
+class="math inline">a(b^{-1})^{-1}=ab\in H</span>. <span
+class="math inline">H\le G</span>. ◻</p>
+</div>
+<p>In fact, this can itself be viewed as a right regular action.
+Consider <span class="math inline">\pi:G\times G\to G</span>, <span
+class="math inline">(g,x)\mapsto g\cdot x:=xg^{-1}</span>. associative
+law <span class="math inline">\forall g,h\in G</span>, <span
+class="math inline">(gh)\cdot x=xh^{-1}g^{-1}</span>, <span
+class="math inline">g\cdot(h\cdot x)=g\cdot
+xh^{-1}=xh^{-1}g^{-1}</span>. This tells us <span
+class="math inline">H</span> is the subgroup of <span
+class="math inline">G</span> iff. <span class="math inline">H</span> is
+a fixed subset of <span class="math inline">G</span> under self action.
+Next, I will offer another perspective on subgroups. Consider retract
+map <span class="math inline">\pi:G\to H</span>, <span
+class="math inline">\pi\mid_H=\mathrm{id_H.}</span>. <span
+class="math inline">\forall h(h\in H\rightarrow\pi(h)=h)</span>. let
+<span class="math inline">N=\ker\pi</span>, obviously, <span
+class="math inline">N\cap H=\{\mathrm{id.}\}</span>. <span
+class="math inline">N\trianglelefteq G</span>, so the elements of <span
+class="math inline">G</span> can be uniquely represented as <span
+class="math inline">\forall g\in G</span>, <span
+class="math inline">g=(g\cdot(\pi(g))^{-1})\cdot\pi(g)</span>. so we
+have <span class="math display">1\longrightarrow
+N\overset{\iota}\longrightarrow\ G\overset{\pi}\longrightarrow
+H\longrightarrow1</span> <span class="math inline">G\cong N\rtimes
+H</span>.</p>
+<div class="proposition">
+<p><strong>Proposition 3</strong>. <em><span
+class="math inline">A</span>, <span class="math inline">B</span> are the
+subgroups of <span class="math inline">G</span>, if <span
+class="math inline">A\cup B</span> is the subgroup of <span
+class="math inline">G</span> iff. <span class="math inline">A\subseteq
+B\lor B\subseteq A</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> if <span class="math inline">A\cap
+B=\{\mathrm{id.}\}</span>, the elements in <span
+class="math inline">A</span> and <span class="math inline">B</span> are
+closed under their respective operations. Obviously, <span
+class="math inline">A\cup B</span> is not subgroup. so <span
+class="math inline">A\cap B\ne\{\mathrm{id.}\}</span>. if <span
+class="math inline">A\subseteq B</span>, <span
+class="math inline">\forall x\in B</span>, <span
+class="math inline">x\in A</span>, Obviously. ◻</p>
+</div>
+<div class="definition">
+<p><strong>Definition 4</strong>. Let <span class="math inline">G</span>
+is an abelian group, the torsion group <span
+class="math inline">T</span> is the subgroup of <span
+class="math inline">G</span>, where <span class="math inline">T=\{g\in
+G\mid|g|&lt;\infty\}</span>.</p>
+</div>
+<p>Easily, we have <span class="math display">0\longrightarrow
+T(G)\overset{\iota}\longrightarrow G\overset{\pi}\longrightarrow
+G/T(G)\longrightarrow0</span> if <span class="math inline">G</span> is
+finite, then <span class="math inline">T(G)=G</span>, <span
+class="math inline">G/T(G)=\{0\}</span>, <span
+class="math inline">G\cong G\oplus\{0\}</span>. if <span
+class="math inline">G</span> is infinite, <span
+class="math inline">G\cong T(G)\oplus G/T(G)</span>.(It not always
+correct.) This need more powerful condition, specficty, <span
+class="math inline">\exists\varphi:G/T(G)\to G</span>, <span
+class="math inline">\pi\circ\varphi=\mathrm{id_H.}</span>.</p>
+<div class="proposition">
+<p><strong>Proposition 5</strong>. <em><span
+class="math inline">H</span> is the subgroup of <span
+class="math inline">G</span>, <span class="math inline">H\le
+N_G(H)</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span class="math inline">H\curvearrowright
+H</span>,<span class="math inline">N_H(H)</span>,<span
+class="math inline">\forall h,x\in H,x\mapsto hxh^{-1}</span>, <span
+class="math inline">hxh^{-1}\in H</span>, <span
+class="math inline">hHh^{-1}=H</span>, <span
+class="math inline">H=N_{H}(H)</span>, <span
+class="math inline">H=N_H(H)\le N_G(H)</span>. ◻</p>
+</div>
+<div class="proposition">
+<p><strong>Proposition 6</strong>. <em><span
+class="math inline">A\subseteq B\subseteq G</span>, <span
+class="math inline">C_G(B)\subseteq C_G(A)</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span class="math inline">\forall x\in G</span>, if
+an element can commute with <span class="math inline">a\forall a\in
+A</span>, it must commute with <span class="math inline">b\forall b\in
+B</span>. if an element can commute with <span
+class="math inline">b\forall b\in B</span>, it may commute with <span
+class="math inline">a\forall a\in A</span>. <span
+class="math inline">C_G(B)\subseteq C_G(A)</span>. ◻</p>
+</div>
+<p>more generally, given a group <span class="math inline">G</span>,
+some set <span class="math inline">A\subseteq B\subseteq
+C\subseteq\cdots\subseteq G</span>. <span
+class="math inline">C_G(G)\subseteq\cdots\subseteq C_G(B)\subseteq
+C_G(A)</span>.</p>
+<div class="proposition">
+<p><strong>Proposition 7</strong>. <em><span
+class="math inline">A\subseteq G</span>, <span class="math inline">H\le
+G</span>, <span class="math inline">N_H(A)=N_G(A)\cap H</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span class="math inline">\forall x\in
+N_H(A)</span>,<span class="math inline">x\in H\land
+xHx^{-1}=H</span>,<span class="math inline">x\in N_G(A)\land x\in
+H</span>,<span class="math inline">x\in N_G(A)\cap H</span>. <span
+class="math inline">x\in N_G(A)\cap H</span>,<span
+class="math inline">x\in H\land x\in N_G(A)</span>. <span
+class="math inline">xAx^{-1}=A</span>,<span class="math inline">x\in
+N_H(A)</span>, <span class="math inline">N_H(A)=N_G(A)\cap
+H</span> ◻</p>
+</div>
+<div class="proposition">
+<p><strong>Proposition 8</strong>. <em><span
+class="math inline">A\subseteq G</span>,<span
+class="math inline">Z(G)\le N_G(A)</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span class="math inline">\forall g\in
+Z(G)</span>,<span class="math inline">\forall a\in A</span>, <span
+class="math inline">gag^{-1}=a</span>, <span
+class="math inline">gAg^{-1}=A</span>, <span class="math inline">g\in
+N_G(A)</span>. <span class="math inline">Z(G)\subseteq N_G(A)</span>.
+<span class="math inline">Z(G)\le G\land N_G(A)\le G</span>,<span
+class="math inline">Z(G)\le N_G(A)</span>. ◻</p>
+</div>
+<div class="definition">
+<p><strong>Definition 9</strong>. A group <span
+class="math inline">H</span> is called cyclic if it can be generated by
+a single element. i.e. <span class="math inline">H=\{x^n\mid
+n\in\mathbb{Z}\}</span>.</p>
+</div>
+<p>It’s easy to find <span class="math inline">H=\{x^n\mid
+n\in\mathbb{Z}\}=\{x^{-n}\mid n\in\mathbb{Z}\}</span>. That’s beacuse
+<span class="math inline">x^{-n}=(x^{-1})^n</span>. Obviously, if <span
+class="math inline">H=\langle x\rangle</span>, <span
+class="math inline">|H|=|x|</span>. More specifically, if <span
+class="math inline">|H|&lt;\infty</span>, <span
+class="math inline">\forall x\in H</span> is distinct. suppose <span
+class="math inline">x^a=x^b</span>, <span
+class="math inline">a&lt;b</span>, <span
+class="math inline">x^{b-a}=1</span>. if <span
+class="math inline">|H|=\infty</span>, <span class="math inline">\forall
+n\ne0</span>,<span class="math inline">x^n\ne1</span>,<span
+class="math inline">\forall a\ne b</span>,<span
+class="math inline">x^a\ne x^b</span>,<span class="math inline">\forall
+a,b\in\mathbb{Z}</span>. For a cyclic group, it’s very useful to
+attention its smallest respective element. We will see in next part.</p>
+<div class="proposition">
+<p><strong>Proposition 10</strong>. <em>Given a group <span
+class="math inline">G</span>, <span class="math inline">x\in G</span>,
+if <span class="math inline">x^m=1,m\in\mathbb{Z}</span>, <span
+class="math inline">|x|\mid m</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> let <span class="math inline">|x|=n</span>, <span
+class="math inline">m=nq+r</span>, <span
+class="math inline">x^r=x^{m-nq}</span>, <span
+class="math inline">r=0</span>, <span class="math inline">m=nq</span>,
+<span class="math inline">n\mid m</span>. ◻</p>
+</div>
+<div class="proposition">
+<p><strong>Proposition 11</strong>. <em>if <span
+class="math inline">\langle x\rangle</span> and <span
+class="math inline">\langle y\rangle</span> are finite and have same
+order, then they are isomomphism.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Consider a map <span class="math inline">\pi:\langle
+x\rangle\to\langle y\rangle</span>, <span class="math inline">\forall
+k\in\mathbb{Z}</span>, <span class="math inline">x^k\mapsto y^k</span>.
+<span class="math inline">\pi(x^k)=y^k</span>. First, we will check the
+map is well-defined. Consider if <span class="math inline">\forall
+a,b\in\mathbb{Z}</span>, <span class="math inline">x^a=x^b</span>, <span
+class="math inline">\pi(x^a)=\pi(x^b)</span>, <span
+class="math inline">x^{a-b}=1</span>, <span class="math inline">n\mid
+a-b</span>, <span class="math inline">\exists
+q\in\mathbb{Z},a=nq+b</span>, <span
+class="math inline">\pi(x^{nq+b})=\pi(x^b)=y^{nq+b}=y^b</span>. It’s
+well-defined. Next, we will proof the map is homomorphic. <span
+class="math inline">\forall a,b\in\mathbb{Z}</span>, <span
+class="math inline">\pi(x^ax^b)=\pi(x^{ab})=y^{ab}</span>. <span
+class="math inline">\pi(x^a)\pi(x^b)=y^ay^b=y^{ab}</span>. <span
+class="math inline">\pi(x^ax^b)=\pi(x^a)\pi(x^b)</span>. <span
+class="math inline">y^k</span> is the image of <span
+class="math inline">x^k</span>, so it’s surjective. Also, they have the
+same order so it’s bejective. ◻</p>
+</div>
+<div class="proposition">
+<p><strong>Proposition 12</strong>. <em>if <span
+class="math inline">\langle x\rangle</span> is infinite, so <span
+class="math inline">\mathbb{Z}\cong\langle x\rangle</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> Consider a map <span
+class="math inline">\pi:\mathbb{Z}\to\langle x\rangle</span>, <span
+class="math inline">\forall k\in\mathbb{Z}</span>, <span
+class="math inline">\pi(k)=x^k</span>. <span class="math inline">\forall
+a,b\in\mathbb{Z}</span>, <span class="math inline">a\ne b</span>, <span
+class="math inline">x^a\ne x^b</span>, so it’s injective. By definition,
+it’s surjective. so it’s bejective. ◻</p>
+</div>
+<div class="proposition">
+<p><strong>Proposition 13</strong>. <em>Let <span
+class="math inline">G</span> is a group, <span class="math inline">x\in
+G</span>, <span class="math inline">a\in\mathbb{Z}-0</span>, if <span
+class="math inline">|x|=n&lt;\infty</span>, then <span
+class="math inline">|x^a|=\frac{n}{\gcd(n,a)}</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span class="math inline">|x^a|=m</span>,<span
+class="math inline">d=\gcd(n,a)</span>,<span
+class="math inline">n=dn&#39;</span>,<span
+class="math inline">a=da&#39;</span>,<span class="math inline">\forall
+n&#39;,a&#39;\in\mathbb{Z}</span>,<span
+class="math inline">\gcd(n&#39;,a&#39;)=1</span>, <span
+class="math inline">(x^a)^{n&#39;}=x^{an&#39;}=x^{da&#39;n&#39;}=1^{a&#39;}=1</span>,<span
+class="math inline">m\mid n&#39;</span>. <span
+class="math inline">x^{am}=x^n</span>,<span class="math inline">n\mid
+am</span>,<span class="math inline">dn&#39;\mid da&#39;m</span>,<span
+class="math inline">n&#39;\mid a&#39;m</span>, <span
+class="math inline">n&#39;\mid m</span> <span
+class="math inline">m=n&#39;</span>. ◻</p>
+</div>
+<div class="proposition">
+<p><strong>Proposition 14</strong>. <em><span
+class="math inline">H=\langle x\rangle</span>, if <span
+class="math inline">K\le H</span>, <span class="math inline">K=\{1\}\lor
+K=\langle x^d\rangle</span>, where <span class="math inline">d</span> is
+the smallest positive number such <span class="math inline">x^d\in
+K</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span class="math inline">H=\langle
+x\rangle</span>,<span class="math inline">K\le H</span>,<span
+class="math inline">\exists a\ne0</span>,<span
+class="math inline">x^a\in K</span>. if <span
+class="math inline">a&lt;0</span>, <span
+class="math inline">x^{-a}=(x^{a})^{-1}\in K</span>. <span
+class="math inline">\mathcal{P}=\{b\mid b\in\mathbb{Z}^+\land x^b\in
+K\}</span>. <span class="math inline">x^d\in K</span>,<span
+class="math inline">\langle x^d\rangle\le K</span>. <span
+class="math inline">K\le H</span>,<span
+class="math inline">a=qd+r</span>,<span
+class="math inline">x^a=x^{qd+r}</span>,<span
+class="math inline">x^r=x^{a-qd}</span>,<span
+class="math inline">a=qd</span>,<span
+class="math inline">x^a=(x^{d})^q\in\langle x^d\rangle</span>. <span
+class="math inline">K\le\langle x^d\rangle</span>. <span
+class="math inline">K=\langle x^d\rangle</span>. ◻</p>
+</div>
+<div class="proposition">
+<p><strong>Proposition 15</strong>. <em><span
+class="math inline">H=\langle x\rangle</span>, <span
+class="math inline">|x|=n&lt;\infty</span>, <span
+class="math inline">H=\langle x^a\rangle</span> iff. <span
+class="math inline">\gcd(a,n)=1</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> <span
+class="math inline">|x|=n&lt;\infty</span>,<span
+class="math inline">H=\langle x^a\rangle\iff\gcd(a,n)=1</span>. <span
+class="math inline">|x^a|=|x|\iff\frac{n}{\gcd(a,n)}=n\iff\gcd(a,n)=1</span> ◻</p>
+</div>
+<p>This is very useful, it tells us <span class="math inline">H</span>
+is generated by <span class="math inline">\varphi(n)</span>. For
+example, consider a group <span
+class="math inline">\langle\mathbb{Z}/n\mathbb{Z},\times\rangle</span>,
+<span class="math inline">H=\{\varphi(n)\mid
+n\in\mathbb{Z}\}</span>.</p>
+<div class="proposition">
+<p><strong>Proposition 16</strong>. <em><span
+class="math inline">H=\langle x\rangle</span>, <span
+class="math inline">|H|=n&lt;\infty</span>, <span
+class="math inline">\forall a\in\mathbb{Z},a\mid n</span> is a unique
+subgroup of <span class="math inline">H</span> of order <span
+class="math inline">a</span>.</em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> let <span class="math inline">d=a\mid n</span>, <span
+class="math inline">\langle x^d\rangle</span> is a subgroup of <span
+class="math inline">H</span> of order <span
+class="math inline">a</span>, suppose <span class="math inline">\exists
+b\in\mathbb{Z}</span>, <span class="math inline">\langle
+x^b\rangle</span> is a subgroup of <span class="math inline">H</span> of
+order <span class="math inline">a</span>. <span
+class="math inline">\frac{n}{d}=a=|x^b|=\frac{n}{\gcd(b,n)}</span>,
+<span class="math inline">\gcd(b,n)=d</span>, <span
+class="math inline">d\mid b</span>, <span
+class="math inline">x^b\in\langle x^d\rangle</span>. More generally, we
+have <span class="math inline">\langle x^b\rangle\le\langle
+x^{\gcd(b,n)}\rangle</span>. ◻</p>
+</div>
+<p>From this, we can see the subgroup of finite cyclic group</p>
+</article></main>
+<footer>
+        <div class="social-links">
+            </div>
+        <a href="https://github.com/komarichika-nya" style="font-weight: bold;">Github</a>
+        <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
+        <a href="mailto:xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+    </footer>
+</body>
+</html>

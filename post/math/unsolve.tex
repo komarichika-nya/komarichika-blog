@@ -1,0 +1,34 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm,]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\usepackage{setspace}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+\begin{document}
+Q: Komari Chika is a thrifty girl who enjoys cooking for herself. 
+Vegetable prices at the market fluctuate randomly each day, with a fluctuation range of $\sigma$. 
+To prevent financial loss, the magnitude of any price drop is capped at $v$ (where $v < \sigma$). 
+Chika does not know the day's price before she goes shopping. 
+Suppose that over the past $n$ days, she purchased vegetables $m$ times, resulting in a known price sequence $p = [a_1, \dots, a_m]$. 
+She wants to make a purchase at a low price point before the deadline. What's the price can she get when decide to buy vegetables?$\quad$(random walk and optimal stopping? i cant solve now).
+\\
+\\
+Q:Komari Chika has recently become obsessed with the Steam game *Buckshot Roulette*. The rules are as follows: at the start of each round, 
+there are $n$ bullets ($n \ge 2$), including at least one blank and one live round. 
+The player goes first, followed by the Devil, and they take turns acting. An "action" consists of randomly drawing a bullet; blanks deal no damage, while live rounds cause the loss of one health point. During each action, 
+the player can choose to aim the gun at themselves or at the Devil. If the player aims at themselves and draws a blank, the Devil skips their next turn; if they draw a live round, the player loses one health point, 
+and the turn proceeds as usual. If the player aims at the Devil and draws a blank, the turn proceeds as usual; if they draw a live round, the Devil loses one health point, and the turn proceeds as usual. 
+These rules apply to both parties. The game ends if and only if one party's health drops to zero; if all bullets are exhausted while both parties still have remaining health, the chamber is reloaded.
+Assume both parties start with $v$ health points, and the game includes $e$ blanks and $r$ live rounds (where $r + e = n$). Komari Chika wants to determine the strategy that maximizes her win rate.
+\\
+\\
+Q:what is the essence of action? In group theory, consider a act $G\to X$. In fact, it can be seen a homomorphic map $\varphi:G\to\mathrm{Sym}(X)$, 
+we can define a equaival relation $\forall a\forall b((a\in G\land b\in G)\rightarrow a\sim b)$, this gives us a split of $G$. we can see the action is a homomorphic map essencally.
+But when we consider any object, such give category $\mathcal{C}$, $\forall A\forall B(A\in\mathcal{C}\land B\in\mathcal{C})$, how to understand action?
+\\
+\\
+Q:Show that $\sum\limits_{n=1}^{\infty}\frac{x^n}{1+x+x^2+\cdots+x^{2n-1}}\cos nx$ is uniformly convergent in $[0,1]$.(i am not good at analysis btw.)
+\end{document}

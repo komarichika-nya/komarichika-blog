@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Life · KomariChika</title>
-<link rel="stylesheet" href="../../s1.css">
+<link rel="stylesheet" href="../../s1.css?v=">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
   onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
@@ -95,14 +95,100 @@ think more.</p>
 <p>suki suki suki suki suki suki <img src="img/komarichika.jpg"
 alt="komarichika" /></p>
 </article>
+<article class="log-entry">
+<time>2026-07-07</time>
+<p>suki suki suki <img src="img/chika1.jpg" alt="komarichika" /></p>
+</article>
+<article class="log-entry">
+<time>2026-07-12</time>
+<p>Severely dependent on caffeine</p>
+</article>
+<article class="log-entry">
+<time>2026-09-18</time>
+<p><strong>Always check the path before and verify the presence of other
+mount of points before executing any <code>rm -rf *</code>.</strong></p>
+<p>Recently, I gave gentoo linux a try; the installation process was
+actually quite arduous–I spend almost a whole day to configuring it. I
+am performing the installation on an archlinux host. The inital
+preparations are simple.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mkdir <span class="at">-p</span> /mnt/yuki</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount /dev/nvme0n1p7 /mnt/yuki</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mkdir <span class="at">-p</span> /mnt/yuki/proc</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount <span class="at">--types</span> proc /proc /mnt/yuki/proc</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mkdir <span class="at">-p</span> /mnt/yuki/dev</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount <span class="at">--rbind</span> /dev /mnt/yuki/dev <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> mount <span class="at">--make-rslave</span> /mnt/yuki/dev</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mkdir <span class="at">-p</span> /mnt/yuki/sys </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount <span class="at">--rbind</span> /sys /mnt/yuki/sys <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> mount <span class="at">--make-rslave</span> /mnt/yuki/sys</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mkdir <span class="at">-p</span> /mnt/yuki/run </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mount <span class="at">--bind</span> /run /mnt/yuki/run <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> mount <span class="at">--make-slave</span> /mnt/yuki/run</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> cp /etc/resolv.conf /mnt/yuki/etc/</span></code></pre></div>
+<p>The preliminary preparations are now compleRte. eady to
+<code>chroot</code> the new system.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chroot /mnt/yuki /bin/bash</span></code></pre></div>
+<p>The chroot environment inherits the host’s network settings;</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">http_proxy</span><span class="op">=</span>http://127.0.0.1:7890</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">https_proxy</span><span class="op">=</span>http://127.0.0.1:7890</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">all_proxy</span><span class="op">=</span>http://127.0.0.1:7890</span></code></pre></div>
+<p>Now we will pull the linux source code.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> <span class="at">-o</span> /usr/src/ https://www.kernel.org/pub/linux/kernel/v7.x/linux-7.2.5.tar.xz</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /usr/src</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">zcat</span> /proc/.config.gz <span class="op">&gt;</span> .config</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/config</span> <span class="at">--disable</span> SYSTEM_TRUSTED_KEYS</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/config</span> <span class="at">--disable</span> SYSTEM_REVOCATION_KEYS</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/config</span> <span class="at">--disable</span> DEBUG_INFO_BTF</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/config</span> <span class="at">--set-str</span> LOCALVERSION <span class="st">&quot;-chika&quot;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/config</span> <span class="at">--disable</span> LOCALVERSION_AUTO</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/config</span> <span class="at">--enable</span>  EFI_STUB</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/config</span> <span class="at">--enable</span>  DRM_SIMPLEDRM</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/config</span> <span class="at">--enable</span>  SYSFB_SIMPLEFB</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/config</span> <span class="at">--disable</span> CMDLINE_OVERRIDE</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/config</span> <span class="at">--enable</span>  MODULE_SIG</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="ex">./scripts/config</span> <span class="at">--disable</span> MODULE_SIG_FORCE</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> olddefconfig</span></code></pre></div>
+<p>make sure config is correct. Given the dependencies, who knows that
+what happens after <code>make olddefconfig</code> ?</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> s <span class="kw">in</span> EFI_STUB DRM_SIMPLEDRM SYSFB_SIMPLEFB BLK_DEV_NVME EXT4_FS <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>         BTRFS_FS DRM_NOUVEAU MODULE_SIG SYSTEM_TRUSTED_KEYS<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">&#39;%-24s %s\n&#39;</span> <span class="st">&quot;</span><span class="va">$s</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="va">$(</span><span class="ex">./scripts/config</span> <span class="at">--state</span> <span class="va">$s)</span><span class="st">&quot;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<p>write <code>/etc/kernel/cmdline</code></p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="va">root</span><span class="op">=</span>UUID=<span class="op">&lt;</span>uuid<span class="op">&gt;</span> rw</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> <span class="st">&quot;-j</span><span class="va">$(</span><span class="fu">nproc</span><span class="va">)</span><span class="st">&quot;</span></span></code></pre></div>
+<p>Everything is proceeding so smoothly. I installed sucessfully.
+However, the number of gentoo mirror sites is pitifully small. I didn’t
+notice the community announcement my IP got banned because I
+synchronized too many times. After a few twists and truns, I back
+archlinux. arch is best, pacman is best, AUR is best. <del>(KomariChika
+is best)</del> This time, I customized my kernel—a process that took
+nearly 19 hours, primarily spent on kernel tuning. I chose niri as my
+desktop environment; I feel it suits me better, as it has a superior
+approach to tiling. <img src="img/archlinux.jpg" alt="archlinux" /> I
+probably won’t be sprucing up my desktop for a while; the renderer
+project has already dragged on for a week, and since I have a lot of
+things I want to do lately, I really need to catch up on progress.</p>
+</article>
+<article class="log-entry">
+<time>2026-09-18</time>
+<figure>
+<img src="img/komarichika_2.png" alt="komarichika" />
+<figcaption aria-hidden="true">komarichika</figcaption>
+</figure>
+</article>
 </main>
 <footer>
         <div class="social-links">
             </div>
-        <a href="https://github.com/zhanglyhub" style="font-weight: bold;">Github</a>
+        <a href="https://github.com/komarichika-nya" style="font-weight: bold;">Github</a>
         <a href="https://x.com/Theshine891403" style="font-weight: bold;">twitter</a>
-        <a href="xdefan101@gmail.com" style="font-weight: bold;">mail</a>
-        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</p>
+        <a href="mailto:xdefan101@gmail.com" style="font-weight: bold;">mail</a>
+        <p>© 2026 KomariChika · <a href=" https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
     </footer>
 </body>
 </html>
