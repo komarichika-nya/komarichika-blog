@@ -21,55 +21,33 @@
 \begin{document}
 \subsection{pseudo-random generator}
 A pseudo-random number generator can be abstracted as a finite state machine $\mathcal{G}=(S,O,s_0,f,g)$.
-where $S$ is finite set contains all possible internal states of spaces, $O$ is the output spaces, $s_0\in S$ 
-is the seed, $f:S\to S$ is the transition function and the $g:S\to O$ is the output function.\\
-The generation process involves repeatedly executing the following transfers:
-\[s_{n+1}=f(s_n)\]\[o_n=g(s_n)\]
-Ideally, we want $f$ is bijective. If $f$ is not bijective, that means when the generator enter $f(S)$,
-it will not visit the state $S/f(S)$. That would means we'd spend a lot of memery storing a rapidl
-iterating generator.\\
+$\exists f:S\to O$, $g:O\to O$ $S=\{0,1\}^b$, $|S|=2^b$, $O=\{0,1\}^r$. The state transition is $g(s_t)=s_{t+1}$, $f(s_t)=y_t$. if the $s_0$ is fixed, anything can be compute. Such as preiod $T\le|S|=2^{b-r}$. 
+At this point, $f$ is surjective and $\sum\limits_{y\in O}=|S|=2^b$.
 The quality of random number generator is constrained by is internal state. Suppose we have a generator which 
 have $b$ bits internal states and output $r$ bits number everytime.$(b\ge r)$ So the cycle is $2^b$ and the types of numbers are $2^r$.
-Uniformly requires us the number which is $r$ bit must appear $2^{b-r}$. An extreme example is $r=32,b=32$.
+Uniformly requires us the number which is $r$ bit must appear $2^{b-r}$. An extreme example is $r=b$.
 That means each number will not repeat before the cycle is completely traversed. However, this is not the case in real randomness.
 In real randomness, each number are independently repeatable. We can use birthday problem to model this.
-Given $m=2^b$ possibilities, draw $n=2^r$ independent and uniform samples, $X$ is the repeat at least once. The birthday problem given:
-\[P(X)=1-\frac{m(m-1)(m-2)\cdots(m-n+1)}{m^n}\]
+Given $m=2^b$ possibilities, draw $n=2^r$ independent and uniform samples, $X$ is the repeat at least once. The birthday problem given $P(X)=1-\frac{m(m-1)(m-2)\cdots(m-n+1)}{m^n}$
 Actually, we can use Poisson distribution approximation.
-\[\lambda\approx\binom{n}{2}\frac{1}{m}=\frac{n(n-1)}{2m}\]
-\[P(X)\approx\exp(-\frac{n(n-1)}{2m})\]
+$\lambda\approx\binom{n}{2}\frac{1}{m}=\frac{n(n-1)}{2m}$
+$P(X)\approx\exp(-\frac{n(n-1)}{2m})$
 Ideally, the possibility of repeating at least once is hightest around time $\sqrt{m}$.\\
 Q: The birthday problem tell us that repeatition of output values always occurs too early.
 So does the finite-state PRNG fail statistically even earlier?\\
-A: Not at all. Repeatition is a normal phenomenon in birthday problem.
-Evluating whether a PRNG is failed depends on whether it stochastic model.
-For any PRNG, it should simulate the birthday problem as closely as possible, which is why the
-high bit is used to generate the low bit.\\
+A: No. The success or failure of a finite-state PRNG depends solesly on its internal state space; the birthday problrm's appearance is inevitable, and it provides with a benchmark for evaluation.\\
 Q: Consider a uniform mapping with an internal value state sapce of $2^b$ and an output value state of $2^r$, where $b>r$.
-According to the pigeonhole principle, each number appears approximationly $2^{b-r}$ times within one period. What is the expected number of times the output
-value appears more than $2^{b-r}$ times? What is the expected occurrence of such an event?\\
-A: Let internal state $N=2^b$ and output state $V=2^r$. Each output value $i$ and its frequently $X_i$ follow a multinomial distribution
-\[X_i\sim\mathcal{B}(N,\frac{1}{V})\]
-$\lambda\approx\frac{N}{V}=2^{b-r}$, so:
-\[I_i=\begin{cases}1&X_i>\lambda\\0&\mathtt{otherwise}\end{cases}\]
-\[E[\sum\limits_{i=1}^{V}I_i]=V\cdot P(X_i>\lambda)\]
-\[P(X_1>\lambda)=1-\sum\limits_{k=0}^{\lambda}\binom{n}{k}p^k(1-p)^{n-k}\]
-In fact, a normal approximation can be used(Poisson distribution also works).
-\[P(X>\lambda)=P(X\ge\lambda)\approx P(X\ge\lambda+1-0.5)=P(X\ge\lambda+1+0.5)\]
-normalize so:
-\[P(\frac{X-\lambda}{\sqrt{\lambda}})=1-\Phi(\frac{0.5}{\sqrt{\lambda}})=\Phi(\frac{0.5}{\sqrt{\lambda}})\approx\frac{1}{2}-\frac{1}{2\sqrt{2\pi\lambda}}\]
-\[\mathbb{E}[\#\{i:X_i>\lambda\}]\approx 2^{r-1}-\frac{2^r}{\sqrt{2\pi\lambda}}\cdot 2^{r-1}\]
-so, obversely, the expected is approximation $2^{r-1}$.\\
-Let's look at the second problem.
-\[P(X_1>\lambda,X_2>\lambda,\cdots,X_k>\lambda)\]
-\[X\sim\mathcal{M}(N;V^{-1},V^{-1},\cdots,1-nV^{-1})\]
-\[P(X_1>\lambda,X_2>\lambda,\cdots,X_k>\lambda)=\sum\limits_{X_i>\lambda\land\sum\limits_ia_i=k}\frac{\Gamma(k+1)}{\prod\limits_{i=1}^{k}\Gamma(a_i+1)}(\frac{1}{V})^{\sum a_i}(1-\frac{k}{V})^{N-\sum a_i}\]
-\subsection{LCG}
-A classic generator is $LCG$:
-\[X_{n+1}=(aX_n+c)\mod m\]
+According to the pigeonhole principle, each number appears approximationly $2^{b-r}$ times within one period. 
+What is the expected number of times the output value appears more than $2^{b-r}$ times?
+A: Let internal state $N=\{0,1\}^b$ and output state $V=\{0,1\}^b$. To solve this problem, we will use multionmial distribution. 
+$\forall v_i\in V$, the corresponding probability $p_i$ where $i\le 2^r$, let $X_i$ is $v_i$ occurrences. so $\sum\limits_{i=1}^{2^r}X_i=2^b$. $X_i\sim\mathcal{M}(2^b,\frac{1}{2^r})$. For each $f:N\to V$ is uniformation. So it can be approxed $X_i\sim\mathcal{B}(2^b,\frac{1}{2^r})$. Let us consider the excepted number of times a fixed appears more than once. $\mathbb{E}[\mathbf{1}_{X_i>1}]=P(X_i>1)=1-P(X_i=1)-P(X_i=0)$, $P(X_i>1)=1-(1-p_i)^n-np_i(1-p_i)^{n-1}$,$P(X_i>1)=1-(1-2^{-r})^{2^b-1}(1+\frac{2^b-1}{2^r})$. Let $Y=\sum\limits_{i=1}^{2^r}\mathbf{1}_{X_i>1}$, $\mathbb{E}[Y]=\sum\limits_{i=1}^{2^r}\mathbb{E}[\mathbf{1}_{X_i>1}]=\sum\limits_{i=1}^{2^r}P(X_i>1)=2^rP(X_i>1)$. 
+$\mathbb{E}[Y]=2^r\left(1-(1-2^{-r})^{2^b}-2^b\cdot2^{-r}(1-2^{-r})^{2^b-1}\right)$.
+\subsection{lcg}
+$X_{n+1}=(aX_n+c)\mod m$, 
 where $m>0$ is modulus, $m>a>0$ is the multiplier, $m>c\ge 0$ is the increment and $X_0$ is the seed.
 It can addressable in $O(n\log n)$
-\[X_{n+i}=(a^iX_n+\frac{c(a^i-1)}{a-1})\]
+$X_{n+i}=(a^iX_n+\frac{c(a^i-1)}{a-1})$.
+
 \begin{lstlisting}[language=C++]
 u64 qp(u64 a,u64 b,u64 m){u64 ans=1ull;a%=m;for(;b;b>>=1,a=a*a%m)(b&1)&&(ans=ans*a%m);return ans;}
 u64 sum(u64 a,u64 c,u64 m,u64 x){u64 ans=0,cur=1;a%=m;for(;x;x>>=1,cur=cur*(1+a)%m,a=a*a%m)(x&1)&&(ans=(ans*a%m+cur%m));return ans;}
@@ -78,14 +56,12 @@ string ec(u64 a,u64 c,u64 m,u64 sd){int n=s.size();string ans;ans.resize(n);int 
 \end{lstlisting}
 Actually, LCG is excellent. It have a long period, high speed, low memory useage and it's simple to implement(Um...you may care this).
 But the problem isn't with LCG itself, but with we shoudn't have directly output the LCG status unchanged. So what should we do ? How to improve it ?
-\subsection{PCG}
-A efficent idea is ($permutation-function$, Melissa O'Neill).Essentially, the permutation-function is adding a non-linear function before the output layer. Commonly, it contains following functions:$Xorshift$, $BitRotation$. 
+\subsection{pcg}
+A efficent idea is (permutation-function, Melissa O'Neill).Essentially, the permutation-function is adding a non-linear function before the output layer. Commonly, it contains following functions xorshift, bit rotation. 
 Formally, it may express $f\circ X_n$ where $f$ is the permutation-function.\\ 
 64-bits to 32-bits.
 \begin{lstlisting}[language=C++]
-using u32=uint32_t;
-u64 st=0;
-void f(u32 s){st=s|1;}
+using u32=uint32_t;u64 st=0;void f(u32 s){st=s|1;}
 u32 pcg(){u32 la=st;st=st*747796405u+2891336453u;u32 u=la>>(29-(st>>61));return u;}
 \end{lstlisting}
 \begin{lstlisting}[language=C++]
@@ -95,6 +71,46 @@ u32 pcg32(){u64 la=st;st=st*747796405u+2891336453u;u32 u=(la^(la>>22u))>>(22u+(l
 u32 r32(u32 v,u32 r){return (v>>r)|(v<<32-r);}
 u32 pcg1(){u64 la=st;st=st*747796405u+2891336453u;u32 u=r32(st^(st>>18)>>27,st>>59);return u;}
 \end{lstlisting}
-In fact, you can make use of your image to design.
+\subsection{xorshift}
+A 32-bit integer can be regarded as $x=(x_0,x_1,\dots,x_31)\in\mathbb{F}_2^{32}$, $\mathbb{F}_2=\{0,1\}$.
+or it could be viewed as $\langle\mathbb{F}_2,\oplus\rangle$. A shift can be ragarded as a linear mapping.
+$x\mapsto(I+L^n)x$. so the state transition of xorshift can be written $T=(I+L^5)(I+R^{17})(I+L^{13})$. Obviously, 
+$T$ is invertible. The question is, how long is its period? We consider its characteristic ploynomal. $f(t)=\det(tI-T)\in\mathbb{F}_2[t]$. also, $f(t)=\det(tI+T)$. so $f(t)=t^{32}+t^{22}+t^2+t+1\in\mathbb{F}_2[t]$. This is a source 
+polynomial with a maximum period of $2^{32}-1$. Here, we can carry out a quick check. All you need to do is check 
+$2^{2^{32}-1}=1\land\forall p\in\{3,5,17,257,65537\},2^{(2^{32}-1}/p)\ne1$.
+\begin{lstlisting}[language=Python]
+def pmul(a,b,mod):
+    ans=0
+    while b:
+        if b&1:ans^=a
+        b>>=1
+        a<<=1
+    while ans.bit_length()>=mod.bit_length():
+        sft=ans.bit_length()-mod.bit_length()
+        ans^=mod<<sft
+    return ans
+def ppow(a,b,mod):
+    r=1
+    while b:
+        if b&1:r=pmul(r,a,mod)
+        a=pmul(a,a,mod)
+        b>>=1
+    return r
+f=1<<32|1<<22|1<<2|1<<1|1
+odr=(1<<32)-1
+fac=[3,5,17,257,65537]
+x=2
+print(ppow(x,odr,f)==1)
+for p in fac:
+    print(p,ppow(x,odr//p,f)!=1)
+
+[chika@chika ~] python check.py
+True
+3 True
+5 True
+17 True
+257 True
+65537 True
+\end{lstlisting}
 \end{document}
 

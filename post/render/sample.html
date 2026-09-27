@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>sample · KomariChika</title>
-<link rel="stylesheet" href="../../s1.css?v=1789874540">
+<link rel="stylesheet" href="../../s1.css?v=1790515424">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
   onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
@@ -16,51 +16,45 @@
 <h2>pseudo-random generator</h2>
 <p>A pseudo-random number generator can be abstracted as a finite state
 machine <span class="math inline">\mathcal{G}=(S,O,s_0,f,g)</span>.
-where <span class="math inline">S</span> is finite set contains all
-possible internal states of spaces, <span class="math inline">O</span>
-is the output spaces, <span class="math inline">s_0\in S</span> is the
-seed, <span class="math inline">f:S\to S</span> is the transition
-function and the <span class="math inline">g:S\to O</span> is the output
-function.<br />
-The generation process involves repeatedly executing the following
-transfers: <span class="math display">s_{n+1}=f(s_n)</span><span
-class="math display">o_n=g(s_n)</span> Ideally, we want <span
-class="math inline">f</span> is bijective. If <span
-class="math inline">f</span> is not bijective, that means when the
-generator enter <span class="math inline">f(S)</span>, it will not visit
-the state <span class="math inline">S/f(S)</span>. That would means we’d
-spend a lot of memery storing a rapidl iterating generator.<br />
-The quality of random number generator is constrained by is internal
-state. Suppose we have a generator which have <span
-class="math inline">b</span> bits internal states and output <span
-class="math inline">r</span> bits number everytime.<span
-class="math inline">(b\ge r)</span> So the cycle is <span
-class="math inline">2^b</span> and the types of numbers are <span
-class="math inline">2^r</span>. Uniformly requires us the number which
-is <span class="math inline">r</span> bit must appear <span
+<span class="math inline">\exists f:S\to O</span>, <span
+class="math inline">g:O\to O</span> <span
+class="math inline">S=\{0,1\}^b</span>, <span
+class="math inline">|S|=2^b</span>, <span
+class="math inline">O=\{0,1\}^r</span>. The state transition is <span
+class="math inline">g(s_t)=s_{t+1}</span>, <span
+class="math inline">f(s_t)=y_t</span>. if the <span
+class="math inline">s_0</span> is fixed, anything can be compute. Such
+as preiod <span class="math inline">T\le|S|=2^{b-r}</span>. At this
+point, <span class="math inline">f</span> is surjective and <span
+class="math inline">\sum\limits_{y\in O}=|S|=2^b</span>. The quality of
+random number generator is constrained by is internal state. Suppose we
+have a generator which have <span class="math inline">b</span> bits
+internal states and output <span class="math inline">r</span> bits
+number everytime.<span class="math inline">(b\ge r)</span> So the cycle
+is <span class="math inline">2^b</span> and the types of numbers are
+<span class="math inline">2^r</span>. Uniformly requires us the number
+which is <span class="math inline">r</span> bit must appear <span
 class="math inline">2^{b-r}</span>. An extreme example is <span
-class="math inline">r=32,b=32</span>. That means each number will not
-repeat before the cycle is completely traversed. However, this is not
-the case in real randomness. In real randomness, each number are
-independently repeatable. We can use birthday problem to model this.
-Given <span class="math inline">m=2^b</span> possibilities, draw <span
+class="math inline">r=b</span>. That means each number will not repeat
+before the cycle is completely traversed. However, this is not the case
+in real randomness. In real randomness, each number are independently
+repeatable. We can use birthday problem to model this. Given <span
+class="math inline">m=2^b</span> possibilities, draw <span
 class="math inline">n=2^r</span> independent and uniform samples, <span
 class="math inline">X</span> is the repeat at least once. The birthday
-problem given: <span
-class="math display">P(X)=1-\frac{m(m-1)(m-2)\cdots(m-n+1)}{m^n}</span>
+problem given <span
+class="math inline">P(X)=1-\frac{m(m-1)(m-2)\cdots(m-n+1)}{m^n}</span>
 Actually, we can use Poisson distribution approximation. <span
-class="math display">\lambda\approx\binom{n}{2}\frac{1}{m}=\frac{n(n-1)}{2m}</span>
-<span class="math display">P(X)\approx\exp(-\frac{n(n-1)}{2m})</span>
+class="math inline">\lambda\approx\binom{n}{2}\frac{1}{m}=\frac{n(n-1)}{2m}</span>
+<span class="math inline">P(X)\approx\exp(-\frac{n(n-1)}{2m})</span>
 Ideally, the possibility of repeating at least once is hightest around
 time <span class="math inline">\sqrt{m}</span>.<br />
 Q: The birthday problem tell us that repeatition of output values always
 occurs too early. So does the finite-state PRNG fail statistically even
 earlier?<br />
-A: Not at all. Repeatition is a normal phenomenon in birthday problem.
-Evluating whether a PRNG is failed depends on whether it stochastic
-model. For any PRNG, it should simulate the birthday problem as closely
-as possible, which is why the high bit is used to generate the low
-bit.<br />
+A: No. The success or failure of a finite-state PRNG depends solesly on
+its internal state space; the birthday problrm’s appearance is
+inevitable, and it provides with a benchmark for evaluation.<br />
 Q: Consider a uniform mapping with an internal value state sapce of
 <span class="math inline">2^b</span> and an output value state of <span
 class="math inline">2^r</span>, where <span
@@ -68,44 +62,41 @@ class="math inline">b&gt;r</span>. According to the pigeonhole
 principle, each number appears approximationly <span
 class="math inline">2^{b-r}</span> times within one period. What is the
 expected number of times the output value appears more than <span
-class="math inline">2^{b-r}</span> times? What is the expected
-occurrence of such an event?<br />
-A: Let internal state <span class="math inline">N=2^b</span> and output
-state <span class="math inline">V=2^r</span>. Each output value <span
-class="math inline">i</span> and its frequently <span
-class="math inline">X_i</span> follow a multinomial distribution <span
-class="math display">X_i\sim\mathcal{B}(N,\frac{1}{V})</span> <span
-class="math inline">\lambda\approx\frac{N}{V}=2^{b-r}</span>, so: <span
-class="math display">I_i=\begin{cases}1&amp;X_i&gt;\lambda\\0&amp;\mathtt{otherwise}\end{cases}</span>
-<span class="math display">E[\sum\limits_{i=1}^{V}I_i]=V\cdot
-P(X_i&gt;\lambda)</span> <span
-class="math display">P(X_1&gt;\lambda)=1-\sum\limits_{k=0}^{\lambda}\binom{n}{k}p^k(1-p)^{n-k}</span>
-In fact, a normal approximation can be used(Poisson distribution also
-works). <span class="math display">P(X&gt;\lambda)=P(X\ge\lambda)\approx
-P(X\ge\lambda+1-0.5)=P(X\ge\lambda+1+0.5)</span> normalize so: <span
-class="math display">P(\frac{X-\lambda}{\sqrt{\lambda}})=1-\Phi(\frac{0.5}{\sqrt{\lambda}})=\Phi(\frac{0.5}{\sqrt{\lambda}})\approx\frac{1}{2}-\frac{1}{2\sqrt{2\pi\lambda}}</span>
-<span class="math display">\mathbb{E}[\#\{i:X_i&gt;\lambda\}]\approx
-2^{r-1}-\frac{2^r}{\sqrt{2\pi\lambda}}\cdot 2^{r-1}</span> so,
-obversely, the expected is approximation <span
-class="math inline">2^{r-1}</span>.<br />
-Let’s look at the second problem. <span
-class="math display">P(X_1&gt;\lambda,X_2&gt;\lambda,\cdots,X_k&gt;\lambda)</span>
+class="math inline">2^{b-r}</span> times? A: Let internal state <span
+class="math inline">N=\{0,1\}^b</span> and output state <span
+class="math inline">V=\{0,1\}^b</span>. To solve this problem, we will
+use multionmial distribution. <span class="math inline">\forall v_i\in
+V</span>, the corresponding probability <span
+class="math inline">p_i</span> where <span class="math inline">i\le
+2^r</span>, let <span class="math inline">X_i</span> is <span
+class="math inline">v_i</span> occurrences. so <span
+class="math inline">\sum\limits_{i=1}^{2^r}X_i=2^b</span>. <span
+class="math inline">X_i\sim\mathcal{M}(2^b,\frac{1}{2^r})</span>. For
+each <span class="math inline">f:N\to V</span> is uniformation. So it
+can be approxed <span
+class="math inline">X_i\sim\mathcal{B}(2^b,\frac{1}{2^r})</span>. Let us
+consider the excepted number of times a fixed appears more than once.
 <span
-class="math display">X\sim\mathcal{M}(N;V^{-1},V^{-1},\cdots,1-nV^{-1})</span>
+class="math inline">\mathbb{E}[\mathbf{1}_{X_i&gt;1}]=P(X_i&gt;1)=1-P(X_i=1)-P(X_i=0)</span>,
 <span
-class="math display">P(X_1&gt;\lambda,X_2&gt;\lambda,\cdots,X_k&gt;\lambda)=\sum\limits_{X_i&gt;\lambda\land\sum\limits_ia_i=k}\frac{\Gamma(k+1)}{\prod\limits_{i=1}^{k}\Gamma(a_i+1)}(\frac{1}{V})^{\sum
-a_i}(1-\frac{k}{V})^{N-\sum a_i}</span></p>
+class="math inline">P(X_i&gt;1)=1-(1-p_i)^n-np_i(1-p_i)^{n-1}</span>,<span
+class="math inline">P(X_i&gt;1)=1-(1-2^{-r})^{2^b-1}(1+\frac{2^b-1}{2^r})</span>.
+Let <span
+class="math inline">Y=\sum\limits_{i=1}^{2^r}\mathbf{1}_{X_i&gt;1}</span>,
+<span
+class="math inline">\mathbb{E}[Y]=\sum\limits_{i=1}^{2^r}\mathbb{E}[\mathbf{1}_{X_i&gt;1}]=\sum\limits_{i=1}^{2^r}P(X_i&gt;1)=2^rP(X_i&gt;1)</span>.
+<span
+class="math inline">\mathbb{E}[Y]=2^r\left(1-(1-2^{-r})^{2^b}-2^b\cdot2^{-r}(1-2^{-r})^{2^b-1}\right)</span>.</p>
 </section>
 <section id="lcg" class="level2">
-<h2>LCG</h2>
-<p>A classic generator is <span class="math inline">LCG</span>: <span
-class="math display">X_{n+1}=(aX_n+c)\mod m</span> where <span
+<h2>lcg</h2>
+<p><span class="math inline">X_{n+1}=(aX_n+c)\mod m</span>, where <span
 class="math inline">m&gt;0</span> is modulus, <span
 class="math inline">m&gt;a&gt;0</span> is the multiplier, <span
 class="math inline">m&gt;c\ge 0</span> is the increment and <span
 class="math inline">X_0</span> is the seed. It can addressable in <span
 class="math inline">O(n\log n)</span> <span
-class="math display">X_{n+i}=(a^iX_n+\frac{c(a^i-1)}{a-1})</span></p>
+class="math inline">X_{n+i}=(a^iX_n+\frac{c(a^i-1)}{a-1})</span>.</p>
 <div class="sourceCode" id="cb1" data-language="C++"><pre
 class="sourceCode c++"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>u64 qp<span class="op">(</span>u64 a<span class="op">,</span>u64 b<span class="op">,</span>u64 m<span class="op">){</span>u64 ans<span class="op">=</span><span class="dv">1</span><span class="bu">ull</span><span class="op">;</span>a<span class="op">%=</span>m<span class="op">;</span><span class="cf">for</span><span class="op">(;</span>b<span class="op">;</span>b<span class="op">&gt;&gt;=</span><span class="dv">1</span><span class="op">,</span>a<span class="op">=</span>a<span class="op">*</span>a<span class="op">%</span>m<span class="op">)(</span>b<span class="op">&amp;</span><span class="dv">1</span><span class="op">)&amp;&amp;(</span>ans<span class="op">=</span>ans<span class="op">*</span>a<span class="op">%</span>m<span class="op">);</span><span class="cf">return</span> ans<span class="op">;}</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>u64 sum<span class="op">(</span>u64 a<span class="op">,</span>u64 c<span class="op">,</span>u64 m<span class="op">,</span>u64 x<span class="op">){</span>u64 ans<span class="op">=</span><span class="dv">0</span><span class="op">,</span>cur<span class="op">=</span><span class="dv">1</span><span class="op">;</span>a<span class="op">%=</span>m<span class="op">;</span><span class="cf">for</span><span class="op">(;</span>x<span class="op">;</span>x<span class="op">&gt;&gt;=</span><span class="dv">1</span><span class="op">,</span>cur<span class="op">=</span>cur<span class="op">*(</span><span class="dv">1</span><span class="op">+</span>a<span class="op">)%</span>m<span class="op">,</span>a<span class="op">=</span>a<span class="op">*</span>a<span class="op">%</span>m<span class="op">)(</span>x<span class="op">&amp;</span><span class="dv">1</span><span class="op">)&amp;&amp;(</span>ans<span class="op">=(</span>ans<span class="op">*</span>a<span class="op">%</span>m<span class="op">+</span>cur<span class="op">%</span>m<span class="op">));</span><span class="cf">return</span> ans<span class="op">;}</span></span>
@@ -118,27 +109,77 @@ output the LCG status unchanged. So what should we do ? How to improve
 it ?</p>
 </section>
 <section id="pcg" class="level2">
-<h2>PCG</h2>
-<p>A efficent idea is (<span
-class="math inline">permutation-function</span>, Melissa
+<h2>pcg</h2>
+<p>A efficent idea is (permutation-function, Melissa
 O’Neill).Essentially, the permutation-function is adding a non-linear
 function before the output layer. Commonly, it contains following
-functions:<span class="math inline">Xorshift</span>, <span
-class="math inline">BitRotation</span>. Formally, it may express <span
+functions xorshift, bit rotation. Formally, it may express <span
 class="math inline">f\circ X_n</span> where <span
 class="math inline">f</span> is the permutation-function.<br />
 64-bits to 32-bits.</p>
 <div class="sourceCode" id="cb2" data-language="C++"><pre
-class="sourceCode c++"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> u32<span class="op">=</span><span class="dt">uint32_t</span><span class="op">;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>u64 st<span class="op">=</span><span class="dv">0</span><span class="op">;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span>u32 s<span class="op">){</span>st<span class="op">=</span>s<span class="op">|</span><span class="dv">1</span><span class="op">;}</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>u32 pcg<span class="op">(){</span>u32 la<span class="op">=</span>st<span class="op">;</span>st<span class="op">=</span>st<span class="op">*</span><span class="dv">747796405</span><span class="bu">u</span><span class="op">+</span><span class="dv">2891336453</span><span class="bu">u</span><span class="op">;</span>u32 u<span class="op">=</span>la<span class="op">&gt;&gt;(</span><span class="dv">29</span><span class="op">-(</span>st<span class="op">&gt;&gt;</span><span class="dv">61</span><span class="op">));</span><span class="cf">return</span> u<span class="op">;}</span></span></code></pre></div>
+class="sourceCode c++"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> u32<span class="op">=</span><span class="dt">uint32_t</span><span class="op">;</span>u64 st<span class="op">=</span><span class="dv">0</span><span class="op">;</span><span class="dt">void</span> f<span class="op">(</span>u32 s<span class="op">){</span>st<span class="op">=</span>s<span class="op">|</span><span class="dv">1</span><span class="op">;}</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>u32 pcg<span class="op">(){</span>u32 la<span class="op">=</span>st<span class="op">;</span>st<span class="op">=</span>st<span class="op">*</span><span class="dv">747796405</span><span class="bu">u</span><span class="op">+</span><span class="dv">2891336453</span><span class="bu">u</span><span class="op">;</span>u32 u<span class="op">=</span>la<span class="op">&gt;&gt;(</span><span class="dv">29</span><span class="op">-(</span>st<span class="op">&gt;&gt;</span><span class="dv">61</span><span class="op">));</span><span class="cf">return</span> u<span class="op">;}</span></span></code></pre></div>
 <div class="sourceCode" id="cb3" data-language="C++"><pre
 class="sourceCode c++"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>u32 pcg32<span class="op">(){</span>u64 la<span class="op">=</span>st<span class="op">;</span>st<span class="op">=</span>st<span class="op">*</span><span class="dv">747796405</span><span class="bu">u</span><span class="op">+</span><span class="dv">2891336453</span><span class="bu">u</span><span class="op">;</span>u32 u<span class="op">=(</span>la<span class="op">^(</span>la<span class="op">&gt;&gt;</span><span class="dv">22</span><span class="bu">u</span><span class="op">))&gt;&gt;(</span><span class="dv">22</span><span class="bu">u</span><span class="op">+(</span>la<span class="op">&gt;&gt;</span><span class="dv">61</span><span class="bu">u</span><span class="op">));</span><span class="cf">return</span> u<span class="op">;}</span></span></code></pre></div>
 <div class="sourceCode" id="cb4" data-language="C++"><pre
 class="sourceCode c++"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>u32 r32<span class="op">(</span>u32 v<span class="op">,</span>u32 r<span class="op">){</span><span class="cf">return</span> <span class="op">(</span>v<span class="op">&gt;&gt;</span>r<span class="op">)|(</span>v<span class="op">&lt;&lt;</span><span class="dv">32</span><span class="op">-</span>r<span class="op">);}</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>u32 pcg1<span class="op">(){</span>u64 la<span class="op">=</span>st<span class="op">;</span>st<span class="op">=</span>st<span class="op">*</span><span class="dv">747796405</span><span class="bu">u</span><span class="op">+</span><span class="dv">2891336453</span><span class="bu">u</span><span class="op">;</span>u32 u<span class="op">=</span>r32<span class="op">(</span>st<span class="op">^(</span>st<span class="op">&gt;&gt;</span><span class="dv">18</span><span class="op">)&gt;&gt;</span><span class="dv">27</span><span class="op">,</span>st<span class="op">&gt;&gt;</span><span class="dv">59</span><span class="op">);</span><span class="cf">return</span> u<span class="op">;}</span></span></code></pre></div>
-<p>In fact, you can make use of your image to design.</p>
+</section>
+<section id="xorshift" class="level2">
+<h2>xorshift</h2>
+<p>A 32-bit integer can be regarded as <span
+class="math inline">x=(x_0,x_1,\dots,x_31)\in\mathbb{F}_2^{32}</span>,
+<span class="math inline">\mathbb{F}_2=\{0,1\}</span>. or it could be
+viewed as <span
+class="math inline">\langle\mathbb{F}_2,\oplus\rangle</span>. A shift
+can be ragarded as a linear mapping. <span
+class="math inline">x\mapsto(I+L^n)x</span>. so the state transition of
+xorshift can be written <span
+class="math inline">T=(I+L^5)(I+R^{17})(I+L^{13})</span>. Obviously,
+<span class="math inline">T</span> is invertible. The question is, how
+long is its period? We consider its characteristic ploynomal. <span
+class="math inline">f(t)=\det(tI-T)\in\mathbb{F}_2[t]</span>. also,
+<span class="math inline">f(t)=\det(tI+T)</span>. so <span
+class="math inline">f(t)=t^{32}+t^{22}+t^2+t+1\in\mathbb{F}_2[t]</span>.
+This is a source polynomial with a maximum period of <span
+class="math inline">2^{32}-1</span>. Here, we can carry out a quick
+check. All you need to do is check <span
+class="math inline">2^{2^{32}-1}=1\land\forall
+p\in\{3,5,17,257,65537\},2^{(2^{32}-1}/p)\ne1</span>.</p>
+<div class="sourceCode" id="cb5" data-language="Python"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pmul(a,b,mod):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ans<span class="op">=</span><span class="dv">0</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> b:</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> b<span class="op">&amp;</span><span class="dv">1</span>:ans<span class="op">^=</span>a</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        b<span class="op">&gt;&gt;=</span><span class="dv">1</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        a<span class="op">&lt;&lt;=</span><span class="dv">1</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> ans.bit_length()<span class="op">&gt;=</span>mod.bit_length():</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        sft<span class="op">=</span>ans.bit_length()<span class="op">-</span>mod.bit_length()</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        ans<span class="op">^=</span>mod<span class="op">&lt;&lt;</span>sft</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ans</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ppow(a,b,mod):</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    r<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> b:</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> b<span class="op">&amp;</span><span class="dv">1</span>:r<span class="op">=</span>pmul(r,a,mod)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        a<span class="op">=</span>pmul(a,a,mod)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        b<span class="op">&gt;&gt;=</span><span class="dv">1</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> r</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>f<span class="op">=</span><span class="dv">1</span><span class="op">&lt;&lt;</span><span class="dv">32</span><span class="op">|</span><span class="dv">1</span><span class="op">&lt;&lt;</span><span class="dv">22</span><span class="op">|</span><span class="dv">1</span><span class="op">&lt;&lt;</span><span class="dv">2</span><span class="op">|</span><span class="dv">1</span><span class="op">&lt;&lt;</span><span class="dv">1</span><span class="op">|</span><span class="dv">1</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>odr<span class="op">=</span>(<span class="dv">1</span><span class="op">&lt;&lt;</span><span class="dv">32</span>)<span class="op">-</span><span class="dv">1</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>fac<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">17</span>,<span class="dv">257</span>,<span class="dv">65537</span>]</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>x<span class="op">=</span><span class="dv">2</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ppow(x,odr,f)<span class="op">==</span><span class="dv">1</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> p <span class="kw">in</span> fac:</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(p,ppow(x,odr<span class="op">//</span>p,f)<span class="op">!=</span><span class="dv">1</span>)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>[chika<span class="op">@</span>chika <span class="op">~</span>] python check.py</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="va">True</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="va">True</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="va">True</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="dv">17</span> <span class="va">True</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="dv">257</span> <span class="va">True</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="dv">65537</span> <span class="va">True</span></span></code></pre></div>
 </section>
 </article></main>
 <footer>

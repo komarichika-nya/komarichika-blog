@@ -33,6 +33,15 @@ It can generate by $X=b+(b-a)\mathcal{U}$,$\mathcal{U}\sim\text{Uniform}(0,1)$.
 \end{proof}
 The mean of the uniform distribution is $\mathbb{E}[X]=\int_{a}^{b}a\frac{dx}{b-a}=\frac{b+a}{2}$.
 The variance of the uniform distribution is $\mathbb{Var}[X]=\mathbb{E}[(X-\mathbb[E](X))^2]=\frac{b-1}{12}$.
+
+In a scene, lighting can be divided into self-illumination, direct lighting and indirect lighting. For most objects, we think they don't
+emit light, unless they are a light source. Used as an integral form: $L(\omega_o)=L_e+\int_{\Omega^+}f_r(\omega_i,\omega_o,n)L^{\text{direct}}(\omega_i)d\omega+\int f_r(\omega_i,\omega_o,n)L^{\text{indirect}}(\omega_i)d\omega$.
+
+\subsection{Diffuse Reclection Model}
+The simplest diffuse reflection model is the Lambert model, which assumes that the incident direction doesn't matter for the outgoing direction.
+So at this point, the rendering equation can be written as: $L(\omega_o)=f_r(\omega_i,\omega_o,n)\int_{\Omega^+}L(\omega_i)\cos\theta d\omega$.
+According to the definition of radiant flux: $d\Phi_o=dA\int_{\Omega^+}L_i\cos\theta_i d_i=dA$.
+
 \subsubsection{Cosnie-Weighted Hemisphere sampling}
 One efficient method is that we can convert the directional domain to solid angles for sampling.
 Consider the $z>0$, the solid angles is $2\pi$, probability density is $p(w)=\frac{1}{2\pi}$,

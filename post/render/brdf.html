@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>brdf · KomariChika</title>
-<link rel="stylesheet" href="../../s1.css?v=1789874540">
+<link rel="stylesheet" href="../../s1.css?v=1790515425">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
   onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('display'),throwOnError:false});}catch(e){console.error(e);}});"></script>
@@ -36,6 +36,22 @@ X\le1)</span>. ◻</p>
 class="math inline">\mathbb{E}[X]=\int_{a}^{b}a\frac{dx}{b-a}=\frac{b+a}{2}</span>.
 The variance of the uniform distribution is <span
 class="math inline">\mathbb{Var}[X]=\mathbb{E}[(X-\mathbb[E](X))^2]=\frac{b-1}{12}</span>.</p>
+<p>In a scene, lighting can be divided into self-illumination, direct
+lighting and indirect lighting. For most objects, we think they don’t
+emit light, unless they are a light source. Used as an integral form:
+<span
+class="math inline">L(\omega_o)=L_e+\int_{\Omega^+}f_r(\omega_i,\omega_o,n)L^{\text{direct}}(\omega_i)d\omega+\int
+f_r(\omega_i,\omega_o,n)L^{\text{indirect}}(\omega_i)d\omega</span>.</p>
+<section id="diffuse-reclection-model" class="level2">
+<h2>Diffuse Reclection Model</h2>
+<p>The simplest diffuse reflection model is the Lambert model, which
+assumes that the incident direction doesn’t matter for the outgoing
+direction. So at this point, the rendering equation can be written as:
+<span
+class="math inline">L(\omega_o)=f_r(\omega_i,\omega_o,n)\int_{\Omega^+}L(\omega_i)\cos\theta
+d\omega</span>. According to the definition of radiant flux: <span
+class="math inline">d\Phi_o=dA\int_{\Omega^+}L_i\cos\theta_i
+d_i=dA</span>.</p>
 <section id="cosnie-weighted-hemisphere-sampling" class="level3">
 <h3>Cosnie-Weighted Hemisphere sampling</h3>
 <p>One efficient method is that we can convert the directional domain to
@@ -137,6 +153,7 @@ class="sourceCode c++"><code class="sourceCode cpp"><span id="cb2-1"><a href="#c
 <img src="figures/brdf/c.png" loading="lazy" />
 <figcaption>light intensity:1 1024spp</figcaption>
 </figure>
+</section>
 </section>
 </section>
 </article></main>
