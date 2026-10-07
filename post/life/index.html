@@ -185,6 +185,36 @@ things I want to do lately, I really need to catch up on progress.</p>
 <time>2026-09-27</time>
 <p>i use arch, btw.</p>
 </article>
+<article class="log-entry">
+<time>2026-09-29</time>
+<p>A brief record of motherboard error upon startup. After powering on
+and reaching the tty interface, the motherboard suddenly reported an
+error.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ACPI</span> BIOS Error <span class="er">(</span><span class="ex">bug</span><span class="kw">)</span><span class="bu">:</span> Could not resolve symbol</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[\_SB.PC00.LPCB.EC0._Q37.PNOT],</span> AE_NOT_FOUND</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">ACPI</span> Error: Aborting method <span class="dt">\_</span>SB.PC00.LPCB.EC0._Q37</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">due</span> to previous error <span class="er">(</span><span class="ex">AE_NOT_FOUND</span><span class="kw">)</span></span></code></pre></div>
+<p>so, I rebooted and checked the kernel logs.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[chika@chika</span> ~]$ sudo dmesg <span class="at">-w</span><span class="kw">|</span><span class="fu">grep</span> <span class="at">-i</span> pnot</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[sudo]</span> password for chika: </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span>  571.238245] ACPI BIOS <span class="er">Error</span> <span class="kw">(</span><span class="ex">bug</span><span class="kw">)</span><span class="bu">:</span> Could not resolve symbol <span class="pp">[</span><span class="dt">\_</span><span class="ss">SB.PC00.LPCB.EC0._Q38.PNOT</span><span class="pp">]</span>, AE_NOT_FOUND <span class="er">(</span><span class="ex">20260408/psargs-365</span><span class="kw">)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span>  572.284350] ACPI BIOS <span class="er">Error</span> <span class="kw">(</span><span class="ex">bug</span><span class="kw">)</span><span class="bu">:</span> Could not resolve symbol <span class="pp">[</span><span class="dt">\_</span><span class="ss">SB.PC00.LPCB.EC0._Q37.PNOT</span><span class="pp">]</span>, AE_NOT_FOUND <span class="er">(</span><span class="ex">20260408/psargs-365</span><span class="kw">)</span></span></code></pre></div>
+<p>Attempt to decomplie the acpi tables.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[chika@chika</span> ~]$ sudo acpidump <span class="at">-b</span><span class="kw">&amp;&amp;</span><span class="ex">iasl</span> <span class="at">-f</span> <span class="pp">*</span>.dat </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">[chika@chika</span> ~]$ grep <span class="at">-n</span> <span class="st">&quot;PNOT&quot;</span> <span class="pp">*</span>.dsl</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">dsdt.dsl:134:</span>    External <span class="er">(</span><span class="ex">_SB_.PC00.LPCB.PNOT,</span> MethodObj<span class="kw">)</span>    <span class="ex">//</span> 0 Arguments</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">dsdt.dsl:30836:</span>                PNOT <span class="er">(</span><span class="kw">)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">dsdt.dsl:30984:</span>                PNOT <span class="er">(</span><span class="kw">)</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">dsdt.dsl:31046:</span>                PNOT <span class="er">(</span><span class="kw">)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">[chika@chika</span> ~]$ </span></code></pre></div>
+<p>This is a fucking motherboard bug. The good thing, though, is that it
+donesn’t affect normal use–it’s just a bit annoying that the kernel
+scrolls across the screen when boot up (</p>
+</article>
 </main>
 <footer>
         <div class="social-links">

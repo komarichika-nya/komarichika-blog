@@ -141,3 +141,35 @@ I probably won't be sprucing up my desktop for a while; the renderer project has
 i use arch, btw.
 
 :::
+
+::: 2026-09-29
+A brief record of motherboard error upon startup. After powering on and reaching the tty interface, the motherboard suddenly reported an error. 
+```bash
+ACPI BIOS Error (bug): Could not resolve symbol
+[\_SB.PC00.LPCB.EC0._Q37.PNOT], AE_NOT_FOUND
+
+ACPI Error: Aborting method \_SB.PC00.LPCB.EC0._Q37
+due to previous error (AE_NOT_FOUND)
+```
+so, I rebooted and checked the kernel logs.
+```bash
+[chika@chika ~]$ sudo dmesg -w|grep -i pnot
+[sudo] password for chika: 
+[  571.238245] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PC00.LPCB.EC0._Q38.PNOT], AE_NOT_FOUND (20260408/psargs-365)
+[  572.284350] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PC00.LPCB.EC0._Q37.PNOT], AE_NOT_FOUND (20260408/psargs-365)
+```
+Attempt to decomplie the acpi tables.
+```bash
+[chika@chika ~]$ sudo acpidump -b&&iasl -f *.dat 
+[chika@chika ~]$ grep -n "PNOT" *.dsl
+dsdt.dsl:134:    External (_SB_.PC00.LPCB.PNOT, MethodObj)    // 0 Arguments
+dsdt.dsl:30836:                PNOT ()
+dsdt.dsl:30984:                PNOT ()
+dsdt.dsl:31046:                PNOT ()
+[chika@chika ~]$ 
+```
+This is a fucking motherboard bug. The good thing, though, is that it donesn't affect normal use--it's just a bit 
+annoying that the kernel scrolls across the screen when boot up (
+
+:::
+
